@@ -1,4 +1,9 @@
 {
+  "facebookScheme": "fb366634227889659",
+  "facebookAppId": "366634227889659",
+  "facebookDisplayName": "HUEliteLogin",
+  "android.config.googleSignIn.apiKey": "AIzaSyAiPbw4QD29XDg8anpovpVzfdakdrmQ5gw",
+  "android.config.googleSignIn.certificateHash": "3A:2F:2C:0E:7F:6D:F7:F1:FA:31:5E:88:D3:3E:0B:AD:3B:AC:D4:28",
   "expo": {
     "name": "HUElite",
     "slug": "HUElite",
@@ -23,7 +28,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.sternet.huelite"
     },
     "web": {
       "favicon": "./assets/favicon.png"
