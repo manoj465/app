@@ -1,21 +1,21 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { LogBox, Text } from "react-native";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from "@react-navigation/native";
 import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useMemo, useState } from "react";
+import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import { HUE_CONTAINER_t, types } from "./src/@types/huelite/globalTypes";
+import { types } from "./src/@types/huelite/globalTypes";
 //import "react-native-gesture-handler";
 import Application from "./src/Application";
-import { appCTXAction } from "./src/redux/actions/AppCTXActions";
 import { reduxStore } from "./src/redux";
+import { appCTXAction } from "./src/redux/actions/AppCTXActions";
 import BGService from "./src/services/backGroundServices";
-import { getData, storeData } from "./src/services/db/storage";
+import { getData } from "./src/services/db/storage";
 import { logFun } from "./src/util/logger";
-import { ActionSheetProvider } from '@expo/react-native-action-sheet'
 
 console.disableYellowBox = true;
 
@@ -32,7 +32,6 @@ export default function App() {
   const [appLoading, setAppLoading] = useState(true);
   const [appCTX, setappCTX] = useState({});
   const bgService = useMemo(() => new BGService(6000, log), [])
-  let deviceList: types.HUE_DEVICE_t[] = []
   const linking = {
     prefixes: ['https://app.example.com', 'hueliteapp://'],
     config: {
@@ -52,9 +51,10 @@ export default function App() {
     //await storeData("containers", null);//REMOVE
     //await storeData("appCTX", null);//REMOVE
 
-    //REMOVE const deviceList = await getData("deviceList");
+    const deviceList = await getData("deviceList");
     //REMOVElog("deviceList Size is  " + deviceList?.length);
-    deviceList = await getData("deviceList");
+    //let deviceList: types.HUE_DEVICE_t[] = []
+    //deviceList = await getData("deviceList");
     if (deviceList) {
       log("deviceList data ::  " + JSON.stringify(deviceList));
       await reduxStore.store.dispatch(reduxStore.actions.deviceList.redux({ deviceList }));

@@ -1,19 +1,23 @@
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useRef } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useRef, useState } from "react";
+import { Modal, StyleSheet, Text, View, Image } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
-import { useValue } from "react-native-redash";
+import { red, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 //native imports
 import { _appState } from "../../../redux/reducers";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { logger } from "../../../util/logger";
-import { DeviceCard } from "./containerItem/deviceCard";
-import Header from './newHeader';
+import { DeviceCard } from "./deviceCard";
+import Header from './Header';
+import STYLES from "../../common/styles"
+import { NewRectButton } from "../../common/buttons/RectButtonCustom";
+import { deviceListOperation } from "../../../util/dataManipulator";
+import { LinearGradient } from "expo-linear-gradient";
 
 const navigationIconSize = 25;
 
@@ -34,6 +38,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
   const deviceList = useSelector(({ deviceReducer: { deviceList } }: _appState) => deviceList);
   const y = useValue(0)
   const scrollViewRef = useRef(null)
+  const [toBeDeletedMac, setToBeDeletedMac] = useState("")
   //const state = useValue(State.UNDETERMINED)
   //const onScroll = onScrollEvent({ y })
   //const scroll = useRef(null);
@@ -52,10 +57,12 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           {/* <View style={{ height: HEADER_MAX_HEIGHT + 60 }}></View> */}
           {deviceList.map((device, index) => {
             return (
-              <View>
+              <View key={index}>
                 <DeviceCard
                   device={device}
                   navigation={navigation}
+                  setToBeDeletedDevice={setToBeDeletedMac}
+                  log={log}
                 />
               </View>
 
@@ -79,7 +86,105 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           );
         }}
       /> */}
-      {/* Sec2:  */}
+      <Modal /*///Modal */
+        animationType="slide"
+        transparent
+        visible={toBeDeletedMac.length > 0}
+      >
+        <View /* Sec1: Modal outer container */
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View /* Sec2: Modal inner container */
+            style={[STYLES.shadow, {
+              width: "85%",
+              borderRadius: 20,
+            }]}>
+            <Text style={[STYLES.H6, STYLES.warningText, { marginVertical: 8 }]}>IMPORTANT NOTE</Text>
+            <View style={{ paddingHorizontal: 20, width: "100%" }}>{/* Sec3: hint text container */}
+              <Text style={[STYLES.H7, {
+                marginVertical: 8,
+                textAlign: "center",
+              }]}>This will delete this device from this phone, to pair it with new phone, you have to reset the device manually. follow the following step to reset</Text>
+              <Text style={[STYLES.H7, {}]}>1. Turn off the device </Text>
+              <Text style={[STYLES.H7, {}]}>2. Now switch your HUElite device ON/OFF with a gap of 2 seconds between each toggle</Text>
+              <Text style={[STYLES.H7, {}]}>3. Repeat the above step 5 times</Text>
+              <Text style={[STYLES.H7, {}]}>4. Leave the device ON at last and wait for few seconds</Text>
+              <Text style={[{ textAlign: "center", fontSize: 12, marginVertical: 15, paddingHorizontal: 20 }]}>your device should start blinking after 5 seconds and than restart after few more seconds. once completed you can initiate the pairing process</Text>
+            </View>
+            <View style={{/* Sec3: Buttons */
+              display: "flex",
+              flexDirection: "row",
+              marginTop: 25,
+            }}>
+              <NewRectButton /* Sec3: delete button */
+                useReanimated={false}
+                buttonStyle={{
+                  flex: 1,
+                  marginHorizontal: 8
+                }}
+                text="delete"
+                onPress={() => {
+                  console.log("REMOVE DEVICE")
+                  const newContainerList = deviceListOperation({
+                    props: {
+                      cmd: "REMOVE_DEVICE",
+                      Mac: toBeDeletedMac
+                    },
+                    //log
+                  })
+                  console.log("DEVICE REMOVED : " + JSON.stringify(newContainerList))
+                  setToBeDeletedMac("")
+                }} />
+              <NewRectButton /* Sec3: cancel button */
+                useReanimated={false}
+                buttonStyle={{
+                  flex: 1,
+                  marginHorizontal: 8
+                }}
+                text="cancel"
+                onPress={() => {
+                  console.log("DEVICE REMOVE cancel : ")
+                  setToBeDeletedMac("")
+                }} />
+            </View>
+            <View /* Sec3: modal footer */
+              style={[STYLES.shadow, {
+                width: "97%",
+                height: 80,
+                borderRadius: 15,
+                backgroundColor: "red",
+                marginHorizontal: "3%",
+                marginTop: 15,
+                marginBottom: 8,
+
+              }]}
+            >
+              <LinearGradient
+                style={[{
+                  height: "100%",
+                  width: "100%",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  borderRadius: 14,
+                  overflow: "hidden",
+                  backgroundColor: "transparent",
+                }]}
+                start={{ x: 0.3, y: 0 }}
+                end={{ x: 1, y: 2 }}
+                colors={["#00aaff", "#aa00aa"]} >
+                <View style={[STYLES.absoluteFill, {
+                  backgroundColor: "white",
+                  opacity: 0.4
+                }]} >
+                  <Image source={require("../../../../assets/icons/icon-no-bg.png")} style={[STYLES.absoluteFill, { width: 200, height: "100%" }]} />
+                  <Image source={require("../../../../assets/icons/icon-no-bg.png")} style={[STYLES.absoluteFill, { width: 50, height: "100%", left: "80%" }]} />
+                </View>
+              </LinearGradient>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/* Sec:  */}
       {false && <View style={styles.navigatorMenu}>
         <RectButton
           onPress={() => {

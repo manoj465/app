@@ -1,9 +1,11 @@
-import { takeLatest } from "redux-saga/effects";
+import { select, takeLatest } from "redux-saga/effects";
+import { types } from "../../../@types/huelite";
 import api from "../../../services/api";
 import { deviceSocketHBResponse, getWebSocket } from "../../../services/backGroundServices/webSocket";
 import { getCurrentTimeStamp } from "../../../util/DateTimeUtil";
 import { logFun } from "../../../util/logger";
 import { reduxStore } from "../../index";
+import { _appState } from "../../reducers";
 import { _reduxConstant } from "../../ReduxConstant";
 import { bgServiceSagaAction_porps } from "../actions/bgServiceActions";
 
@@ -26,18 +28,19 @@ function* bgServiceWorker({
     props: { _log },
 }: devicesWorker_Props) {
     const log = logFun("BG SERVICE SAGA", _log)
-    console.log("bgService : : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    yield reduxStore.store.getState().deviceReducer.deviceList.forEach(async device => {
+    //console.log("bgService : : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    let _deviceList: types.HUE_DEVICE_t[] = yield select((state: _appState) => state.deviceReducer.deviceList)
+    _deviceList.forEach(async device => {
         let socketContainer = reduxStore.store.getState().HBReducer.HBSocketList.filter(item => item.Mac == device.Mac)
-        console.log("device : " + device.Mac + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+        //console.log("device : " + device.Mac + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         if (socketContainer[0]?.socket) {
-            log("device : " + device.Mac + " has socket")
+            //log("device : " + device.Mac + " has socket")
         } else {
             let socket = null
             let res = await api.v1.deviceAPI.authAPI(device.IP)
             //log("res for device : " + device.Mac + " >> " + JSON.stringify(res))
             if (res.RES?.Mac == device.Mac) {
-                log(device.ts + "getting socket for device : " + device.Mac)
+                //log(device.ts + "getting socket for device : " + device.Mac)
                 try {
                     socket = await getWebSocket({
                         Mac: device.Mac,

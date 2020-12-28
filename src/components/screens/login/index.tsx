@@ -63,9 +63,9 @@ export const GetStarted = ({ navigation, route: { params } }: Props) => {
           onPress={() => {
             processLoginData({
               user: {
-                id: "",
+                id: undefined,/* this is to be ignored as temp user cannot have ID and 'processLoginData()' requires a 'HUE_User_t' serverside representation of HUElite user*/
                 userName: "tempUser",
-                email: "temp/" + generateRandomUserId(),
+                email: ""
               }, navigation
             }, _log)
           }}

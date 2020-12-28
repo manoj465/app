@@ -29,43 +29,9 @@ export const ColorPickerSection = ({
   log
 }: Props) => {
 
-  log?.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" + log.printDeviceList([device]))
   return (
     <View style={styles.container}>
       {/* Sec: timer Button */}
-      <RectButton
-        activeOpacity={0}
-        style={{
-          position: "absolute",
-          top: "4%",
-          right: "6%",
-        }}
-        onPress={() => {
-          navigation.replace("DeviceModesScreen", { device })
-        }}
-      >
-        <Image source={require("../../../../../../assets/icons/preset.png")}
-          style={{
-            height: 50,
-            width: 50
-          }} />
-      </RectButton>
-      {/* Sec: setting button */}
-      <RectButton
-        activeOpacity={0}
-        style={{
-          position: "absolute",
-          top: "4%",
-          left: "6%",
-        }}
-      >
-        <Image source={require("../../../../../../assets/icons/setting.png")}
-          style={{
-            height: 50,
-            width: 50
-          }} />
-      </RectButton>
-      {/* Sec: colorPicker */}
       <View
         style={{
           flex: 1,

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { GroupHeader } from "./GroupHeader";
-import { DeviceCard, deviceCardHeight } from "./deviceCard";
+import { DeviceCard, deviceCardHeight } from "../deviceCard";
 import Animated, { interpolate, log } from "react-native-reanimated";
 import { useValue, mix } from "react-native-redash";
 import {

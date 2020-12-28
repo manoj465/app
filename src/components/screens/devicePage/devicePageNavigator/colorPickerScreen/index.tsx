@@ -1,19 +1,18 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { RectButton, State } from "react-native-gesture-handler";
+import { RectButton, ScrollView, State } from "react-native-gesture-handler";
 import Animated, { add, max, min } from "react-native-reanimated";
 import { hsv2color, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 import { devicePageStackParamList } from "../..";
-import { reduxStore } from "../../../../../redux";
 import { deviceListOperation } from "../../../../../util/dataManipulator";
 import { logger } from "../../../../../util/logger";
-import { ColorPickerSection } from "./colorPickerSection";
+import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
+import STYLES from "../../../../common/styles";
 import { DevicePageHeader } from "../../DevicePageHeader";
+import { ColorPickerSection } from "./colorPickerSection";
 
 export enum viewTypeEnum {
   DEVICE_COLOR_PICKER_SCREEN = 0,
@@ -55,12 +54,36 @@ export const DeviceColorPickerScreen = ({
   );
   const log = new logger("DEVICE COLOR PICKER")
 
+  const colorSnippets = [
+    { h: 0, s: 100, v: 100, hex: "#ff0000" },
+    { h: 60, s: 100, v: 100, hex: "#ffff00" },
+    { h: 119, s: 100, v: 100, hex: "#00ff00" },
+    { h: 180, s: 100, v: 100, hex: "#00ffff" },
+    { h: 240, s: 100, v: 100, hex: "#0000ff" },
+    { h: 299, s: 100, v: 100, hex: "#ff00ff" },
+  ]
+  interface updateColorProps {
+    h: number,
+    s: number
+  }
+  const updateColor = ({ h, s }: updateColorProps) => {
+    deviceListOperation({
+      props: {
+        cmd: "COLOR_UPDATE",
+        deviceMac: [device.Mac],
+        hsv: { h, s },
+        gestureState: State.END,
+        log
+      },
+    })
+  }
+
   return (
     <SafeAreaView style={[styles.container]}>
       {view == viewTypeEnum.DEVICE_COLOR_PICKER_SCREEN && (
         <View style={[styles.section2, { flex: 1 }]}>
-          {/* Sec1:: Device Header */}
-          <View style={styles.header_container}>
+          <View /* Sec1: devicePage header */
+            style={styles.header_container}>
             <Animated.View
               style={[styles.header_AnimatedView, { backgroundColor: headBackgroundColor }]}
             >
@@ -71,69 +94,105 @@ export const DeviceColorPickerScreen = ({
               />
             </Animated.View>
           </View>
-          {/* Sec5:: Color Picker */}
-          <ColorPickerSection
-            hue={hue}
-            saturation={saturation}
-            value={value}
-            backgroundColor={backgroundColor}
-            device={device}
-            navigation={navigation}
-            log={log}
-          />
+          <ScrollView style={{/* Sec1: color picker container scrollview */
+            //backgroundColor: "green",
+            height: "100%"
+          }}
+            showsVerticalScrollIndicator={false}
+          >
+            <View style={{ minHeight: "10%" }}>{/* Sec2: Navigator */}
+              <RectButton /* Sec3: modes button */
+                activeOpacity={0}
+                style={{
+                  position: "absolute",
+                  top: "4%",
+                  right: "6%",
+                }}
+                onPress={() => {
+                  navigation.replace("DeviceModesScreen", { device })
+                }}
+              >
+                <Image source={require("../../../../../../assets/icons/preset.png")}
+                  style={{
+                    height: 50,
+                    width: 50
+                  }} />
+              </RectButton>
+              <RectButton /* Sec3: setting button */
+                activeOpacity={0}
+                style={{
+                  position: "absolute",
+                  top: "4%",
+                  left: "6%",
+                }}
+                onPress={() => {
+                  navigation.replace("DeviceSettingScreen", { device })
+                }}
+              >
+                <Image source={require("../../../../../../assets/icons/setting.png")}
+                  style={{
+                    height: 50,
+                    width: 50
+                  }} />
+              </RectButton>
+              {/* Sec: colorPicker */}
+
+            </View>
+            <View style={{/*  Sec2: Color Picker */
+              flex: 1,
+              // backgroundColor: "red",
+            }}>
+              <ColorPickerSection
+                hue={hue}
+                saturation={saturation}
+                value={value}
+                backgroundColor={backgroundColor}
+                device={device}
+                navigation={navigation}
+                log={log}
+              />
+            </View>
+            <View style={{/* Sec2: divider => colorPicker - colorSnippets */
+            }}>
+              <Text style={[STYLES.H1, { textAlign: "center", marginTop: "3%" }]}>More Colors</Text>
+              <Text style={[STYLES.H7, STYLES.textFeather, { textAlign: "center", marginTop: 5, marginBottom: "5%", paddingHorizontal: "8%" }]}>
+                Color is the power which directly influences human soul. colors are the smile of nature
+                with <Text style={[STYLES.H7, { color: "#555" }]}>{" "}HUElite{" "}</Text> Express your self in colors, as colors is the most beautiful language
+                </Text>
+            </View>
+            <View style={{ /* Sec2: Color snippets container  */
+              flex: 1,
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              //backgroundColor: "blue",
+              marginBottom: "50%"
+            }}>
+              {colorSnippets.map((color, index) => {
+                return (
+                  <NewRectButtonWithChildren
+                    key={index}
+                    buttonStyle={{
+                      backgroundColor: color.hex,
+                      margin: 10,
+                      borderRadius: 30,
+                      height: 60,
+                      width: 60
+                    }}
+                    onPress={() => {
+                      console.log("Color is :: " + color.hex)
+                      updateColor({ h: color.h, s: color.s })
+                    }}>
+
+                  </NewRectButtonWithChildren>
+                )
+              })}
+            </View>
+          </ScrollView>
         </View>
-      )}
-      {/* Sec3: Navigator Menu */}
-      <View style={styles.navigatorMenu}>
-        <RectButton
-          onPress={() => {
-            setView(viewTypeEnum.DEVICE_SETTING_SCREEN);
-          }}
-          style={{
-            width: 70,
-            //backgroundColor: "blue",
-            borderRightWidth: 0.5,
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingVertical: 5,
-          }}
-        >
-          <Ionicons name="ios-settings" size={25} color="white" />
-          <Text style={{ color: "white", fontSize: 12 }}>Setting</Text>
-        </RectButton>
-        <RectButton
-          onPress={() => {
-            setView(viewTypeEnum.DEVICE_COLOR_PICKER_SCREEN);
-          }}
-          style={{
-            width: 70,
-            //backgroundColor: "blue",
-            borderRightWidth: 0.5,
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingVertical: 5,
-          }}
-        >
-          <MaterialIcons name="color-lens" size={25} color="white" />
-          <Text style={{ color: "white", fontSize: 12 }}>Color</Text>
-        </RectButton>
-        <RectButton
-          onPress={() => {
-            setView(viewTypeEnum.DEVICE_MODES_SCREEN);
-          }}
-          style={{
-            width: 70,
-            //backgroundColor: "green"
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingVertical: 5,
-          }}
-        >
-          <MaterialIcons name="dashboard" size={25} color="white" />
-          <Text style={{ color: "white", fontSize: 12 }}>More...</Text>
-        </RectButton>
-      </View>
-    </SafeAreaView>
+      )
+      }
+    </SafeAreaView >
   );
 };
 
@@ -147,7 +206,7 @@ const styles = StyleSheet.create({
   header_container: {
     paddingHorizontal: 10,
     paddingVertical: 10,
-    flex: 0.3,
+    minHeight: 230,
     justifyContent: "center",
     alignItems: "center",
     width: "100%",

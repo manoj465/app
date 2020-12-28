@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
 import { types } from "../../../@types/huelite";
 import { logger } from "../../../util/logger";
-import { BrightnessSlider, onBrValueChange_Props } from "../../common/BrightnessSlider_ver_1";
+import BrightnessSlider from "../../common/BrightnessSlider";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
 
 interface Props {
   navigation: navigation_t;
   device: types.HUE_DEVICE_t;
-  log?:logger
+  log?: logger
 }
 
 export const DevicePageHeader = ({ navigation, device, log }: Props) => {
@@ -58,8 +57,6 @@ export const DevicePageHeader = ({ navigation, device, log }: Props) => {
       </View>
 
       <View style={styles.brightnessSliderContainer}>
-        <Text style={styles.brightnessNumber}>{brVal}%</Text>
-        {/* <View style={{ height: 50, backgroundColor: "red" }}> */}
         <BrightnessSlider
           color={"#eee"}
           initBrValue={device.hsv ? device.hsv.v : 65}

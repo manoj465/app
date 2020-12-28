@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, StyleProp, Text, TextInput, View, ViewStyle } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import Container from "../../common/wrappers/ComponentWrapper";
+import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
 import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import { RectButton } from "react-native-gesture-handler";
 

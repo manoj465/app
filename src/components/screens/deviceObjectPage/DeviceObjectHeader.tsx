@@ -1,10 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  BrightnessSlider,
-  onBrValueChange_Props,
-} from "../../common/BrightnessSlider_ver_1";
+import BrightnessSlider from "../../common/BrightnessSlider";
 import { RectButton } from "react-native-gesture-handler";
 import { ToggleSwitch } from "../../common/ToggleSwitch";
 import Animated from "react-native-reanimated";
@@ -31,7 +28,7 @@ export const DeviceObjectHeader = ({
 }: Props) => {
   const dispatch = useDispatch();
 
-  const onBrValueChange: onBrValueChange_Props = (value, state) => {
+  const onBrValueChange = (value, state) => {
     //setBrVal(value);
     dispatch(
       brightnessUpdateSagaAction({

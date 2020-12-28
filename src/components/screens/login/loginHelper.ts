@@ -7,7 +7,7 @@ import { logFun_t } from "../../../util/logger"
 import * as Facebook from 'expo-facebook';
 import { reduxStore } from "../../../redux"
 import { GetStartedNavigationProp } from "."
-import { convert_hueContainer_backendToLocal } from "../../../@types/huelite/user/helper"
+import { convert_hueContainer_backendToLocal, convert_hueDevice_backendToLocal } from "../../../@types/huelite/user/helper"
 
 const authServiceUrl = encodeURIComponent("/backend/auth/google/"); // we encode this, because it will be send as a query parameter
 //@ts-ignore
@@ -137,13 +137,20 @@ export const signUp: signUp_t = ({ email, password, navigation }, _log) => new P
 })
 
 
+/**
+ * //TODO adjust this function to receive either clientSide or ServerSide Representation of this 'user' Object
+ * //BUG-101 devices from serverSide are not being store in local DB
+ */
 type processLoginData_t = (props: { user: HUE_User_t, navigation: GetStartedNavigationProp }, _log?: logFun_t) => void
 export const processLoginData: processLoginData_t = async ({ user, navigation }, _log) => {
     const log: logFun_t = (s) => { _log && _log("[processLoginData] " + s) }
     log(JSON.stringify(user))
-    await reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: { ...user, containers: [] }, log }))
-    await reduxStore.store.dispatch(reduxStore.actions.deviceList.container.saga({ containers: convert_hueContainer_backendToLocal({ containers: user.containers }), _log: log }))
-    if (user?.containers?.length) {
+    await reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: { ...user, devices: [] }, log }))
+    if (!user.id) {/* In case user choose to skipp login/signup, than user object field 'id' is going to be undefined */
+        navigation.replace("pairing")/* no need to check for device in that case */
+    }
+    await reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({ deviceList: convert_hueDevice_backendToLocal({ devices: user.devices ? user.devices : [] }) }))
+    if (user?.devices?.length && /* //BUG-101 device has to be saved in redux store first before navigating to redux*/false) {
         log('user has devices stored in SERVER navigating to dashboard')
         navigation.replace("dashboard")
     }

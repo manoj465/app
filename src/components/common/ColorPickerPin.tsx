@@ -37,35 +37,14 @@ const ColorPickerPin = ({
 }: Props) => {
   const state = useValue(State.UNDETERMINED);
   let timeStamp = getCurrentTimeStamp();
-  const CENTER = {
-    x: canvasWidth / 2,
-    y: canvasWidth / 2,
-  };
-  const v = polar2Canvas(
-    {
-      theta: (device.hsv?.h ? device.hsv?.h : 0) * (Math.PI / 180),
-      radius: (canvasWidth / 2) * Math.sqrt((device.hsv?.s ? device.hsv?.s : 100) / 100),
-    },
-    CENTER
-  );
-
-  const offset = {
-    x: useValue(0),
-    y: useValue(0),
-  };
-
+  const CENTER = { x: canvasWidth / 2, y: canvasWidth / 2, };
+  const v = polar2Canvas({ theta: (device.hsv?.h ? device.hsv?.h : 0) * (Math.PI / 180), radius: (canvasWidth / 2) * Math.sqrt((device.hsv?.s ? device.hsv?.s : 100) / 100), }, CENTER);
+  const offset = { x: useValue(0), y: useValue(0) };
   const v2 = vec.add(offset, v);
   const { theta, radius } = canvas2Polar(v2, CENTER);
-  const l = {
-    theta: theta,
-    radius: clamp(radius, 0, canvasWidth / 2),
-  };
+  const l = { theta: theta, radius: clamp(radius, 0, canvasWidth / 2) };
   const hue = divide(modulo(l.theta, 2 * Math.PI), 2 * Math.PI);
-  const saturation = cond(
-    eq(l.radius, 0),
-    0,
-    divide(l.radius, canvasWidth / 2)
-  );
+  const saturation = cond(eq(l.radius, 0), 0, divide(l.radius, canvasWidth / 2));
 
   const gestureHandler = event(
     [
@@ -104,9 +83,18 @@ const ColorPickerPin = ({
       set(h, hue),
       set(s, quadraticIn(saturation)),
       call(
-        [h, hue, s, saturation, state, backgroundColor],
-        ([h, hue, s, saturation, state, backgroundColor]) => {
+        [h, s, state],
+        ([h, s, state]) => {
+          /* if (getTimeDiffNowInMs(timeStamp) > 200) {
+            console.log("<<<< Sending Color- >>>>")
+            timeStamp = getCurrentTimeStamp();
+            updateColor(h, s, State.ACTIVE, log)
+          }
+          else {
+            //console.log("<<<< cannot send Bightness- >>>>")
+          } */
           if (state == State.ACTIVE) {
+            console.log("Sending hex >>>>>>>>>>>>>>>>")
             if (getTimeDiffNowInMs(timeStamp) > 200) {
               //console.log("can send")
               timeStamp = getCurrentTimeStamp();
@@ -115,6 +103,7 @@ const ColorPickerPin = ({
               //console.log("cannot send")
             }
           } else if (state == State.END) {
+            console.log("Sending hex >>>>>>>>>>>>>>>>")
             setTimeout(() => {
               timeStamp = getCurrentTimeStamp();
               updateColor(h, s, state, log)
@@ -123,7 +112,7 @@ const ColorPickerPin = ({
         }
       ),
     ],
-    [h, hue, s, saturation, state, backgroundColor, timeStamp]
+    [h, hue, s, state, saturation, timeStamp]
   );
 
   return (

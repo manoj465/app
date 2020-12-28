@@ -3,13 +3,14 @@ import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { navigationProp } from "../..";
-import { types } from "../../../../../@types/huelite/globalTypes";
-import { convertHSVToRgb, _convertRGBToHex } from "../../../../../util/Color";
-import { deviceListOperation } from "../../../../../util/dataManipulator";
-import {
-  BrightnessSlider
-} from "../../../../common/BrightnessSlider_ver_1";
+import { concat } from "react-native-reanimated";
+import { ReText } from "react-native-redash";
+import { navigationProp } from "..";
+import { types } from "../../../../@types/huelite/globalTypes";
+import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color";
+import { deviceListOperation } from "../../../../util/dataManipulator";
+import { logger } from "../../../../util/logger";
+import BrightnessSlider from "../../../common/BrightnessSlider";
 /* import ColorBlending from "gl-react-color-blending"; */
 
 
@@ -18,14 +19,16 @@ export const deviceCardHeight = 150;
 interface props {
   navigation: navigationProp,
   device: types.HUE_DEVICE_t,
-  deviceContainer?: types.HUE_CONTAINER_t,
-
+  log?: logger,
+  setToBeDeletedDevice?: React.Dispatch<React.SetStateAction<string>>
 }
 export const DeviceCard = ({
   navigation,
   device,
-  deviceContainer: group,
+  log,
+  setToBeDeletedDevice
 }: props) => {
+  log = log ? new logger("DEVICE CARD", log) : undefined
   const { showActionSheetWithOptions } = useActionSheet();
   let rgb2, rgb1, hex1, hex2
   if (device.hsv) {
@@ -74,7 +77,7 @@ export const DeviceCard = ({
             width: "100%",
             height: "100%",
           }}
-          source={require("../../../../../../assets/images/background.jpg")}
+          source={require("../../../../../assets/images/background.jpg")}
         />
         {/* /// deviceCard Top section <deviceIcon | deviceName | menuIcon > */}
         <View
@@ -111,15 +114,8 @@ export const DeviceCard = ({
                 async (index) => {
                   switch (index) {
                     case 0:
-                      console.log("REMOVE DEVICE")
-                      const newContainerList = await deviceListOperation({
-                        props: {
-                          cmd: "REMOVE_DEVICE",
-                          Mac: device.Mac
-                        },
-                        //log
-                      })
-                      console.log("DEVICE REMOVED : " + JSON.stringify(newContainerList))
+                      if (setToBeDeletedDevice)
+                        setToBeDeletedDevice(device.Mac)
                       break;
 
                     default:
@@ -146,10 +142,11 @@ export const DeviceCard = ({
         </View>
         {/* ///brightness container <percentageText &  brightnessBar> */}
         <View style={styles.brightnessSliderContainer}>
-          <Text style={styles.brightnessNumber}>{device.hsv ? device.hsv.v : 50}%</Text>
+          {/*  <ReText style={styles.brightnessNumber} text={concat( BR )}/> */}
           <BrightnessSlider
             initBrValue={device.hsv ? device.hsv.v : 50}
             deviceMac={[device.Mac]}
+            log={log}
           />
         </View>
       </LinearGradient>
@@ -184,13 +181,6 @@ const styles = StyleSheet.create({
     position: "relative",
     top: -20,
     //backgroundColor: "green",
-  },
-  brightnessNumber: {
-    color: "#fff",
-    fontSize: 25,
-    fontWeight: "bold",
-    alignSelf: "flex-end",
-    marginBottom: 6,
   },
   deviceName: {
     fontSize: 18,

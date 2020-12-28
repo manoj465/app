@@ -22,7 +22,9 @@ export type devicePageStackParamList = {
   DeviceModesScreen: {
     device: types.HUE_DEVICE_t;
   };
-  DeviceSettingScreen: undefined;
+  DeviceSettingScreen: {
+    device: types.HUE_DEVICE_t
+  };
 };
 
 type devicePageRouteProp = RouteProp<MainRouterStackParamList, "devicePage">;
@@ -65,6 +67,11 @@ const Component = ({
       <Stack.Screen
         name="DeviceModesScreen"
         component={DeviceModesScreen}
+        initialParams={{ device }}
+      />
+      <Stack.Screen
+        name="DeviceSettingScreen"
+        component={DeviceSettingScreen}
         initialParams={{ device }}
       />
     </Stack.Navigator>

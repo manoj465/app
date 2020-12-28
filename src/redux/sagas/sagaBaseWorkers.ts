@@ -24,6 +24,15 @@ interface _getWorker_t<T> {
     callable: (props: T) => any
     shouldTakeLatest?: boolean
 }
+/**
+ * @param type redux action type 
+ * @param callable generator function to be called upon action is dispatched
+ * @optional `shouldTakeLatest` tale latest if true, `defaut false`, take Every in default case
+ * 
+ * @returns 
+ *  - `watcher` yet to be registered saga watcher
+ *  - `actionCaller` action caller for perticular watcher
+ */
 export const _getWorker: <R>(_props: _getWorker_t<R>) => [any, _getBaseAction_t<R>] = <R>(_props: _getWorker_t<R>) => {
     console.log("[GET WORKER]")
 

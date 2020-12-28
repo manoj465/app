@@ -9,30 +9,32 @@
     "slug": "HUElite",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/icon-no-bg.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/icons/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "icon": "./assets/icons/icon-with-bg.png",
+      "supportsTablet": true,
+      "buildNumber": "1.0.0",
+      "bundleIdentifier": "com.sternet.huelite"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icons/icon-no-bg.png",
         "backgroundColor": "#FFFFFF"
       },
+      "versionCode": 1,
       "package": "com.sternet.huelite"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": ".assets/icons/icon-no-bg.png"
     }
   }
 }

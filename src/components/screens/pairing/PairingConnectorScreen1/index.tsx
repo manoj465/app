@@ -163,9 +163,11 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             }}
           >
             To proceed with pairing you must connect your phone to HUElite
-            Device WiFi network. For Connecting to device via wifi, go-to your
+            Device WiFi network. Go-to your
             phone Wi-Fi Settings and connect to Wi-Fi naming{" "}
-            <Text style={{ fontWeight: "bold" }}>HUE_CL01_XX:XX</Text>
+            <Text style={{ fontWeight: "bold" }}>HUE_XXXX_XX:XX</Text>
+            {" "}with password{" "}
+            <Text style={{ fontWeight: "bold" }}>12345678</Text>
           </Text>
         </View>
         {/* ///goBACK button */}

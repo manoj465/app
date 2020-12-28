@@ -1,9 +1,9 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Dimensions, View } from "react-native";
+import { Dimensions, View, Text } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
-import Animated, { add, block, call, cond, eq, event, set, useCode } from "react-native-reanimated";
-import { clamp, useValue } from "react-native-redash";
+import Animated, { add, block, call, cond, divide, eq, event, multiply, set, useCode, concat } from "react-native-reanimated";
+import { clamp, ReText, round, useValue } from "react-native-redash";
 import { deviceListOperation } from "../../util/dataManipulator";
 import { getCurrentTimeStamp, getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 import { logger } from "../../util/logger";
@@ -23,7 +23,7 @@ interface Props {
 }
 
 const { width, height } = Dimensions.get("window");
-export const BrightnessSlider = ({
+export default ({
   initBrValue = 0,
   bgColor = ["#ffffff00", "#ffffff77"],
   deviceMac,
@@ -34,17 +34,18 @@ export const BrightnessSlider = ({
   const pinState = useValue(State.UNDETERMINED);
   const [sliderWidth, setSliderWidth] = useState(0);
   const offset = useValue((initBrValue / 100) * (width * 0.9));
-  const offsetX = clamp(offset, 0, sliderWidth - 35);
+  const offsetX = clamp(offset, 0, sliderWidth - sliderHeight);
+  const BR = round(multiply(divide(offsetX, (sliderWidth - sliderHeight)), 100))
   let timeStamp = getCurrentTimeStamp();
 
   const gestureHandler = event(
     [
       {
         //@ts-ignore
-        nativeEvent: ({ x, state }) =>
+        nativeEvent: ({ x, state: temp1state }) =>
           block([
-            set(pinState, state),
-            cond(eq(pinState, State.ACTIVE), set(offset, add(offset, x))),
+            set(pinState, temp1state),
+            cond(eq(temp1state, State.ACTIVE), set(offset, add(offset, x))),
           ]),
       },
     ],
@@ -64,55 +65,70 @@ export const BrightnessSlider = ({
       },
     })
   }
+
   useCode(
     () => [
-      call([offsetX, pinState], ([offsetX, pinState]) => {
-        if (pinState == State.ACTIVE) {
+      call([BR, pinState], ([BR, pinState]) => {
+        if (getTimeDiffNowInMs(timeStamp) > 200 && pinState == State.ACTIVE) {
+          console.log("<<<< Sending Bightness- >>>>")
+          timeStamp = getCurrentTimeStamp();
+          updateColor(BR, pinState, log)
+        }
+        else {
+          //console.log("<<<< cannot send Bightness- >>>>")
+        }
+        /* if (pinState == State.ACTIVE) {
           if (getTimeDiffNowInMs(timeStamp) > 200) {
             timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round((offsetX / (sliderWidth - 45)) * 100)), pinState, log)
+            updateColor(Math.min(100, Math.round(BR)), pinState, log)
           }
         } else if (pinState == State.END) {
+          console.log("<<<< --Sending Bightness- >>>>")
           setTimeout(() => {
             timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round((offsetX / (sliderWidth - 45)) * 100)), pinState, log)
+            updateColor(Math.min(100, Math.round(BR)), pinState, log)
           }, 200);
-        }
+        } */
       }),
     ],
-    [offsetX, pinState]
+    [BR, pinState]
   );
 
   return (
-    <View style={{ overflow: "visible", height: sliderHeight }}>
+    <View style={{ overflow: "visible" }}>
+      <View style={{
+        display: "flex",
+        flexDirection: "row",
+        alignSelf: "flex-end",
+        marginBottom: 6,
+      }}>
+        <ReText style={{
+          color: "#fff",
+          fontSize: 25,
+          fontWeight: "bold",
+        }} text={concat(BR)} />
+        <Text
+          style={{
+            color: "#fff",
+            fontSize: 25,
+            fontWeight: "bold",
+          }}>%</Text>
+      </View>
       <LinearGradient
         onLayout={(event) => {
           var { width } = event.nativeEvent.layout;
           setSliderWidth(width);
         }}
+        style={{
+          justifyContent: "center",
+          opacity: 1,
+          height: sliderHeight,
+          width: "100%",
+          borderRadius: 15,
+        }}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={[bgColor[0], bgColor[1]]}
-        style={{
-          position: "absolute",
-          justifyContent: "center",
-          opacity: 1,
-          top: 0,
-          left: 0,
-          height: sliderHeight,
-          width: "100%",
-          //backgroundColor: "#ffffff",
-          borderRadius: 15,
-          //opacity: 0.1,
-          /* shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 0.5,
-            },
-            shadowOpacity: 0.22,
-            shadowRadius: 1.22,
-            elevation: 2, */
-        }}
       >
         <PanGestureHandler
           onGestureEvent={gestureHandler}

@@ -9,7 +9,7 @@ interface Props {
     children?: React.ReactNode
 }
 
-const ComponentWrapper = ({ style, children }: Props) => {
+export default ({ style, children }: Props) => {
     return (
         <SafeAreaView style={[{ width: "100%" }, style]}>
             <Animated.ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
@@ -18,5 +18,3 @@ const ComponentWrapper = ({ style, children }: Props) => {
         </SafeAreaView>
     )
 }
-
-export default ComponentWrapper

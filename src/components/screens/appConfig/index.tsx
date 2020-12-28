@@ -3,7 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, Text, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import Container from "../../common/wrappers/ComponentWrapper";
+import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
 import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { RectButton } from "react-native-gesture-handler";
 
@@ -48,7 +48,7 @@ const AppConfigScreen = ({ navigation }: props) => {
                 <MenuItem heading="Contact Us" />
             </View>
             <View style={{ alignItems: "center", paddingVertical: 20 }}>
-                <Image style={{ height: 150, width: 150, opacity: 0.3 }} source={require("../../../../assets/icons/icon.png")} />
+                <Image style={{ height: 150, width: 150, opacity: 0.3 }} source={require("../../../../assets/icons/splash-icon.png")} />
             </View>
         </Container>
     );

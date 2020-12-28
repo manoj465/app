@@ -1,3 +1,11 @@
+/**
+ * @deprecated
+ * @param h 
+ * @param s 
+ * @param v 
+ * 
+ * @returns [R, G, B] ranging 1-255
+ */
 const convertHSVToRgb: (h: number, s: number, v: number) => [number, number, number] = (
   h,
   s,
@@ -73,6 +81,89 @@ const convertHSVToRgb: (h: number, s: number, v: number) => [number, number, num
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
 };
 
+/**
+ * 
+ * @param h 
+ * @param s 
+ * @param v 
+ * 
+ * @returns [R, G, B] ranging 1-100
+ */
+const convertHSVToRgbShortRange: (h: number, s: number, v: number) => [number, number, number] = (
+  h,
+  s,
+  v
+) => {
+  var r, g, b;
+  var i;
+  var f, p, q, t;
+
+  // Make sure our arguments stay in-range
+  h = Math.max(0, Math.min(360, h));
+  s = Math.max(0, Math.min(100, s));
+  v = Math.max(0, Math.min(100, v));
+
+  // We accept saturation and value arguments from 0 to 100 because that's
+  // how Photoshop represents those values. Internally, however, the
+  // saturation and value are calculated from a range of 0 to 1. We make
+  // That conversion here.
+  s /= 100;
+  v /= 100;
+
+  if (s == 0) {
+    // Achromatic (grey)
+    r = g = b = v;
+    return [Math.round(r * 100), Math.round(g * 100), Math.round(b * 100)];
+  }
+
+  h /= 60; // sector 0 to 5
+  i = Math.floor(h);
+  f = h - i; // factorial part of h
+  p = v * (1 - s);
+  q = v * (1 - s * f);
+  t = v * (1 - s * (1 - f));
+
+  switch (i) {
+    case 0:
+      r = v;
+      g = t;
+      b = p;
+      break;
+
+    case 1:
+      r = q;
+      g = v;
+      b = p;
+      break;
+
+    case 2:
+      r = p;
+      g = v;
+      b = t;
+      break;
+
+    case 3:
+      r = p;
+      g = q;
+      b = v;
+      break;
+
+    case 4:
+      r = t;
+      g = p;
+      b = v;
+      break;
+
+    default:
+      // case 5:
+      r = v;
+      g = p;
+      b = q;
+  }
+
+  return [Math.round(r * 100), Math.round(g * 100), Math.round(b * 100)];
+};
+
 /** 
  * @deprecated
  */
@@ -97,11 +188,11 @@ const convertRGBToHex: (hsv: [number, number, number]) => string = (hsv) => {
   var _g = hsv[1].toString(16);
   var _b = hsv[2].toString(16);
 
-  if (_r.length == 1) _r = "0" + hsv[0];
-  if (_g.length == 1) _g = "0" + hsv[1];
-  if (_b.length == 1) _b = "0" + hsv[2];
+  if (_r.length == 1) _r = "0" + _r;
+  if (_g.length == 1) _g = "0" + _g;
+  if (_b.length == 1) _b = "0" + _b;
 
   return "#" + _r + _g + _b;
 };
 
-export { convertHSVToRgb, _convertRGBToHex, convertRGBToHex };
+export { convertHSVToRgb, _convertRGBToHex, convertHSVToRgbShortRange, convertRGBToHex };

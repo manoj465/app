@@ -91,6 +91,7 @@ export const deviceListOperation: containerListOperation_t = async ({ props }) =
             break;
 
         case "COLOR_UPDATE":
+            props.log = props.log ? new logger("D's OP - color update", props.log) : undefined
             colorUpdate(props)
             break;
 
