@@ -31,18 +31,6 @@ timers{
   ${timer_fields}
 }`
 
-const container_fields_compact_devices = `id
-groupName
-groupUUID
-groupAdmin
-activeMode
-conType
-conCategory
-timers
-devices{
-  ${device_fields_compact_timer}
-}`
-
 const user_fields_compact = ` id
 userName
 email
@@ -54,8 +42,8 @@ userName
 email
 fbId
 googleId
-containers{
-  ${container_fields_compact_devices}
+devices{
+  ${device_fields_compact_timer}
 }`
 
 
