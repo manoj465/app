@@ -164,11 +164,7 @@ export const PairingConnectorScreen2 = ({
           log("validation failed")
 
         }
-        //TODO_CUR
         //- [ ] skip login functionality
-        //- [ ] create new container with new device
-        //- [ ] or device to be added to another container
-        //- [ ] unpaired device cannot be added to existing group 
         //await store.dispatch(containersSagaAction({ containers: user.containers ? convert_hueContainer_backendToLocal({ containers: user.containers }) : [], _log: log }))
         break;
 

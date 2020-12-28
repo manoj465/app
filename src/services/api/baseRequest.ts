@@ -52,7 +52,7 @@ export const defaultRequestPost = <R, E extends baseError>({ checkCutomErrors = 
         params: props.params,
     }).then((response) => {
         if (response?.data) {
-            return resolve({ RES: response.data })
+            return resolve(checkCutomErrors({ RES: response.data }))
         }
         return reject({ ERR: { errCode: 1 } })
     }).catch((error) => {

@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Dimensions, Alert, Linking, Platform } from "react-native";
-import { TextInput, RectButton } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
 import { FontAwesome } from '@expo/vector-icons';
-import { facebookLogIn, login, googleLogin } from "./loginHelper";
-import { logFun_t } from "../../../util/logger";
-import { generateRandomUserId } from "../../../util/UUID_utils"
-import { LoginHeader, SignUpHeader } from "./header";
-import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
-import { _appState } from "../../../redux/reducers";
-import { processLoginData } from "./loginHelper"
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
+import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { logFun_t } from "../../../util/logger";
+import { LoginHeader, SignUpHeader } from "./header";
+import { facebookLogIn, googleLogin, processLoginData } from "./loginHelper";
 
 
 const _log: logFun_t = (s) => {
