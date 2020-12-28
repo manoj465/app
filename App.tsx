@@ -92,6 +92,7 @@ export default function App() {
     }
   }, [])
 
+
   if (appLoading) return <AppLoading />;
   return (
     <ApolloProvider client={client}>

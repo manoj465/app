@@ -43,6 +43,7 @@ export const GetStarted = ({ navigation, route: { params } }: Props) => {
           {false && <RectButton
             onPress={() => {
               googleLogin()
+
             }}>
             <View style={{ borderColor: "#fff", borderWidth: 0.5, height: 50, width: 50, borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
               <FontAwesome name="google" size={30} color="#fff" />
