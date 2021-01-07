@@ -1,18 +1,28 @@
-import { HUE_Device_fields_compactUserWithNoDevices } from "../device/gql"
+import { HUE_Device_fields_noUser } from "../device/gql"
+import { HUE_User_fields_no_devices } from "./userGqlFieldsWithNoDevices"
 
 export const HUE_User_fields = `id
 userName
 email
 ts
 devices{
-  ${HUE_Device_fields_compactUserWithNoDevices}
+  ${HUE_Device_fields_noUser}
 }`
 
-export const HUE_User_fields_no_devices = `id
-userName
-email
-ts`
-
+/** 
+ * @param email email id to filter user
+ * 
+ * @description find first user matching email
+ * 
+ * @returns USER` object WithDeviceList if found else empty array
+ */
+export const HUE_User_queryWithEmail_ = (`query(
+$email:String!
+){
+allUsers(where:{email:$email}, first:1){
+  ${HUE_User_fields}
+}
+}`)
 
 /**
  * @param userName 
@@ -23,7 +33,7 @@ ts`
  * 
  * @returns USER` object WithDeviceList if found else empty array
  */
-export const HUE_User_create_mutationString = (`mutation(
+export const HUE_User_createMutation_ = (`mutation(
   $userName:String,
   $email:String!,
   $password:String
@@ -33,21 +43,33 @@ export const HUE_User_create_mutationString = (`mutation(
     email:$email,
     password:$password
   }){
-    ${HUE_User_fields}
+    ${HUE_User_fields_no_devices}
   }
 }`)
 
-/** 
- * @param email email id to filter user
+
+/**
+ * @param email
+ * @param password
  * 
- * @description find first user matching email
- * 
- * @returns USER` object WithDeviceList if found else empty array
+ * @returns `HUE_User_t` with devices
  */
-export const HUE_User_queryString_withEmail = (`query(
-$email:String!
+export const HUE_User_authenticateMutation_ = (`mutation(
+  $email:String!,
+  $password:String!
 ){
-allUsers(where:{email:$email}, first:1){
-  ${HUE_User_fields}
-}
+  authenticateUserWithPassword(email:$email, password:$password){
+    item{
+      ${HUE_User_fields}
+    }
+  }
+}`)
+
+export const HUE_User_updateMutation_ = (`mutation($id:ID!, $password:String, $userName:String){
+  updateUser(id:$id, data:{
+    password:$password,
+    userName:$userName
+  }){
+    ${HUE_User_fields}
+  }
 }`)
