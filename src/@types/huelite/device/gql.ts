@@ -11,9 +11,7 @@ ssid
 hsv
 groupName
 lastState
-timers{
-    id
-}
+timers
 user{
     ${HUE_User_fields_no_devices}
 }`
@@ -29,6 +27,4 @@ ssid
 hsv
 groupName
 lastState
-timers{
-    id
-}`
+timers`
