@@ -1,16 +1,5 @@
-import { HUE_Container_t, HUE_CONTAINER_t, HUE_DEVICE_t, HUE_Device_t } from "../globalTypes"
+import { HUE_DEVICE_t, HUE_Device_t } from "../globalTypes"
 import { logFun_t } from "../../../util/logger"
-
-type convert_hueContainer_backendToLocal_t = (props: { containers: HUE_Container_t[], socket?: any }, _log?: logFun_t) => HUE_CONTAINER_t[]
-export const convert_hueContainer_backendToLocal: convert_hueContainer_backendToLocal_t = ({ containers, socket = undefined }, _log) => {
-    const log: logFun_t = (s) => { _log && _log("[convert_hueContainer_backendToLocal] " + s) }
-    return containers.map((container, c_index) => {
-        return {
-            ...container,
-            devices: convert_hueDevice_backendToLocal({ devices: container.devices, socket }, log)
-        }
-    })
-}
 
 
 
