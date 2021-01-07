@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deviceListReduxAction,
-  deviceListSagaAction,
-} from "../../redux/deviceListReducer/actions/DeviceListAction";
 import Axios from "axios";
 import { getWebSocket } from "./webSocket";
 import {
@@ -22,7 +18,7 @@ import {
   HBDeviceListReduxAction,
   updateMsgReceivedTimestampAction,
 } from "../../redux/actions/HBDeviceListActions";
-import { HBDeviceList_msgSentType } from "../../redux/reducers/HBReducer";
+import { HBDeviceList_msgSentType } from "../../redux/helperSideEffect/reducers/HBReducer";
 
 interface timeStampTable_prop {
   LAST_MSG_REC_TS: number;

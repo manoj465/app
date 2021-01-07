@@ -29,6 +29,7 @@ export default ({ navigation }: Props) => {
                             <MaterialIcons style={{ marginHorizontal: 10 }} name="add-circle-outline" size={26} color="black" />
                         </RectButton>
                         <RectButton onPress={() => {
+                            //navigation.navigate("user")
                             navigation.navigate("user")
                         }}>
                             <FontAwesome style={{ marginHorizontal: 10 }} name="user-o" size={24} color="black" />
@@ -72,7 +73,7 @@ const QuickActionBlock = ({ Heading, subHeading, primaryColor = "#48C9B0", Child
     return (
         <NewRectButtonWithChildren
             onPress={onPress}
-            buttonStyle={{
+            style={{
                 width: 140,
                 height: 160,
                 overflow: "hidden",

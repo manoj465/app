@@ -1,21 +1,17 @@
-import {
-  createStackNavigator,
-  StackNavigationProp
-} from "@react-navigation/stack";
+import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { types } from "../@types/huelite";
-import { HUE_CONTAINER_t } from "../@types/huelite/container";
+import types from "../@types/huelite";
 import AppConfigScreen from "../components/screens/appConfig";
 import { Dashboard } from "../components/screens/dashboard";
 import DevicePage from "../components/screens/devicePage";
-import { GetStarted } from "../components/screens/login";
 import { WelcomeScreen } from "../components/screens/onboarding/WelcomeScreen";
 import { pairingRouter } from "../components/screens/pairing";
 import UserProfileScreen from "../components/screens/userProfile";
+import { GetStarted } from "../components/screens/userProfile/login";
 import { deviceContainerType } from "../util/dummyData/DummyData";
 
 export type MainRouterStackParamList = {
-  getStarted: undefined;
+  //login_signup: undefined;
   onboarding: undefined;
   pairing: undefined;
   //DashboardRouter: undefined;
@@ -43,7 +39,7 @@ const MainRouter = (props: any) => {
         },
       }}
     >
-      <Stack.Screen name="getStarted" component={GetStarted} />
+      {/* <Stack.Screen name="login_signup" component={GetStarted} /> */}
       <Stack.Screen name="onboarding" component={WelcomeScreen} />
       <Stack.Screen name="pairing" component={pairingRouter} />
       <Stack.Screen name="dashboard" component={Dashboard} />

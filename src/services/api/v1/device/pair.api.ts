@@ -1,33 +1,67 @@
-import { api_v1_errCode, baseError } from "../../baseErrors"
-import { baseResponse_t, defaultRequestPost } from "../../baseRequest"
+import { logger } from "../../../../util/logger"
+import { axiosBaseErrors_e, baseError } from "../../baseErrors"
+import { defaultRequest } from "../../baseRequest"
 
-
-
-
-interface t_res {
-    MAC: string,
+export enum pairApiErrors_e {
+    PAIR_API_UNHANDLED = "PAIR_API_UNHANDLED"
 }
 
-interface t_err extends baseError {
-    data?: "ERR-052" | "ERR-043"
+
+export interface pairApiErrors_i {
+    testError?: any
 }
 
-const checkExtendedErrors = (s: baseResponse_t<t_res, t_err>) => {
-    if (s.ERR?.data == "ERR-052") {
-        s.ERR.errCode = api_v1_errCode.MISSING_PARAM
+interface pairApiRes_i {
+    testData?: any
+}
+
+export interface pairApiReturnType {
+    RES?: pairApiRes_i
+    ERR?: baseError<pairApiErrors_i, pairApiErrors_e | axiosBaseErrors_e>
+}
+
+/**
+ * @description
+ */
+interface pairApiProps_i {
+    IP: string
+    ssid: string
+    pass: string
+    log?: logger
+}
+type fun_t = (props: pairApiProps_i) => Promise<pairApiReturnType>
+
+export const v1: fun_t =
+    async ({
+        IP,
+        ssid,
+        pass,
+        log,
+        ...props
+    }: pairApiProps_i) => {
+        const _params = new URLSearchParams()
+        _params.append("config", "wifi_connect")
+        _params.append("ssid", ssid)
+        _params.append("pass", pass)
+        log?.print("params " + _params)
+        var queryResponse = await defaultRequest<pairApiRes_i, pairApiErrors_i, pairApiReturnType>({
+            method: "post",
+            address: 'http://' + IP,
+            path: "/config",
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            params: _params,
+            resolveData: ({ RES, ERR }) => {
+                if (ERR) {
+                    log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
+                }
+                if (RES) {
+                    log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                }
+                return { ERR: { errCode: pairApiErrors_e.PAIR_API_UNHANDLED } }
+            },
+            log: log ? new logger("base request", log) : undefined
+        }).then(res => res).catch(err => err)
+        return queryResponse
     }
-    else if (s.ERR?.data == "ERR-043") {
-        s.ERR.errCode = api_v1_errCode.PAIR_RESPONSE_WIFI_BUSY
-    }
-    return s
-}
 
 
-const fun: (ssid: string, pass: string, address?: string) => Promise<baseResponse_t<t_res, t_err>> = async (ssid, pass, address: string = "192.168.4.1") => {
-    var res = await defaultRequestPost<t_res, t_err>({ checkCutomErrors: checkExtendedErrors, address: address, path: "/config", urlParams: `config=wifi_connect&ssid=${ssid}&pass=${pass}` }).then(res => res).catch(err => err)
-    //console.log(authAPIres)
-    return res
-}
-
-
-export default fun

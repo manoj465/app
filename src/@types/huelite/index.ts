@@ -1,1 +1,3 @@
-export * as types from "./globalTypes"
+import * as types from "./globalTypes"
+
+export default types

@@ -1,24 +1,57 @@
-import { baseError } from "../../baseErrors"
-import { baseResponse_t, defaultRequestGet } from "../../baseRequest"
+import { logger } from "../../../../util/logger"
+import { axiosBaseErrors_e, baseError } from "../../baseErrors"
+import { defaultRequest } from "../../baseRequest"
+
+export enum authApiErrors_e {
+    AUTH_API_UNHANDLED = "AUTH_API_UNHANDLED"
+}
 
 
-interface t_res {
-    Mac: string,
+export interface authApiErrors_i {
+    testError?: any
+}
+
+interface authApiRes_i {
+    Mac: string
     Hostname: string
 }
 
-type t_ress = (string)
-
-interface t_err extends baseError {
-    testErr: number
+export interface authApiReturnType {
+    RES?: authApiRes_i
+    ERR?: baseError<authApiErrors_i, authApiErrors_e | axiosBaseErrors_e>
 }
 
-
-const fun: (address?: string) => Promise<baseResponse_t<t_res, t_err>> = async (address: string = "192.168.4.1") => {
-    const authAPIres = await defaultRequestGet<t_res, t_err>({ address: address, path: "/auth" }).then(res => res).catch(err => err)
-    //console.log("AUTH API " + JSON.stringify(authAPIres))
-    return authAPIres
+/**
+ * @description
+ */
+interface authApiProps_i {
+    IP: string
+    log?: logger
 }
+type fun_t = (props: authApiProps_i) => Promise<authApiReturnType>
 
+export const v1: fun_t =
+    async ({
+        IP,
+        log,
+        ...props
+    }: authApiProps_i) => {
+        var queryResponse = await defaultRequest<authApiRes_i, authApiErrors_i, authApiReturnType>({
+            method: "get",
+            address: 'http://' + IP,
+            path: "/auth",
+            resolveData: ({ RES, ERR }) => {
+                if (ERR) {
+                    log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
+                }
+                if (RES?.Mac && RES.Hostname) {
+                    log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                    return { RES }
+                }
+                return { ERR: { errCode: authApiErrors_e.AUTH_API_UNHANDLED } }
+            },
+            log: log ? new logger("base request", log) : undefined
+        }).then(res => res).catch(err => err)
+        return queryResponse
+    }
 
-export default fun

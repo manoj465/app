@@ -1,6 +1,8 @@
-import loginAPI from "./login.api"
+import * as loginAPI from "./login.api"
+import * as signupAPI from "./signup.api"
+import * as userUpdateAPI from "./userUpdate.api"
 
 
-export default { loginAPI, }
+export { loginAPI, signupAPI, userUpdateAPI }
 
 

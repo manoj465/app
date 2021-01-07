@@ -6,6 +6,10 @@ import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
 import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { RectButton } from "react-native-gesture-handler";
+import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
+import { reduxStore } from "../../../redux";
+import { appOperator } from "../../../util/app.operator";
+import { logger } from "../../../util/logger";
 
 type navigationProp = StackNavigationProp<
     MainRouterStackParamList,
@@ -19,6 +23,7 @@ interface props {
 
 }
 const AppConfigScreen = ({ navigation }: props) => {
+    const log = new logger("APP SETTING")
 
 
     return (
@@ -39,7 +44,14 @@ const AppConfigScreen = ({ navigation }: props) => {
                 <MenuHeading heading="User Profile" Icon={() => <FontAwesome style={{ paddingRight: 10 }} name="user-o" size={25} color="#555" />} />
                 <MenuItem heading="User Profile" />
                 <MenuItem heading="Change Password" />
-                <MenuItem heading="Logout" />
+                <MenuItem heading="Logout" onPress={() => {
+                    appOperator.user({
+                        cmd: "LOGOUT", onLogout: () => {
+                            log?.print("logging out now")
+                            navigation.replace("user")
+                        }
+                    })
+                }} />
                 <MenuHeading heading="Notification" Icon={() => <MaterialIcons style={{ paddingRight: 10 }} name="notifications-none" size={25} color="#555" />} />
                 <MenuItem heading="App Notifications" Icon={() => <FontAwesome name="toggle-off" size={25} color="#555" />} />
                 <MenuItem heading="Device Notifications" Icon={() => <FontAwesome name="toggle-off" size={25} color="#555" />} />
@@ -72,12 +84,19 @@ const MenuHeading = ({ Icon, heading }: MenuHeadingProps) => {
 interface MenuItemProps {
     Icon?: any
     heading: string
+    onPress?: () => void
 }
-const MenuItem = ({ Icon = () => <Ionicons name="ios-arrow-forward" size={25} color="#777" />, heading }: MenuItemProps) => {
+const MenuItem = ({
+    Icon = () => <Ionicons name="ios-arrow-forward" size={25} color="#777" />,
+    heading,
+    onPress = () => { }
+}: MenuItemProps) => {
     return (
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 13 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", height: 50 }}>
             <Text style={{ fontSize: 15, color: "#777", fontWeight: "bold" }}>{heading}</Text>
-            <Icon />
+            <NewRectButtonWithChildren onPress={onPress} style={{ shadowOpacity: 0, elevation: 0 }}>
+                <Icon />
+            </NewRectButtonWithChildren>
         </View>
     )
 }

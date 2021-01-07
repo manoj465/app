@@ -8,16 +8,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Text } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
-import { types } from "./src/@types/huelite/globalTypes";
-//import "react-native-gesture-handler";
+//import "react-native-gesture-handler"; // TODO this was recommended to be imported in app.js for proper functioning og gesture handler acroose the application
 import Application from "./src/Application";
 import { reduxStore } from "./src/redux";
-import { appCTXAction } from "./src/redux/actions/AppCTXActions";
 import BGService from "./src/services/backGroundServices";
-import { getData } from "./src/services/db/storage";
-import { logFun } from "./src/util/logger";
+import { getData, storeData } from "./src/services/db/storage";
+import { logger } from "./src/util/logger";
 
-console.disableYellowBox = true;
+//LogBox.ignoreAllLogs(true)
 
 //TODO LogBox.ignoreAllLogs(true);
 
@@ -28,10 +26,10 @@ const client = new ApolloClient({
 });
 
 export default function App() {
-  const log = logFun("MAIN ACTIVITY", undefined, true)
+  const log = new logger("MAIN ACTIVITY")
   const [appLoading, setAppLoading] = useState(true);
   const [appCTX, setappCTX] = useState({});
-  const bgService = useMemo(() => new BGService(6000, log), [])
+  const bgService = useMemo(() => new BGService(6000), [])
   const linking = {
     prefixes: ['https://app.example.com', 'hueliteapp://'],
     config: {
@@ -49,24 +47,25 @@ export default function App() {
     //await storeData("deviceList", HallRGBGroupDummyData);
     //EXP: remove data from storage
     //await storeData("containers", null);//REMOVE
-    //await storeData("appCTX", null);//REMOVE
+    await storeData("appCTX", null);//REMOVE
 
     const deviceList = await getData("deviceList");
     //REMOVElog("deviceList Size is  " + deviceList?.length);
     //let deviceList: types.HUE_DEVICE_t[] = []
     //deviceList = await getData("deviceList");
     if (deviceList) {
-      log("deviceList data ::  " + JSON.stringify(deviceList));
-      await reduxStore.store.dispatch(reduxStore.actions.deviceList.redux({ deviceList }));
-    } else log("NO devices data Found in storage");
+      log.print("deviceList data ::  " + JSON.stringify(deviceList));
+      reduxStore.store.dispatch(reduxStore.actions.deviceList.redux({ deviceList }));
+    } else log.print("NO devices data Found in storage");
 
 
     const _appCTX = await getData("appCTX");
-    console.log("[APPCTX] >>" + JSON.stringify(_appCTX))
+    log.print("[APPCTX] >>" + JSON.stringify(_appCTX))
     if (_appCTX) {
-      log("appCTX is  " + JSON.stringify(_appCTX));
-      await setappCTX(_appCTX)
-      await reduxStore.store.dispatch(appCTXAction({ appCTX: _appCTX }));//TODO this is to be redux action and store only in saga side-effect. no need to store this data as it is from the memory itself 
+      log.print("appCTX is  " + JSON.stringify(_appCTX));
+      setappCTX(_appCTX)
+      reduxStore.store.dispatch(reduxStore.actions.appCTX.appCtxSagaAction({ data: _appCTX, saveToDB: true /*, log */ }));
+      bgService.startInterval()
     }
     setTimeout(async () => {
       await SplashScreen.hideAsync();
@@ -77,9 +76,7 @@ export default function App() {
   useEffect(() => {
     try {
       SplashScreen.preventAutoHideAsync();
-    } catch (e) {
-      //console.warn(e);
-    }
+    } catch (e) { }
     loadAppData();
     return () => {
     }

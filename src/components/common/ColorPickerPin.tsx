@@ -5,7 +5,7 @@ import Animated, { add, block, call, cond, divide, eq, event, modulo, pow, set, 
 import { canvas2Polar, clamp, polar2Canvas, translate, useValue, vec } from "react-native-redash";
 //import { Path } from "react-native-svg";
 import { types } from "../../@types/huelite";
-import { deviceListOperation } from "../../util/dataManipulator";
+import { deviceListOperation } from "../../util/app.operator/device.operator";
 import {
   getCurrentTimeStamp,
   getTimeDiffNowInMs

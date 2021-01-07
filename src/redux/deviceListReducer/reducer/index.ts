@@ -1,7 +1,7 @@
 import { _reduxConstant } from "../../ReduxConstant";
-import { logFun_t, logger } from "../../../util/logger";
-import { types } from "../../../@types/huelite";
+import types from "../../../@types/huelite";
 import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
+import { logger } from "../../../util/logger";
 
 
 export interface _reducer_i {
@@ -33,13 +33,13 @@ export const _reducer = (
 /************************************************************************************************************************* 
  * /// container Redux Actions
  *************************************************************************************************************************/
-interface _containersReduxAction_Props {
+interface _deviceListReduxAction_Props {
   deviceList: types.HUE_DEVICE_t[];
   log?: logger
 }
-export const _actions = { redux: _getBaseAction<_containersReduxAction_Props>(_reduxConstant.DEVICELIST_REDUX) }
+export const _actions = { redux: _getBaseAction<_deviceListReduxAction_Props>(_reduxConstant.DEVICELIST_REDUX) }
 
 export type _actionReturnTypes =
-  | __baseAction_Props<_containersReduxAction_Props> & {
+  | __baseAction_Props<_deviceListReduxAction_Props> & {
     type: _reduxConstant.DEVICELIST_REDUX
   }

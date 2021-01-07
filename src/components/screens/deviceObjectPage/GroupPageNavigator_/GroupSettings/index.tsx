@@ -9,7 +9,7 @@ import { GroupDeviceSelectorList } from "./GroupDeviceSelectorList";
 import { useDispatch, useSelector } from "react-redux";
 import { groupPropsModification_saga_action } from "../../../../../redux/actions/groupActions/groupPropsModification";
 import { dummyGroup } from "../../../../../util/dummyData/DummyData";
-import { _appState } from "../../../../../redux/reducers";
+import { _appState } from "../../../../../redux/rootReducer";
 
 type groupSettingNavigationProp = StackNavigationProp<
   GroupPageStackParamList,

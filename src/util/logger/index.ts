@@ -1,6 +1,7 @@
-import { types } from "../../@types/huelite";
+import types from "../../@types/huelite";
 import { getSafeDeviceList } from "../deviceListUtil";
 
+/** @deprecated */
 export type logFun_t = (s: string) => void;
 
 export enum printType {
@@ -13,9 +14,15 @@ export enum printType {
 
 export class logger {
     owner: string
+    printAll = false
     printable = [
-        "DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
-        "DASHBOARD",/* DAHSBOARD SCREEN */
+        //"MAIN ACTIVITY", /* App.ts */
+        //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
+        //"DASHBOARD",/* DAHSBOARD SCREEN */
+        //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
+        //"TEST FUNCTION", /* testfunction prints */
+        "USER PROFILE",
+        //"APP SETTING"
     ]
     /**
      * 
@@ -43,9 +50,9 @@ export class logger {
     print = (s: string, type?: printType) => {
         if (this.canPrint())
             console.log(this.owner + " >> " + s)
-        else {
+        /* else {
             console.log("connaot print")
-        }
+        } */
     }
 
     printDeviceList = (deviceList?: types.HUE_DEVICE_t[],) => {
@@ -55,6 +62,8 @@ export class logger {
     }
 
     canPrint = () => {
+        if (this.printAll)
+            return true
         let cprint = false
         this.printable.forEach(item => {
             if (this.owner.includes(item.toUpperCase()))

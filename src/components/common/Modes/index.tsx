@@ -1,13 +1,9 @@
 import React from "react";
-import { View, FlatList, Text, Image } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
+import { FlatList, Image, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-import { groupModes_saga_action } from "../../../redux/actions/groupActions/groupModeActions";
-import { deviceContainerType } from "../../../util/dummyData/DummyData";
-import { _appState } from "../../../redux/reducers";
-import { types } from "../../../@types/huelite";
+import types from "../../../@types/huelite";
+import { _appState } from "../../../redux/rootReducer";
 
 const modes = [
   {

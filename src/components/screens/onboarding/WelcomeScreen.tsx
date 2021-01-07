@@ -11,7 +11,7 @@ import { reduxStore } from "../../../redux";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter"
-import { _appState } from "../../../redux/reducers";
+import { _appState } from "../../../redux/rootReducer";
 
 const { width, height } = Dimensions.get("window");
 const BORDER_RADIUS = 75;
@@ -130,7 +130,7 @@ export const WelcomeScreen = ({ navigation }: props_t) => {
               key={index}
               onPress={async () => {
                 if (Platform.OS == "web") {
-                  navigation.replace("getStarted");
+                  navigation.replace("user");
                 } else
                   if (scroll?.current && slides.length - 1 != index) {
                     try {
@@ -139,7 +139,7 @@ export const WelcomeScreen = ({ navigation }: props_t) => {
                       console.log("index is = " + index)
                     } catch (error) { }
                   } else if (slides.length - 1 == index) {
-                    navigation.replace("getStarted");
+                    navigation.replace("user");
                   }
               }}
               /*  onPress={() => {

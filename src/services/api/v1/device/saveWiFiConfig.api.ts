@@ -1,28 +1,63 @@
-import { api_v1_errCode, baseError } from "../../baseErrors"
-import { baseResponse_t, defaultRequestPost } from "../../baseRequest"
+import { logger } from "../../../../util/logger"
+import { axiosBaseErrors_e, baseError } from "../../baseErrors"
+import { defaultRequest } from "../../baseRequest"
 
-
-
-
-type t_res = ("RES-551")
-
-interface t_err extends baseError {
-    data?: "ERR-048"
+export enum saveWifiConfigApiErrors_e {
+    SAVE_WIFI_CONFIG_API_UNHANDLED = "SAVE_WIFI_CONFIG_API_UNHANDLED"
 }
 
-const checkExtendedErrors = (s: baseResponse_t<t_res, t_err>) => {
-    if (s.ERR?.data == "ERR-048") {
-        s.ERR.errCode = api_v1_errCode.SAVE_WIFI_CONFIG_API_RESPONSE_COULD_NOT_SAVE
+
+export interface saveWifiConfigApiErrors_i {
+    testError?: any
+}
+
+interface saveWifiConfigApiRes_i {
+    testData?: any
+}
+
+export interface saveWifiConfigApiReturnType {
+    RES?: saveWifiConfigApiRes_i
+    ERR?: baseError<saveWifiConfigApiErrors_i, saveWifiConfigApiErrors_e | axiosBaseErrors_e>
+}
+
+/**
+ * @description
+ */
+interface saveWifiConfigApiProps_i {
+    IP: string
+    log?: logger
+}
+type fun_t =
+    (props: saveWifiConfigApiProps_i)
+        => Promise<saveWifiConfigApiReturnType>
+
+export const v1: fun_t =
+    async ({
+        IP,
+        log,
+        ...props
+    }: saveWifiConfigApiProps_i) => {
+        const _params = new URLSearchParams()
+        _params.append("config", "save_wifi_cnf")
+        log?.print("params " + _params)
+        var queryResponse = await defaultRequest<saveWifiConfigApiRes_i, saveWifiConfigApiErrors_i, saveWifiConfigApiReturnType>({
+            method: "post",
+            address: 'http://' + IP,
+            path: "/config",
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            params: _params,
+            resolveData: ({ RES, ERR }) => {
+                if (ERR) {
+                    log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
+                }
+                if (RES) {
+                    log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                }
+                return { ERR: { errCode: saveWifiConfigApiErrors_e.SAVE_WIFI_CONFIG_API_UNHANDLED } }
+            },
+            log: log ? new logger("base request", log) : undefined
+        }).then(res => res).catch(err => err)
+        return queryResponse
     }
-    return s
-}
 
 
-const fun: ( address?: string) => Promise<baseResponse_t<t_res, t_err>> = async (address: string = "192.168.4.1") => {
-    var res = await defaultRequestPost<t_res, t_err>({ checkCutomErrors: checkExtendedErrors, address: address, path: "/config", urlParams: "config=save_wifi_cnf" }).then(res => res).catch(err => err)
-    //console.log(res)
-    return res
-}
-
-
-export default fun

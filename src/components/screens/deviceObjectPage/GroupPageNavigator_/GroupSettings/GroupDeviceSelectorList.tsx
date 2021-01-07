@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { FlatList, RectButton } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { newDeviceSagaAction } from "../../../../../redux/actions/pairingActions";
-import { _appState } from "../../../../../redux/reducers";
+import { _appState } from "../../../../../redux/rootReducer";
 import {
   deviceContainerType,
   GROUP_TYPES,

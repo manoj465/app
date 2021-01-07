@@ -1,27 +1,75 @@
-import { baseError } from "../../baseErrors"
-import { baseResponse_t, defaultRequestPost } from "../../baseRequest"
+import { URLSearchParams } from "url"
+import { logger } from "../../../../util/logger"
+import { axiosBaseErrors_e, baseError } from "../../baseErrors"
+import { defaultRequest } from "../../baseRequest"
 
-
-export interface scan_result_i {
-    ssid: string
-    bssid: string
-}
-
-interface t_res {
-    status: number
-    networks?: scan_result_i[]
-}
-
-interface t_err extends baseError {
-    testErr: number
+export enum ScanApiErrors_e {
+    SCAN_API_UNHANDLED = "ScanAPI_UNHANDLED"
 }
 
 
-const fun: (address?: string) => Promise<baseResponse_t<t_res, t_err>> = async (address: string = "192.168.4.1") => {
-    var res = await defaultRequestPost<t_res, t_err>({ address: address, path: "/config", urlParams: "config=wifi_scan" }).then(res => res).catch(err => err)
-    console.log("SCAN API >> " + JSON.stringify(res))
-    return res
+export interface ScanApiErrors_i {
+    testError?: any
 }
 
+interface ScanApiRes_i {
+    testData?: any
+}
 
-export default fun
+export interface ScanApiReturnType {
+    RES?: ScanApiRes_i
+    ERR?: baseError<ScanApiErrors_i, ScanApiErrors_e | axiosBaseErrors_e>
+}
+
+/**
+ * @description
+ */
+interface ScanApiProps_i {
+    IP: string
+    log?: logger
+    /** resolve  */
+}
+type fun_t = (props: ScanApiProps_i) => Promise<ScanApiReturnType>
+
+export const v1: fun_t =
+    async ({
+        IP,
+        log,
+        ...props
+    }: ScanApiProps_i) => {
+        const _params = new URLSearchParams()
+        _params.append("config", "wifi_scan")
+        log?.print("params " + _params)
+        var queryResponse = await defaultRequest<ScanApiRes_i, ScanApiErrors_i, ScanApiReturnType>({
+            method: "post",
+            address: 'http://' + IP,
+            path: "/config",
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            body: _params,
+            resolveData: ({ RES, ERR }) => {
+                if (ERR) {
+                    log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
+                }
+                if (RES) {
+                    log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                }
+                return { ERR: { errCode: ScanApiErrors_e.SCAN_API_UNHANDLED } }
+            },
+            log: log ? new logger("base request", log) : undefined
+        }).then(res => res).catch(err => err)
+        return queryResponse
+    }
+
+
+/* (
+    async () => {
+        const log = new logger("test function")
+        log.print("test function for device api")
+        const res = await fun({
+            IP: "192.168.1.72",
+            log: new logger("scan api", log)
+        })
+        log.print("response --> " + JSON.stringify(res, null, 2))
+    }
+)() */
+

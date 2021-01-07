@@ -1,13 +1,5 @@
-import { _reduxConstant } from "../ReduxConstant";
-import { storeData } from "../../services/db/storage";
-import { HBDeviceListReturnTypes } from "../actions/HBDeviceListActions";
-import { timerType } from "../../util/dummyData/timerTypes";
-import { getCurrentTimeStamp } from "../../util/DateTimeUtil";
-import { act } from "react-test-renderer";
-import { types } from "../../@types/huelite";
-import { logger } from "../../util/logger";
-import { _getBaseAction, __baseAction_Props } from "../sagas/sagaBaseWorkers";
-import device from "../../services/api/v1/device";
+import { _reduxConstant } from "../../ReduxConstant";
+import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
 
 type HBDeviceList_msgSentType = {
   Mac: string;
@@ -42,14 +34,14 @@ export const HBReducer = (
   action: _actionReturnTypes
 ) => {
   switch (action.type) {
-    case _reduxConstant.HB_DEVICE_LIST_REDUX:
+    case _reduxConstant.HB_DEVICELIST_REDUX:
       const data = Object.assign({}, state, {
         HBDevieclist_msgSent: action.props.HBDeviceList.HBDevieclist_msgSent,
         HBDevieclist_msgRec: action.props.HBDeviceList.HBDevieclist_msgRec
       });
       return data;
 
-    case _reduxConstant.HB_DEVICELIST_MSG_SENT_TS:
+    case _reduxConstant.HB_DEVICELIST_MSG_SENT:
       let deviceFound = false
       const newList = state.HBDevieclist_msgSent.map((item, index) => {
         if (item.Mac == action.props.Mac) {
@@ -64,7 +56,7 @@ export const HBReducer = (
       return Object.assign({}, state, { HBDevieclist_msgSent: newList })
       break;
 
-    case _reduxConstant.HB_DEVICELIST_MSG_REC_TS:
+    case _reduxConstant.HB_DEVICELIST_MSG_REC:
       let _deviceFound = false
       const _newList = state.HBDevieclist_msgRec.map((item, index) => {
         if (item.Mac == action.props.Mac) {
@@ -106,21 +98,21 @@ interface HBDeviceListReduxAction_Props {
   HBDeviceList: HBReducerReducerState_Prop;
 }
 export const _actions = {
-  HBList: _getBaseAction<HBDeviceListReduxAction_Props>(_reduxConstant.HB_DEVICE_LIST_REDUX),
-  HBMsgSent: _getBaseAction<HBDeviceList_msgSentType>(_reduxConstant.HB_DEVICELIST_MSG_SENT_TS),
-  HBMsgRec: _getBaseAction<HBDeviceList_msgRecType>(_reduxConstant.HB_DEVICELIST_MSG_REC_TS),
+  HBList: _getBaseAction<HBDeviceListReduxAction_Props>(_reduxConstant.HB_DEVICELIST_REDUX),
+  HBMsgSent: _getBaseAction<HBDeviceList_msgSentType>(_reduxConstant.HB_DEVICELIST_MSG_SENT),
+  HBMsgRec: _getBaseAction<HBDeviceList_msgRecType>(_reduxConstant.HB_DEVICELIST_MSG_REC),
   HBSocket: _getBaseAction<HBSocketList_t>(_reduxConstant.HB_SOCKET_LIST)
 }
 
 export type _actionReturnTypes =
   | __baseAction_Props<HBDeviceListReduxAction_Props> & {
-    type: _reduxConstant.HB_DEVICE_LIST_REDUX
+    type: _reduxConstant.HB_DEVICELIST_REDUX
   }
   | __baseAction_Props<HBDeviceList_msgSentType> & {
-    type: _reduxConstant.HB_DEVICELIST_MSG_SENT_TS
+    type: _reduxConstant.HB_DEVICELIST_MSG_SENT
   }
   | __baseAction_Props<HBDeviceList_msgRecType> & {
-    type: _reduxConstant.HB_DEVICELIST_MSG_REC_TS
+    type: _reduxConstant.HB_DEVICELIST_MSG_REC
   }
   | __baseAction_Props<HBSocketList_t> & {
     type: _reduxConstant.HB_SOCKET_LIST

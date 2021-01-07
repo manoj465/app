@@ -8,10 +8,9 @@ export default function* _saga() {
         _deviceSaga_watcher(),
         _deviceListDB_watcher(),
         _colorSaga_watcher(),
-        /*  _brSaga_watcher(), */
     ]);
 }
 
 //export const _actions = { _containerSaga_action, _containerSagaDb_action }
 
-export const _actions = { deviceListSaga: _deviceListSaga_action, deviceSaga: _deviceSaga_action, colorSaga: _colorSaga_action/* , brSaga: _brSaga_action  */ } 
+export const _actions = { deviceListSaga: _deviceListSaga_action, deviceSaga: _deviceSaga_action, colorSaga: _colorSaga_action } 

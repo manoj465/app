@@ -1,8 +1,11 @@
 import { all } from "redux-saga/effects";
-import { watchBGServiceAction } from "./bgServiceSaga";
+import { bgServiceWatcher } from "./bgServiceSaga";
+import { appCtxDBWatcher, appCtxSagaWatcher } from "./appCTXSagas"
 
 export default function* _saga() {
     yield all([
-        watchBGServiceAction()
+        appCtxSagaWatcher(),
+        appCtxDBWatcher(),
+        bgServiceWatcher()
     ]);
 }

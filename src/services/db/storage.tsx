@@ -32,7 +32,7 @@ export const getData = async (key: "appCTX" | "deviceList") => {
 };
 
 export const saveAppCTX = (props: any) => {
-  console.log("appCTX props" + JSON.stringify(props));
+  console.log("appCTX data to save => " + JSON.stringify(props));
   new Promise(() => {
     storeData("appCTX", props);
   });

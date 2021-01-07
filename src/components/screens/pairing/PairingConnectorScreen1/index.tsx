@@ -31,7 +31,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      const res = await api.v1.deviceAPI.authAPI()
+      const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1" })
       console.log("<><><> " + JSON.stringify(res))
       if (res.RES?.Mac) {
         clearInterval(interval)

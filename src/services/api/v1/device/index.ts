@@ -1,7 +1,7 @@
-import authAPI from "./auth.api"
-import scanAPI from "./scan.api"
-import pairAPI from "./pair.api"
-import saveWiFiConfigAPI from "./saveWiFiConfig.api"
+import * as authAPI from "./auth.api"
+import * as scanAPI from "./scan.api"
+import * as pairAPI from "./pair.api"
+import * as saveWiFiConfigAPI from "./saveWiFiConfig.api"
 
 
-export default { authAPI, scanAPI, pairAPI, saveWiFiConfigAPI }
+export { authAPI, scanAPI, pairAPI, saveWiFiConfigAPI }

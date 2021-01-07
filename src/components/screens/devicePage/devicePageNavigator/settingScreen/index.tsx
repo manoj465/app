@@ -8,9 +8,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { types } from "../../../../../@types/huelite";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../common/styles"
-import { deviceListOperation } from "../../../../../util/dataManipulator"
+import { deviceListOperation } from "../../../../../util/app.operator/device.operator"
 import { useSelector } from "react-redux";
-import { _appState } from "../../../../../redux/reducers";
+import { _appState } from "../../../../../redux/rootReducer";
 
 type navigation_t = StackNavigationProp<
   devicePageStackParamList,
@@ -44,7 +44,7 @@ export const DeviceSettingScreen = ({
         setValue={setName}
         value={name}
       />
-      <NewRectButtonWithChildren buttonStyle={{
+      <NewRectButtonWithChildren style={{
         height: 50,
         width: 250,
         borderRadius: 25,

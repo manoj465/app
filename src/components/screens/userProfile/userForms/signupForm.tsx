@@ -2,148 +2,26 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import { GetStartedNavigationProp } from '.';
-import { _appState } from '../../../redux/reducers';
-import { myAxios } from '../../../services/gql_n_rest/axios';
-import { logFun_t } from '../../../util/logger';
-import { login, signUp } from './loginHelper';
-
-
-interface LoginHeader_t { setHeaderView: any, navigation: GetStartedNavigationProp }
-export const LoginHeader = ({ setHeaderView, navigation }: LoginHeader_t) => {
-    const [password, setPassword] = useState("");
-    const [email, setEmail] = useState("");
-
-    const _log: logFun_t = (s) => {
-        console.log("< LOGIN HEADER > " + s);
-    }
-
-
-    return (
-        <View style={styles.headerContainer}>
-            <View style={{ flex: 1, width: "100%", alignItems: "center", justifyContent: "center" }}>
-                <Text
-                    style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        textAlign: "center",
-                        color: "#555",
-                        paddingHorizontal: 20,
-                    }}
-                >
-                    Let's start with Login
-        </Text>
-                <Text
-                    style={{
-                        fontSize: 15,
-                        color: "#555",
-                        textAlign: "center",
-                        paddingVertical: 20,
-                        paddingHorizontal: 30,
-                    }}
-                >
-                    Your HUElite Account is required to setup your devices with Alexa and
-                    Google Assistant
-        </Text>
-                <TextInput
-                    style={{
-                        height: 50,
-                        width: "80%",
-                        maxWidth: 400,
-                        borderColor: "#5555ff7f",
-                        color: "#5555ff",
-                        borderWidth: 1,
-                        borderRadius: 25,
-                        textAlign: "center",
-                        alignSelf: "center",
-                        marginTop: "10%",
-                    }}
-
-                    onChangeText={(text) => {
-                        setEmail(text);
-                    }}
-                    placeholder="email/userID"
-                    value={email}
-                    autoCompleteType="email"
-                />
-
-                <TextInput
-                    style={{
-                        height: 50,
-                        width: "80%",
-                        maxWidth: 400,
-                        borderColor: "#5555ff7f",
-                        color: "#5555ff",
-                        borderWidth: 1,
-                        borderRadius: 25,
-                        textAlign: "center",
-                        alignSelf: "center",
-                        marginTop: "10%",
-                    }}
-                    onChangeText={(text) => {
-                        setPassword(text);
-                    }}
-                    placeholder="password"
-                    value={password}
-                    secureTextEntry={true}
-                />
-
-                <RectButton
-                    style={{
-                        backgroundColor: "#5555ff",
-                        height: 50,
-                        width: "80%",
-                        maxWidth: 400,
-                        borderRadius: 25,
-                        alignSelf: "center",
-                        marginTop: "10%",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        elevation: 5,
-                    }}
-                    onPress={async () => {
-                        login({ email, password, navigation }, _log)
-                    }}
-                >
-                    <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-                        Login
-          </Text>
-                </RectButton>
-            </View>
-            <RectButton
-                style={{ marginTop: "5%" }}
-                onPress={() => {
-                    console.log("Signup");
-                    setHeaderView(2)
-                }}
-            >
-                <Text style={{ textAlign: "center" }}>
-                    Dont have an account
-            <Text style={{ color: "#5555ff", fontWeight: "bold" }}>SignUP</Text>
-                </Text>
-            </RectButton>
-        </View>
-    )
-}
-
+import { _appState } from '../../../../redux/rootReducer';
+import { appOperator } from '../../../../util/app.operator';
+import { logger } from '../../../../util/logger';
+import { navigationProp } from "../index"
 
 /**
  * 
  * //TODO email validation before signing up
  * //TODO retype pass must match before procceding
  */
-interface SignUpHeader_t { setHeaderView: any, navigation: GetStartedNavigationProp }
-export const SignUpHeader = ({ setHeaderView, navigation }: SignUpHeader_t) => {
-    const user = useSelector((state: _appState) =>
-        state.appCTXReducer.user
-    );
+interface SignUpHeader_t {
+    navigation: navigationProp
+    setHeaderView?: React.Dispatch<React.SetStateAction<string>>
+    log?: logger
+}
+export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t) => {
     const [password, setPassword] = useState("");
     const [re_password, setRePassword] = useState("");
     const [email, setEmail] = useState("");
-
-    const _log: logFun_t = (s) => {
-        console.log("< SIGNUP INDEX > " + s);
-    }
+    const [userName, setUserName] = useState("");
 
     return (
         <View style={styles.headerContainer}>
@@ -206,6 +84,28 @@ export const SignUpHeader = ({ setHeaderView, navigation }: SignUpHeader_t) => {
                         alignSelf: "center",
                         marginTop: "10%",
                     }}
+
+                    onChangeText={(text) => {
+                        setUserName(text);
+                    }}
+                    placeholder="Username"
+                    value={userName}
+                //autoCompleteType="username"
+                />
+
+                <TextInput
+                    style={{
+                        height: 50,
+                        width: "80%",
+                        maxWidth: 400,
+                        borderColor: "#5555ff7f",
+                        color: "#5555ff",
+                        borderWidth: 1,
+                        borderRadius: 25,
+                        textAlign: "center",
+                        alignSelf: "center",
+                        marginTop: "10%",
+                    }}
                     onChangeText={(text) => {
                         setPassword(text);
                     }}
@@ -234,7 +134,7 @@ export const SignUpHeader = ({ setHeaderView, navigation }: SignUpHeader_t) => {
                     secureTextEntry={true}
                 />
 
-                <RectButton
+                <RectButton /* Sec3: SignUp button */
                     style={{
                         backgroundColor: "#5555ff",
                         height: 50,
@@ -248,16 +148,20 @@ export const SignUpHeader = ({ setHeaderView, navigation }: SignUpHeader_t) => {
                         elevation: 5,
                     }}
                     onPress={() => {
-                        if (password != re_password) {
-                            Alert.alert("Password Mismatch", "'password' & 're-type password' fields must match in case sensitive manner")
-                        }
-                        else if (false/* //TODO email validation check*/) {
-
-                        } else if (password != password.trim()) {
-                            Alert.alert("Not Allowed whitespace in password field", "whitespace in password could be security leak, try a password without whitespaces")
-                        } else {
-                            signUp({ email, password, navigation }, _log)
-                        }
+                        appOperator.user({
+                            cmd: "SIGNUP",
+                            userName,
+                            password,
+                            re_password,
+                            email,
+                            onSignupFailed: ({ ERR }) => {
+                                Alert.alert(ERR?.errCode ? ERR?.errCode : "UNKNOWN ERROR", ERR?.errMsg ? ERR.errMsg : "This could be due to technical error at backend, you can report the issue our forum. We regret for the inconveniences")
+                            },
+                            onSignupSuccess: () => {
+                                navigation.replace("dashboard")
+                            },
+                            log: log ? new logger("user signup operator", log) : undefined
+                        })
                     }}
                 >
                     <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
@@ -269,7 +173,7 @@ export const SignUpHeader = ({ setHeaderView, navigation }: SignUpHeader_t) => {
                 style={{ marginTop: "5%" }}
                 onPress={() => {
                     console.log("Signup");
-                    setHeaderView(1)
+                    setHeaderView ? setHeaderView("LOGIN") : {}
                 }}
             >
                 <Text style={{ textAlign: "center" }}>

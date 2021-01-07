@@ -1,13 +1,13 @@
 
 import { reduxStore } from "../../redux";
-import { logFun, logFun_t } from "../../util/logger";
-import { bgServiceSagaAction } from "../../redux/helperSideEffect/actions"
+import { logger } from "../../util/logger";
+import { bgServiceSagaAction } from "../../redux/helperSideEffect/saga/bgServiceSaga"
 
 export default class {
     interval = 3000
     id = Math.floor(Math.random() * 10001);
-    log = logFun("BG_SR-ID : " + this.id, undefined, true)
-    timerFun: NodeJS.Timeout | undefined
+    log;
+    timerFun: any/* NodeJS.Timeout | undefined */
 
     runner = () => {
         //this.log("-")
@@ -16,7 +16,7 @@ export default class {
 
     clearInterval = () => {
         if (this.timerFun != undefined) {
-            this.log("clearing BGService Interval")
+            this.log?.print("clearing BGService Interval")
             clearInterval(this.timerFun)
             this.timerFun = undefined
         }
@@ -25,16 +25,17 @@ export default class {
     startInterval = () => {
         if (this.timerFun === undefined) {
             reduxStore.store.dispatch(bgServiceSagaAction({/*  _log: this.log  */ }))
-            this.log("starting BGService Interval")
+            this.log?.print("starting BGService Interval")
             this.timerFun = setInterval(this.runner, this.interval)
+        } else {
+            //clearInterval(this.timerFun)
         }
     }
 
-    constructor(interval?: number, _log?: logFun_t,) {
-        this.log = logFun("BG_SR-ID : " + this.id, _log)
+    constructor(interval?: number, log?: logger) {
+        this.log = log
         if (interval)
             this.interval = interval
-        this.startInterval()
     }
 
 

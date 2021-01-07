@@ -58,7 +58,7 @@ const usePairApiHook: Props = ({ IP: IP_ADD, _onMsg }) => {
     if (pairStatus == pairing_state_e.PAIR_READY || pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD || pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR) {
       setPairStatus(pairing_state_e.PAIR_REQUEST_SENT);
       SetPairingTimeCounter(0);
-      const result = await api.v1.deviceAPI.pairAPI(ssid, pass)
+      const result = await api.deviceAPI.pairAPI.v1({ IP: "192.168.4.1", ssid, pass })
       if (result.RES?.MAC) {
         console.log("Pair Request Data Came" + JSON.stringify(result));
         setPairStatus(pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING);

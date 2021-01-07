@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
 import useFetchData from "../../../../services/webApi/webHooks";
 import { logFun } from "../../../../util/logger";
-import { deviceListOperation, doesDeviceNameAlreadyExists } from "../../../../util/dataManipulator"
+import { deviceListOperation, doesDeviceNameAlreadyExists } from "../../../../util/app.operator/device.operator"
 import { HUE_DEVICE_t } from "../../../../@types/huelite/device";
 
 const deviceNames = [

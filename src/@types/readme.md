@@ -5,10 +5,12 @@ decleration of types, interface, enum and js helperFunctions
 - #### user
 
   - added `ts:number` to backend and client side dataset
+  - user gql's distributed in tqo different files `gql.ts` & `userGqlFieldsWithNoDevices.ts` to avoid import cycle
 
 - #### container
 
   - added `ts:number` to backend and client side dataset
+  - removed container from types
 
 - #### Device
 
@@ -20,10 +22,4 @@ decleration of types, interface, enum and js helperFunctions
 
 - #### gqlsStrings
 
-
-
-
-
-
-
-- [ ] move  gql to specific folders
+- [ ] move gql to specific folders

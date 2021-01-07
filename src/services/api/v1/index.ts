@@ -1,5 +1,6 @@
-import deviceAPI from "./device"
-import cloudAPI from "./cloud"
+import * as deviceAPI from "./device"
+import * as cloudAPI from "./cloud"
+import { baseError } from "../baseErrors"
 
 
-export default { deviceAPI, cloudAPI }
+export { baseError, deviceAPI, cloudAPI } 

@@ -1,32 +1,17 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { TimePicker } from "../TimePicker";
-import { Fontisto } from "@expo/vector-icons";
-import { DispatchProp, useDispatch, useSelector } from "react-redux";
-import { deviceTimerSagaAction, groupTimerSagaAction } from "../../../redux/actions/timerActions";
-import { deviceContainerType } from "../../../util/dummyData/DummyData";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Dialog } from "react-native-simple-dialogs";
-import { _appState } from "../../../redux/reducers";
+import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "redux";
-import {
-  EmptyWeekDayList,
-  timerDaytimeType,
-  timerEventType,
-  timerType,
-  weekDaysType,
-} from "../../../util/dummyData/timerTypes";
 import { timerDialogShowHideReduxAction } from "../../../redux/actions/AppCTXActions";
-import { uuidv4 } from "../../../util/UUID_utils";
+import { deviceTimerSagaAction } from "../../../redux/actions/timerActions";
+import { _appState } from "../../../redux/rootReducer";
 import { appPositiveColor } from "../../../theme/colors/highlightColors";
-import { RectButton } from "react-native-gesture-handler";
-import { empty } from "@apollo/client";
+import { deviceContainerType } from "../../../util/dummyData/DummyData";
+import { EmptyWeekDayList, timerDaytimeType, timerEventType, timerType, weekDaysType } from "../../../util/dummyData/timerTypes";
+import { uuidv4 } from "../../../util/UUID_utils";
+import { TimePicker } from "../TimePicker";
 
 const hrs = [
   { _data: "01", val: 1 },

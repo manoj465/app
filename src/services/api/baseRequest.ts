@@ -1,63 +1,72 @@
 import Axios from "axios";
-import { logFun_t } from "../../util/logger";
-import { baseError, checkBaseErrors } from "./baseErrors";
+import { logger } from "../../util/logger";
+import { axiosBaseErrors_e, baseError, checkForHttpErrors } from "./baseErrors";
 
 
-export interface baseResponse_t<R, E> {
-    RES?: R,
-    ERR?: E
+interface baseResponse_t<res, err> {
+    RES?: res,
+    ERR?: baseError<err, axiosBaseErrors_e>
 }
-
-/** 
- * @param R final response
- * 
- * @param E possible Errors
+/**
+ * Default request t
+ * @template res 
+ * @template err 
  */
-interface defaultRequest_t<R, E> {
+export interface defaultRequest_t<res, err, resolveReturn_t> {
     address: string,
     path: string,
+    method: "get" | "post" | "delete" | "put"
+    body?: any,
     config?: {
         timeout?: number,
     },
-    headers?: {
-    },
-    body?: string,
-    params?: Object,
-    urlParams?: any
-    checkCutomErrors?: (s: any) => baseResponse_t<R, E>
+    headers?: {},
+    params?: any,
+    resolveData?: (s: baseResponse_t<res, err>) => resolveReturn_t
+    log?: logger
 }
-export const defaultRequestGet = <R, E extends baseError>({ checkCutomErrors = (s) => { return s }, ...props }: defaultRequest_t<R, E>) => new Promise<baseResponse_t<R, E>>(async (resolve, reject) => {
-    await Axios.get<R>("http://" + (props.address ? props.address : "192.168.4.1") + props.path, {
-        timeout: props?.config?.timeout ? props.config.timeout : 5000,
+
+/**
+ * ## templates
+ * @template res response type expected from base request
+ * @template err possible error returns from base request if no base errors are found
+ * @template resolveReturn_t return type of the `resolveData` function
+ * 
+ * ## parameters
+ * @param address 
+ * @param path
+ * @param method: "get" | "post" | "delete" | "put"
+ * @param body?: any,
+ * @param config?: { timeout?: number },
+ * @param headers?: {},
+ * @param params?: Object,
+ * @param resolveData?: (s: baseResponse_t<res, err>) => resolveReturn_t `default` `(s) => { return s }`,
+ * @param log?: logger
+ * } 
+ */
+export const defaultRequest = <res, err, resolveReturn_t>({
+    resolveData = (s: any) => { return s },
+    log,
+    ...props
+}: defaultRequest_t<res, err, resolveReturn_t>) => new Promise<baseResponse_t<res, err>>(async (resolve, reject) => {
+    await Axios.request<res>({
+        method: props.method,
+        url: props.address + props.path,
         data: props.body,
+        headers: props.headers,
         params: props.params,
-        ...props.config
-    }).then(function (response) {
-        //console.log("*********" + JSON.stringify(response))
-        if (response?.data)
-            return resolve({ RES: response.data })
-        return reject({ ERR: { errCode: 1 } })
-    }).catch(function (error) {
-        //console.log("*********" + JSON.stringify(error))
-        return reject(checkCutomErrors({ ERR: checkBaseErrors(error) }))
-    });
-})
-
-
-
-export const defaultRequestPost = <R, E extends baseError>({ checkCutomErrors = (s) => { return s }, ...props }: defaultRequest_t<R, E>) => new Promise<baseResponse_t<R, E>>(async (resolve, reject) => {
-    await Axios.post<R>("http://" + (props.address ? props.address : "192.168.4.1") + props.path, props.urlParams, {
         timeout: props?.config?.timeout ? props.config.timeout : 5000,
-        data: props.body,
-        params: props.params,
-    }).then((response) => {
-        if (response?.data) {
-            return resolve(checkCutomErrors({ RES: response.data }))
+    }).then(({ data }) => {
+        if (data) {
+            log?.print("[][] response data : " + JSON.stringify(data, null, 2))
+            return resolve(resolveData({ RES: data }))
         }
-        return reject({ ERR: { errCode: 1 } })
+        return reject({ ERR: { errCode: axiosBaseErrors_e.NO_DATA, data } })
     }).catch((error) => {
-        return reject(checkCutomErrors({ ERR: checkBaseErrors(error) }))
+        log?.print("[][] error : " + error)
+        let tempError = checkForHttpErrors<err, axiosBaseErrors_e>(error, log ? new logger("base http error checker", log) : undefined)
+        if (tempError.errCode)
+            reject({ ERR: tempError })
+        return reject(resolveData({ ERR: { errCode: axiosBaseErrors_e.REQUEST_FAILED, error: error } }))
     });
 })
-
-

@@ -14,7 +14,7 @@ import {
   appNegativeColor,
   appPositiveColor,
 } from "../../../theme/colors/highlightColors";
-import { _appState } from "../../../redux/reducers";
+import { _appState } from "../../../redux/rootReducer";
 import {
   timerDaytimeType,
   timerEventType,

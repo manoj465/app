@@ -8,7 +8,7 @@ import { ReText } from "react-native-redash";
 import { navigationProp } from "..";
 import { types } from "../../../../@types/huelite/globalTypes";
 import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color";
-import { deviceListOperation } from "../../../../util/dataManipulator";
+import { deviceListOperation } from "../../../../util/app.operator/device.operator";
 import { logger } from "../../../../util/logger";
 import BrightnessSlider from "../../../common/BrightnessSlider";
 /* import ColorBlending from "gl-react-color-blending"; */

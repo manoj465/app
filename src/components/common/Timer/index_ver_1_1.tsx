@@ -12,7 +12,7 @@ import { Dialog } from "react-native-simple-dialogs";
 import { useDispatch, useSelector } from "react-redux";
 import { timerDialogShowHideReduxAction } from "../../../redux/actions/AppCTXActions";
 import { appPositiveColor } from "../../../theme/colors/highlightColors";
-import { _appState } from "../../../redux/reducers";
+import { _appState } from "../../../redux/rootReducer";
 import {
   timerDaytimeType,
   timerEventType,

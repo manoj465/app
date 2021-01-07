@@ -9,14 +9,14 @@ import { red, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 //native imports
-import { _appState } from "../../../redux/reducers";
+import { _appState } from "../../../redux/rootReducer";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { logger } from "../../../util/logger";
 import { DeviceCard } from "./deviceCard";
 import Header from './Header';
 import STYLES from "../../common/styles"
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
-import { deviceListOperation } from "../../../util/dataManipulator";
+import { deviceListOperation } from "../../../util/app.operator/device.operator";
 import { LinearGradient } from "expo-linear-gradient";
 
 const navigationIconSize = 25;
@@ -36,13 +36,12 @@ interface Props {
 export const Dashboard = ({ navigation, route: { params } }: Props) => {
   let log = new logger("DASHBOARD")
   const deviceList = useSelector(({ deviceReducer: { deviceList } }: _appState) => deviceList);
-  const y = useValue(0)
+  //const user = useSelector(({ appCTXReducer: { user } }: _appState) => user);
   const scrollViewRef = useRef(null)
-  const [toBeDeletedMac, setToBeDeletedMac] = useState("")
+  const [state_deleteDeviceModal, set_state_deleteDeviceModal] = useState("")
   //const state = useValue(State.UNDETERMINED)
   //const onScroll = onScrollEvent({ y })
   //const scroll = useRef(null);
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,7 +60,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
                 <DeviceCard
                   device={device}
                   navigation={navigation}
-                  setToBeDeletedDevice={setToBeDeletedMac}
+                  setToBeDeletedDevice={set_state_deleteDeviceModal}
                   log={log}
                 />
               </View>
@@ -89,7 +88,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
       <Modal /*///Modal */
         animationType="slide"
         transparent
-        visible={toBeDeletedMac.length > 0}
+        visible={state_deleteDeviceModal.length > 0}
       >
         <View /* Sec1: Modal outer container */
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -127,12 +126,12 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
                   const newContainerList = deviceListOperation({
                     props: {
                       cmd: "REMOVE_DEVICE",
-                      Mac: toBeDeletedMac
+                      Mac: state_deleteDeviceModal
                     },
                     //log
                   })
                   console.log("DEVICE REMOVED : " + JSON.stringify(newContainerList))
-                  setToBeDeletedMac("")
+                  set_state_deleteDeviceModal("")
                 }} />
               <NewRectButton /* Sec3: cancel button */
                 useReanimated={false}
@@ -143,7 +142,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
                 text="cancel"
                 onPress={() => {
                   console.log("DEVICE REMOVE cancel : ")
-                  setToBeDeletedMac("")
+                  set_state_deleteDeviceModal("")
                 }} />
             </View>
             <View /* Sec3: modal footer */

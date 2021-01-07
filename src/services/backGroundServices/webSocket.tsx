@@ -1,5 +1,3 @@
-import { store } from "../../../App";
-import { getCurrentTimeStamp } from "../../util/DateTimeUtil";
 
 export interface deviceSocketHBResponse {
   MAC?: string;
@@ -10,30 +8,16 @@ export interface deviceSocketHBResponse {
   BUILD_VERSION?: string;
 }
 
-interface onWebSocketCloseProps {
-  (msg: string | undefined): void;
-}
-interface onWebSocketErrProps {
-  (msg: string): void;
-}
-interface onWebSocketMsgProps {
-  (msg: string): void;
-}
-interface onWebSocketOpenProps {
-  (): void;
-}
 interface webSocketProps {
   (_props: {
-    Mac: string;
-    ipAddr: string;
-    onOpen: onWebSocketOpenProps;
-    onMsg: onWebSocketMsgProps;
-    onErr: onWebSocketErrProps;
-    onClose: onWebSocketCloseProps;
+    ipAddr: string
+    onOpen?: (s: any) => void
+    onMsg: (s: any) => void
+    onErr?: (s: any) => void
+    onClose?: (s: any) => void
   }): Promise<WebSocket | null>;
 }
 const getWebSocket: webSocketProps = async ({
-  Mac,
   ipAddr,
   onOpen,
   onMsg,
@@ -44,31 +28,28 @@ const getWebSocket: webSocketProps = async ({
   try {
     let ws = await new WebSocket(wsUrl);
 
-    ws.onopen = () => {
+    ws.onopen = (e) => {
       if (ws) {
         try {
           ws.send("Connected");
         } catch (e) {
           console.error("errrrrrrrrrrrrrrrrrrrrr" + e);
         }
-        onOpen();
+        onOpen ? onOpen(e) : {}
       }
     };
 
     ws.onerror = (e) => {
-      onErr(e.message);
+      onErr ? onErr(e) : {}
     };
 
     ws.onmessage = (m) => {
-      /* console.log("--SOCKET-MSG--\n" + msg); */
-      //store.dispatch;
-      ///TODO:conditional upon prop => updateMsgReceivedTimestampAction(Mac, getCurrentTimeStamp())();
       onMsg(m.data);
     };
 
     ws.onclose = (e) => {
-      onClose(e.message);
-    };
+      onClose ? onClose(e) : {}
+    }
 
     return ws;
   } catch (error) {
@@ -77,3 +58,4 @@ const getWebSocket: webSocketProps = async ({
 };
 
 export { getWebSocket };
+

@@ -15,7 +15,7 @@ import { newDeviceSagaAction } from "../../../../redux/actions/pairingActions";
 import usePairApiHook, { pairing_state_e } from "../../../../services/webApi/pairAPI_Hook";
 import { dummyDevice, GROUP_TYPES } from "../../../../util/dummyData/DummyData";
 import { HUE_CONTAINER_t, HUE_CONTAINER_TYPE_e } from "../../../../@types/huelite/container";
-import { deviceListOperation } from "../../../../util/dataManipulator";
+import { deviceListOperation } from "../../../../util/app.operator/device.operator";
 
 const groupNames = ["Bedroom", "Kitchen", "Garden", "Drawing Lamps", "Stairs"];
 

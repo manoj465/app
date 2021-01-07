@@ -4,7 +4,7 @@ import { Dimensions, View, Text } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, cond, divide, eq, event, multiply, set, useCode, concat } from "react-native-reanimated";
 import { clamp, ReText, round, useValue } from "react-native-redash";
-import { deviceListOperation } from "../../util/dataManipulator";
+import { deviceListOperation } from "../../util/app.operator/device.operator";
 import { getCurrentTimeStamp, getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 import { logger } from "../../util/logger";
 

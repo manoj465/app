@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleProp, ViewStyle, TextStyle, TouchableOpacity } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
+import styles from '../styles'
 import STYLES from "../styles"
 
 interface Props {
@@ -32,27 +33,36 @@ export const NewRectButton = ({ buttonStyle, textStyle, text, onPress = () => { 
 
 
 interface NewRectButtonWithChildrenProps {
-    buttonStyle?: StyleProp<ViewStyle>
+    style?: StyleProp<ViewStyle>
+    innerCompStyle?: StyleProp<ViewStyle>
+    shadow?: boolean
     onPress?: () => void
     children?: React.ReactNode
-}
-export const NewRectButtonWithChildren = ({ buttonStyle, onPress = () => { }, children }: NewRectButtonWithChildrenProps) => {
+}/**
+ * @param style `StyleProp<ViewStyle>` button ContainerView Style 
+ * @param innerCompStyle `StyleProp<ViewStyle>` RectButton Style 
+ * @param shadow `default false` 
+ * @param onPress 
+ * @param children `React.Node` children component
+ * @returns  
+ */
+export const NewRectButtonWithChildren = ({ style, innerCompStyle, onPress = () => { }, children, shadow }: NewRectButtonWithChildrenProps) => {
     return (
         <View style={[{
             backgroundColor: "#fff",
             overflow: "hidden",
-            borderRadius: 25,
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 25,
-            elevation: 5,
-            marginVertical: 5
-        }, buttonStyle]}>
-            <RectButton style={{ height: "100%", width: "100%", justifyContent: "center", alignContent: "center" }}
+            marginVertical: 5,
+        },
+            style,
+        shadow ? STYLES.shadow : {}
+        ]}>
+            <RectButton style={
+                [{
+                    height: "100%",
+                    width: "100%",
+                    justifyContent: "center",
+                    alignContent: "center"
+                }, innerCompStyle]}
                 onPress={onPress}>
                 {children}
             </RectButton>

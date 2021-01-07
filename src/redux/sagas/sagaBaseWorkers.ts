@@ -1,6 +1,6 @@
 import { call, CallEffect, PutEffect, takeEvery, takeLatest } from "redux-saga/effects";
-import { types } from "../../@types/huelite";
-import { actionReturnTypes, _reduxConstant } from "../ReduxConstant";
+import types from "../../@types/huelite";
+import { _reduxConstant } from "../ReduxConstant";
 
 
 export interface __baseAction_Props<R> {
@@ -48,11 +48,13 @@ export const _getWorker: <R>(_props: _getWorker_t<R>) => [any, _getBaseAction_t<
     if (_props.shouldTakeLatest)
         watcher = function* _baseWatcher() {
             //console.log("[BASE WATCHER] takeLatest")
+            //@ts-ignore
             yield takeLatest(_props.type, worker);
         }
     else
         watcher = function* _baseWatcher() {
             //console.log("[BASE WORKER] takeEvery")
+            //@ts-ignore
             yield takeEvery(_props.type, worker);
         }
 

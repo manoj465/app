@@ -7,7 +7,7 @@ import Animated, { add, max, min } from "react-native-reanimated";
 import { hsv2color, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
-import { deviceListOperation } from "../../../../../util/dataManipulator";
+import { deviceListOperation } from "../../../../../util/app.operator/device.operator";
 import { logger } from "../../../../../util/logger";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../common/styles";
@@ -172,7 +172,7 @@ export const DeviceColorPickerScreen = ({
                 return (
                   <NewRectButtonWithChildren
                     key={index}
-                    buttonStyle={{
+                    style={{
                       backgroundColor: color.hex,
                       margin: 10,
                       borderRadius: 30,
