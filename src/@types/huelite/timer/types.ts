@@ -10,3 +10,5 @@ export interface HUE_TIMER_t {
     STATUS: number,
     DAYS: [boolean, boolean, boolean, boolean, boolean, boolean, boolean],
 }
+
+/** test-001 */
