@@ -118,9 +118,7 @@ const Item = ({
   const [view, setView] = useState<0 | 1>(0);
   const [hrIndex, setHrIndex] = useState<number>(timer.hr - 1);
   const [minIndex, setMinIndex] = useState<number>(timer.min / 5);
-  const [dayTimeIndex, setDayTimeIndex] = useState<timerDaytimeType>(
-    timer.daytime
-  );
+  const [dayTimeIndex, setDayTimeIndex] = useState<timerDaytimeType>(timer.daytime);
   const [eventType, setEventType] = useState<timerEventType>(timer.eventType);
   const [selectedDevices, setSelectedDevices] = useState<string[]>(
     timer.devicesMac
@@ -316,7 +314,7 @@ const Item = ({
               display: "flex",
               flexDirection: "row",
               justifyContent: "space-between",
-              display: "none",
+              //display: "none",
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold", color: "#555" }}>

@@ -1,27 +1,17 @@
-import React, { useState } from "react";
-import { View, FlatList, Text, StyleSheet } from "react-native";
-import { ScrollView, RectButton } from "react-native-gesture-handler";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-  FontAwesome5,
-} from "@expo/vector-icons";
-import { TimerEditorDialog } from "./TimerEditorDialog";
-import { deviceContainerType } from "../../../util/dummyData/DummyData";
-import { useDispatch, useSelector } from "react-redux";
-import { timerDialogShowHideReduxAction } from "../../../redux/actions/AppCTXActions";
-import {
-  appNegativeColor,
-  appPositiveColor,
-} from "../../../theme/colors/highlightColors";
-import { _appState } from "../../../redux/rootReducer";
-import {
-  timerDaytimeType,
-  timerEventType,
-} from "../../../util/dummyData/timerTypes";
-import { groupTimerSagaAction } from "../../../redux/actions/timerActions";
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { types } from "../../../@types/huelite";
+import React, { useState } from "react";
+import { Modal, StyleSheet, Text, View } from "react-native";
+import { RectButton, ScrollView } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
+import types from "../../../@types/huelite";
+import { appState } from "../../../redux";
+import { appNegativeColor, appPositiveColor } from "../../../theme/colors/highlightColors";
+import { timerDaytimeType, timerEventType } from "../../../util/dummyData/timerTypes";
+import { logger } from "../../../util/logger";
+import STYLES from "../../common/styles"
+import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
+import { TimePicker } from "../TimePicker";
 
 const days = [
   { day: "M" },
@@ -32,22 +22,102 @@ const days = [
   { day: "S" },
   { day: "S" },
 ];
-const timers = [{}, {}, {}, {}, {}, {}];
+const hrs = [
+  { _data: "01", val: 1 },
+  { _data: "02", val: 2 },
+  { _data: "03", val: 3 },
+  { _data: "04", val: 4 },
+  { _data: "05", val: 5 },
+  { _data: "06", val: 6 },
+  { _data: "07", val: 7 },
+  { _data: "08", val: 8 },
+  { _data: "09", val: 9 },
+  { _data: "10", val: 10 },
+  { _data: "11", val: 11 },
+  { _data: "12", val: 12 },
+];
+const mins = [
+  { _data: "00", val: 0 },
+  { _data: "05", val: 5 },
+  { _data: "10", val: 10 },
+  { _data: "15", val: 15 },
+  { _data: "20", val: 20 },
+  { _data: "25", val: 25 },
+  { _data: "30", val: 30 },
+  { _data: "35", val: 35 },
+  { _data: "40", val: 40 },
+  { _data: "45", val: 45 },
+  { _data: "50", val: 50 },
+
+  { _data: "55", val: 55 },
+  /* { _data: "12" },
+  { _data: "13" },
+  { _data: "14" },
+  { _data: "15" },
+  { _data: "16" },
+  { _data: "17" },
+  { _data: "18" },
+  { _data: "19" },
+  { _data: "20" },
+
+  { _data: "21" },
+  { _data: "22" },
+  { _data: "23" },
+  { _data: "24" },
+  { _data: "25" },
+  { _data: "26" },
+  { _data: "27" },
+  { _data: "28" },
+  { _data: "29" },
+  { _data: "30" },
+
+  { _data: "41" },
+  { _data: "42" },
+  { _data: "43" },
+  { _data: "44" },
+  { _data: "45" },
+  { _data: "46" },
+  { _data: "47" },
+  { _data: "48" },
+  { _data: "49" },
+  { _data: "50" },
+
+  { _data: "51" },
+  { _data: "52" },
+  { _data: "53" },
+  { _data: "54" },
+  { _data: "55" },
+  { _data: "56" },
+  { _data: "57" },
+  { _data: "58" },
+  { _data: "59" }, */
+];
+
 interface Props {
   device: types.HUE_DEVICE_t
+  log?: logger
 }
 
-export const Timer = ({ device }: Props) => {
+export const Timer = ({ device, log }: Props) => {
+  const deviceFromStore = useSelector((state: appState) => state.deviceReducer.deviceList.find(item => item.Mac == device.Mac))
+  const [showTimerEditorDialog, setShowTimerEditorDialog] = useState<types.HUE_TIMER_t | undefined>(undefined)
+  const [hrIndex, setHrIndex] = useState<number>(8);
+  const [minIndex, setMinIndex] = useState<number>(0);
+
+  log?.print("size of device timers list is " + JSON.stringify(device))
+
   return (
-    <ScrollView style={{ width: "100%" }}>
-      {/* <TimerEditorDialog group={group} /> */}
-      {/* ///TimerEditor Dialog */}
-      {/* Sec: ListView for Timers in the group */}
+    <ScrollView /* Sec1: ListView for Timers in the group  */
+      showsVerticalScrollIndicator={false}
+      style={{
+        width: "100%",
+      }} >
       {device.timers?.length && device?.timers.map((timerFromProp, index) => {
         return (
-          <View style={styles.timerBlockConatiner}>
-            {/* Sec: Left Side Section */}
-            <View
+          <View /* Sec2: timer block container */
+            style={styles.timerBlockConatiner}
+            key={index}>
+            <View /* Sec3: Left Side Section */
               style={{
                 backgroundColor: "#fff",
                 margin: 10,
@@ -74,16 +144,15 @@ export const Timer = ({ device }: Props) => {
                   marginBottom: 10,
                 }}
               >
-                {timerFromProp.HR < 10 ? "0" : ""}
-                {timerFromProp.HR}
+                {timerFromProp.H < 10 ? "0" : ""}
+                {timerFromProp.H}
                 {":"}
-                {timerFromProp.MIN < 10 ? "0" : ""}
-                {timerFromProp.MIN + " "}
+                {timerFromProp.M < 10 ? "0" : ""}
+                {timerFromProp.M + " "}
                 {timerFromProp.DT == timerDaytimeType.AM ? "AM" : "PM"}
               </Text>
             </View>
-            {/* Sec: Timer Card */}
-            <View
+            <View /* Sec3: Timer Card */
               style={{
                 flex: 1,
                 marginVertical: 10,
@@ -101,7 +170,7 @@ export const Timer = ({ device }: Props) => {
                 elevation: 3,
               }}
             >
-              <LinearGradient
+              <LinearGradient /* Sec4: */
                 colors={["#ae39fe", "#cf63ff"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0 }}
@@ -113,31 +182,21 @@ export const Timer = ({ device }: Props) => {
                   width: "100%",
                 }}
               />
-              {/* Sec: Middle Sec for TIME & EVENT TYPE */}
-              <RectButton
-                /*  onPress={() => {
-                   dispatch(
-                     timerDialogShowHideReduxAction({
-                       showTimerDialog: true,
-                       timer: timerFromProp,
-                     })
-                   );
-                 }} */
+              <View /* Sec4: Middle Sec for TIME & EVENT TYPE */
                 style={{
                   flex: 1,
                   //backgroundColor: "#ff0",
                 }}
               >
-                {/* Sec: Event Type */}
-                <View style={{ marginLeft: 20, marginTop: 10 }}>
+                <View /* Sec5: Event Type */
+                  style={{ marginLeft: 20, marginTop: 10 }}>
                   <Text style={{ color: "white", fontSize: 12 }}>
                     {timerFromProp?.ET == timerEventType.ON
                       ? "TURN ON"
                       : "TURN OFF"}
                   </Text>
                 </View>
-                {/* Sec: Alarm Time */}
-                <View
+                <View /* Sec5: Alarm Time */
                   style={{
                     //backgroundColor: "#f00",
                     flex: 1,
@@ -152,20 +211,20 @@ export const Timer = ({ device }: Props) => {
                       color: "#fff",
                     }}
                   >
-                    {timerFromProp?.HR + " : "}
-                    {timerFromProp?.MIN && timerFromProp.MIN < 10 ? "0" : ""}
-                    {timerFromProp?.MIN + " "}
+                    {timerFromProp?.H + " : "}
+                    {timerFromProp?.M && timerFromProp.M < 10 ? "0" : ""}
+                    {timerFromProp?.M + " "}
                     {timerFromProp?.DT == timerDaytimeType.AM
                       ? "AM"
                       : "PM"}
                   </Text>
                 </View>
-              </RectButton>
-              {/* Sec: Days Conatiner */}
-              <View style={styles.weekDaysConatiner}>
+              </View>
+              <View /* Sec4: Days Conatiner */
+                style={styles.weekDaysConatiner}>
                 {timerFromProp?.DAYS.map((item, index) => {
                   return (
-                    <View style={[styles.weekDayBlock]}>
+                    <View style={[styles.weekDayBlock]} key={index}>
                       <Text
                         style={{
                           textAlign: "center",
@@ -180,33 +239,25 @@ export const Timer = ({ device }: Props) => {
                   );
                 })}
               </View>
-              {/* Sec: BUTTON CONTAINER ==> EDIT / DELETE */}
-              <View
+              <View /* Sec4: BUTTON CONTAINER ==> EDIT / DELETE */
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   borderTopColor: "#fff",
                   borderTopWidth: 0.5,
                   marginHorizontal: 10,
-                }}
-              >
-                {/* Sec: EDIT BUTTON */}
-                <RectButton
+                }}>
+                <RectButton /* Sec5: EDIT BUTTON */
                   style={{
                     flex: 1,
                     justifyContent: "center",
                     alignItems: "center",
                     height: 30,
                   }}
-                /* onPress={() => {
-                  dispatch(
-                    timerDialogShowHideReduxAction({
-                      showTimerDialog: true,
-                      timer: timerFromProp,
-                    })
-                  );
-                }} */
-                >
+                  onPress={() => {
+                    setShowTimerEditorDialog(timerFromProp)
+
+                  }}>
                   <Text
                     style={{
                       fontWeight: "bold",
@@ -217,8 +268,7 @@ export const Timer = ({ device }: Props) => {
                     EDIT
                     </Text>
                 </RectButton>
-                {/* Sec: Divider */}
-                <View
+                <View /* Sec5: Divider */
                   style={{
                     width: 1,
                     borderRightColor: "#fff",
@@ -226,8 +276,7 @@ export const Timer = ({ device }: Props) => {
                     marginVertical: 5,
                   }}
                 ></View>
-                {/* Sec: DELETE BUTTON */}
-                <RectButton
+                <RectButton /* Sec5: DELETE BUTTON */
                   style={{
                     flex: 1,
                     justifyContent: "center",
@@ -273,8 +322,7 @@ export const Timer = ({ device }: Props) => {
           </View>
         );
       })}
-      {/* Sec: AddNew Event Button */}
-      <RectButton
+      <RectButton /* Sec2: AddNew Event Button */
         style={[
           styles.timerBlockConatiner,
           { justifyContent: "center", alignItems: "center", minHeight: 120 },
@@ -292,6 +340,99 @@ export const Timer = ({ device }: Props) => {
           ADD NEW EVENT
         </Text>
       </RectButton>
+      <Modal /* Sec2: timer editor dialog */
+        animationType="slide"
+        transparent
+        visible={showTimerEditorDialog != undefined} >
+        <View /* Sec3: modal container */
+          style={{
+            flex: 1,
+            //backgroundColor: "red",
+            justifyContent: "center",
+            alignItems: "center"
+          }}>
+          <View /* Sec3: modal inner container */
+            style={[{
+              width: "85%",
+              minHeight: 300,
+              backgroundColor: "white",
+              borderRadius: 20
+            }, STYLES.shadow]}>
+            <View /* Sec4:  header */
+              style={{
+                backgroundColor: "green",
+                borderRadius: 20,
+                margin: 5,
+                height: 100,
+                width: "97%"
+              }}>
+
+            </View>
+            <View /* Sec4: middle container */
+              style={{
+                display: "flex",
+                flexDirection: "row"
+              }}>
+              <TimePicker
+                initValue={1}
+                heading="HRS"
+                maxVal={hrs.length}
+                value={hrs[hrIndex] ? hrs[hrIndex]._data : ""}
+                index={hrIndex}
+                setIndex={setHrIndex}
+              />
+              <TimePicker
+                initValue={5}
+                heading="MIN"
+                maxVal={mins.length}
+                value={mins[minIndex] ? mins[minIndex]._data : ""}
+                index={minIndex}
+                setIndex={setMinIndex}
+              />
+              <TimePicker
+                initValue={5}
+                heading="MIN"
+                maxVal={mins.length}
+                value={mins[minIndex] ? mins[minIndex]._data : ""}
+                index={minIndex}
+                setIndex={setMinIndex}
+              />
+            </View>
+            <View /* Sec4: button container */
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: 10
+              }}>
+              <View /* Sec5: save/update button */
+                style={{ flex: 1, paddingHorizontal: 5 }}>
+                <NewRectButtonWithChildren /* Sec5: close dialog button */
+                  onPress={() => {
+                    // - [ ] print incoming timer
+                    // - [ ] process the timer addition/update here
+                    // - [ ] update local state with local timetamp of device
+                    // - [ ] update the new device tate to cloud
+                  }}
+                  useReanimated={false}
+                  style={{ backgroundColor: "green" }}>
+                  <Text>Update</Text>
+                </NewRectButtonWithChildren>
+              </View>
+              <View /* Sec5: close dialog button */
+                style={{ flex: 1, paddingHorizontal: 5 }}>
+                <NewRectButtonWithChildren
+                  onPress={() => {
+                    setShowTimerEditorDialog(undefined)
+                  }}
+                  useReanimated={false}
+                  style={{ backgroundColor: "red" }}>
+                  <Text>cancel</Text>
+                </NewRectButtonWithChildren>
+              </View>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </ScrollView>
   );
 };
@@ -300,6 +441,7 @@ const styles = StyleSheet.create({
   container: {},
   timerBlockConatiner: {
     width: "100%",
+    height: 160,
     backgroundColor: "#fff",
     overflow: "hidden",
     display: "flex",

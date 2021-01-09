@@ -12,6 +12,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
+import { logger } from "../../../../../util/logger";
 
 type DevicePageColorPickerNavigationProp = StackNavigationProp<
   devicePageStackParamList,
@@ -33,10 +34,11 @@ export const DeviceModesScreen = ({
     params: { device },
   },
 }: Props) => {
+  const log = new logger("device modes screen")
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
-      {/* Sec: back arrow */}
-      <View style={{ height: 60, justifyContent: "center", width: 200 }}>
+      <View /* Sec1: header - back arrow */
+        style={{ height: 60, justifyContent: "center", width: 200 }}>
         <RectButton
           style={{
             //backgroundColor: "red",
@@ -62,8 +64,8 @@ export const DeviceModesScreen = ({
             </Text>
         </RectButton>
       </View>
-      {/* Sec: Modes */}
-      <View style={{}}>
+      <View /* Sec1: Modes container */
+        style={{}}>
         <Text
           style={{
             color: "#555",
@@ -90,8 +92,7 @@ export const DeviceModesScreen = ({
           <Modes device={device} />
         </View>
       </View>
-      {/* Sec: Timer */}
-      <View
+      <View /* Sec1: Timer container */
         style={{
           backgroundColor: "#fff",
           marginTop: 20,
@@ -121,7 +122,7 @@ export const DeviceModesScreen = ({
         >
           From dawn to dusk, schedule your day with HUE
           </Text>
-        <Timer device={device} />
+        <Timer device={device} log={new logger("TIMER COMP", log)} />
       </View>
     </SafeAreaView>
   );

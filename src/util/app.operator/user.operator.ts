@@ -22,11 +22,11 @@ interface logoutFunction_props {
 /**
  * 
  * ## featureAddition
- * - [ ] clear deviceList and reduxState upon logout
+ * - [x] clear deviceList and reduxState upon logout
  */
 const logoutFunction = ({ onLogout }: logoutFunction_props) => {
-    reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: undefined }))
-    // - [ ] reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({deviceList:[]}))
+    reduxStore.store.dispatch(reduxStore.actions.appCTX.userSagaAction({ user: undefined, saveToDB: true }))
+    reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({ deviceList: [], saveToDB: true }))
     if (onLogout)
         onLogout()
     return {}
@@ -84,15 +84,16 @@ const loginFunction: loginFunction_t = async ({
     const res = await API.cloudAPI.loginAPI.v1({
         email,
         password,
-        log: log ? new logger("login API", log) : undefined
+        //log: log ? new logger("login API", log) : undefined
     })
-    log?.print("res >>>> " + JSON.stringify(res, null, 2))
+    log?.print("res >>>>-- " + JSON.stringify(res, null, 2))
     if (res.RES?.id) {
         log?.print("user >>>> " + JSON.stringify(res.RES, null, 2))
-        // REMOVE reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: res.RES }))
+        reduxStore.store.dispatch(reduxStore.actions.appCTX.userSagaAction({ user: res.RES, saveToDB: true }))
         if (res.RES.devices?.length) {
             log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
             log?.print("device converted to local" + JSON.stringify(convert_hueDevice_backendToLocal({ devices: res.RES.devices }), null, 2))
+            reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({ deviceList: res.RES.devices ? convert_hueDevice_backendToLocal({ devices: res.RES.devices }) : [], saveToDB: true }))
         }
         onLoginSuccess ? onLoginSuccess(res.RES) : {}
         return res

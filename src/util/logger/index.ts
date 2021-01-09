@@ -16,7 +16,8 @@ export class logger {
     owner: string
     printAll = false
     printable = [
-        //"MAIN ACTIVITY", /* App.ts */
+        "MAIN ACTIVITY", /* App.ts */
+        "DEVICE MODES SCREEN", /* device modes screen in device page */
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
         //"DASHBOARD",/* DAHSBOARD SCREEN */
         //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
@@ -50,9 +51,6 @@ export class logger {
     print = (s: string, type?: printType) => {
         if (this.canPrint())
             console.log(this.owner + " >> " + s)
-        /* else {
-            console.log("connaot print")
-        } */
     }
 
     printDeviceList = (deviceList?: types.HUE_DEVICE_t[],) => {

@@ -1,4 +1,4 @@
-import { types } from "../@types/huelite";
+import types from "../@types/huelite";
 import { reduxStore } from "../redux";
 
 export const getSafeDeviceList = (deviceList?: types.HUE_DEVICE_t[]) => {

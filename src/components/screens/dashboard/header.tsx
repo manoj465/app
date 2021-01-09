@@ -71,27 +71,20 @@ interface QAB_props {
 const QuickActionBlock = ({ Heading, subHeading, primaryColor = "#48C9B0", Child, onPress = () => { } }: QAB_props) => {
 
     return (
+
         <NewRectButtonWithChildren
             onPress={onPress}
             style={{
                 width: 140,
                 height: 160,
+                borderRadius: 10,
                 overflow: "hidden",
-                borderRadius: 20,
                 borderColor: primaryColor,
                 borderWidth: 0.2,
-                //backgroundColor: "red",
-                shadowColor: "#0f0",
-                shadowOffset: {
-                    width: 0,
-                    height: 0,
-                },
-                shadowOpacity: 1,
-                shadowRadius: 20,
-                marginRight: 10,
-                //marginVertical: 10
+                backgroundColor: "green",
+                marginRight: 10
             }}>
-            <View style={{ backgroundColor: primaryColor, padding: 10, flex: 1 }}>
+            <View style={{ backgroundColor: primaryColor, padding: 10, flex: 1, height: 120 }}>
                 <View style={{ backgroundColor: "#fff", height: 50, width: 50, borderRadius: 30, justifyContent: "center", alignItems: "center" }} >
                     <Child />
                 </View>

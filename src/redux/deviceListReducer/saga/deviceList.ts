@@ -23,16 +23,21 @@ import { logger } from "../../../util/logger";
 
 interface _deviceListSagaAction_Props {
     deviceList: types.HUE_DEVICE_t[]
-    persistent?: boolean
+    saveToDB?: boolean
     log?: logger
 }
-
+/** 
+ * `_deviceListSaga_watcher`
+ *              - @param saveToDB?: `default - true` wetaher to save to local database or not
+ *              - @param log?: logger
+ * `_deviceListSaga_action`
+ */
 const [_deviceListSaga_watcher, _deviceListSaga_action] = _getWorker<_deviceListSagaAction_Props>({
     type: _reduxConstant.DEVICELIST_SAGA,
-    callable: function* containersWorker({ deviceList, persistent = true, log }) {
+    callable: function* containersWorker({ deviceList, saveToDB = true, log }) {
         log?.print("newDeviceList >> " + JSON.stringify(deviceList))
         yield put(_deviceListReduxAction.redux({ deviceList, log }));
-        if (persistent)
+        if (saveToDB)
             yield put(_________deviceListDB_action({ deviceList, log }));
     }
 })
@@ -51,18 +56,18 @@ const [_deviceListSaga_watcher, _deviceListSaga_action] = _getWorker<_deviceList
 
 interface _deviceSagaAction_props {
     device: types.HUE_DEVICE_t
-    /** `boolean` true if needs to be saved to DB */
-    persistent?: boolean
+    /** `boolean` default `true` if needs to be saved to DB */
+    saveToDB?: boolean
     log?: logger
 }
 /** 
  * @param device
- * @param persistent?: `boolean` true if needs to be saved to DB
+ * @param saveToDB `default true` wetaher to save to local database or not
  * @param log?: logger
  */
 const [_deviceSaga_watcher, _deviceSaga_action] = _getWorker<_deviceSagaAction_props>({
     type: _reduxConstant.DEVICE_SAGA,
-    callable: function* containersWorker({ device, persistent = true, log }) {
+    callable: function* containersWorker({ device, saveToDB = true, log }) {
         log?.print("container list > " + JSON.stringify(device))
         let deviceUpdated = false
         //const newDeviceList = []
@@ -77,7 +82,7 @@ const [_deviceSaga_watcher, _deviceSaga_action] = _getWorker<_deviceSagaAction_p
         if (!deviceUpdated)
             newDeviceList.push(device)
         yield put(_deviceListReduxAction.redux({ deviceList: newDeviceList, log }));
-        if (persistent)
+        if (saveToDB)
             yield put(_________deviceListDB_action({ deviceList: newDeviceList, log }));
     }
 })

@@ -47,7 +47,7 @@ export default function App() {
     //await storeData("deviceList", HallRGBGroupDummyData);
     //EXP: remove data from storage
     //await storeData("containers", null);//REMOVE
-    await storeData("appCTX", null);//REMOVE
+    //await storeData("appCTX", null);//REMOVE
 
     const deviceList = await getData("deviceList");
     //REMOVElog("deviceList Size is  " + deviceList?.length);
@@ -64,7 +64,7 @@ export default function App() {
     if (_appCTX) {
       log.print("appCTX is  " + JSON.stringify(_appCTX));
       setappCTX(_appCTX)
-      reduxStore.store.dispatch(reduxStore.actions.appCTX.appCtxSagaAction({ data: _appCTX, saveToDB: true /*, log */ }));
+      reduxStore.store.dispatch(reduxStore.actions.appCTX.appCtxSagaAction({ data: _appCTX, saveToDB: false /*, log */ }));
       bgService.startInterval()
     }
     setTimeout(async () => {

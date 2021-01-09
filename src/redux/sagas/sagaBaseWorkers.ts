@@ -8,7 +8,7 @@ export interface __baseAction_Props<R> {
 }
 type _getBaseAction_t<R> = (props: R) => __baseAction_Props<R> & { type: _reduxConstant }
 export const _getBaseAction: <R>(type: _reduxConstant) => _getBaseAction_t<R> = (type) => {
-    console.log("[get base action]")
+    //console.log("[get base action]")
     return (props) => {
         //console.log("[base action called]" + JSON.stringify(props))
         return {
@@ -34,7 +34,7 @@ interface _getWorker_t<T> {
  *  - `actionCaller` action caller for perticular watcher
  */
 export const _getWorker: <R>(_props: _getWorker_t<R>) => [any, _getBaseAction_t<R>] = <R>(_props: _getWorker_t<R>) => {
-    console.log("[GET WORKER]")
+    //console.log("[GET WORKER]")
 
     const baseAction = _getBaseAction<R>(_props.type)
 
