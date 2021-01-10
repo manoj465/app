@@ -1,3 +1,6 @@
-import * as types from "./globalTypes"
+import types from "./huelite"
+import { venderConf } from "./universals"
 
-export default types
+const UNIVERSALS = { types, venderConf }
+
+export default UNIVERSALS
