@@ -1,6 +1,3 @@
-import types from "./huelite"
-import { venderConf } from "./universals"
-
-const UNIVERSALS = { types, venderConf }
+import * as UNIVERSALS from "./combineExport"
 
 export default UNIVERSALS
