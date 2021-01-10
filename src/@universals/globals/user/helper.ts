@@ -1,12 +1,12 @@
-import { HUE_DEVICE_t, HUE_Device_t } from "../globalTypes"
+import { DEVICE_t, Device_t } from "../globalTypes"
 import { logger } from "../../../util/logger"
-import types from ".."
+import { TIMER_t } from "../timer"
 
 
 
-type convert_hueDevice_backendToLocal_t = (props: { devices: HUE_Device_t[], socket?: any, log?: logger }) => HUE_DEVICE_t[]
+type convert_Device_backendToLocal_t = (props: { devices: Device_t[], socket?: any, log?: logger }) => DEVICE_t[]
 //@ts-ignore
-export const convert_hueDevice_backendToLocal: convert_hueDevice_backendToLocal_t = ({ devices, socket = undefined, log }) => {
+export const convert_hueDevice_backendToLocal: convert_Device_backendToLocal_t = ({ devices, socket = undefined, log }) => {
     return devices.map((device, d_index) => {
         return {
             ...device,
@@ -66,12 +66,12 @@ const getHsvFromString: getHsvFromString_t = ({ hsvString }) => {
 interface convertTimersStringToObj_props {
     timersString?: string
 }
-type convertTimersStringToObj_t = (props: convertTimersStringToObj_props) => types.HUE_TIMER_t[] | undefined
+type convertTimersStringToObj_t = (props: convertTimersStringToObj_props) => TIMER_t[] | undefined
 const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersString }) => {
     console.log("timersString to convert = " + timersString)
     if (timersString) {
         try {
-            let timersObject: (Omit<types.HUE_TIMER_t, "DAYS"> & { DAYS: number })[] = JSON.parse(timersString)
+            let timersObject: (Omit<TIMER_t, "DAYS"> & { DAYS: number })[] = JSON.parse(timersString)
             if (timersObject && timersObject.length) {
                 console.log("timer array size is " + timersObject.length)
                 console.log(timersObject)
@@ -81,7 +81,7 @@ const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersString }) 
                     for (let daysIndex = 0; daysIndex < 7; daysIndex++) {
                         tempDAYS[daysIndex] = getBit(daysIndex, timer.DAYS)
                     }
-                    let tempTimer: types.HUE_TIMER_t = { ...timer, DAYS: tempDAYS }
+                    let tempTimer: TIMER_t = { ...timer, DAYS: tempDAYS }
                     return tempTimer
                 });
                 return newTimersObject

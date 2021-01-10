@@ -1,2 +1,2 @@
-export * from "./huelite"
+export * from "./globals"
 export * from "./universals"

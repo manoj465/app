@@ -1,20 +1,20 @@
 import { timestamp_i } from "../base.types"
-import { HUE_TIMER_t } from "../timer/types"
-import { HUE_User_t } from "../user/types"
+import { TIMER_t } from "../timer/types"
+import { User_t } from "../user/types"
 
 
 
 
 /** @description >- Client side Local representation of device Object */
-export interface HUE_DEVICE_t extends Omit<Omit<Omit<Omit<HUE_Device_t, "id">, "hsv">, "IP">, "timers"> {
+export interface DEVICE_t extends Omit<Omit<Omit<Omit<Device_t, "id">, "hsv">, "IP">, "timers"> {
     socket?: any,
     id?: string,
     IP: string,
     hsv: { h: number, s: number, v: number }/** whole numbers [360, 100, 100] */
-    timers?: HUE_TIMER_t[]
+    timers?: TIMER_t[]
 }
 /** @description >- backend representation of device Object */
-export interface HUE_Device_t extends timestamp_i {
+export interface Device_t extends timestamp_i {
     id: string,
     Hostname: string,
     deviceName: string,
@@ -25,6 +25,6 @@ export interface HUE_Device_t extends timestamp_i {
     groupName?: string,
     lastState?: string,
     timers?: string
-    user?: HUE_User_t
+    user?: User_t
     //add timers to data type timers
 }

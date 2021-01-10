@@ -1,0 +1,1 @@
+export * as GLOBALS from "./globalTypes"

@@ -1,4 +1,4 @@
-import { HUE_Device_fields_noUser } from "../device/gql"
+import { Device_fields_noUser } from "../device/gql"
 import { HUE_User_fields_no_devices } from "./userGqlFieldsWithNoDevices"
 
 export const HUE_User_fields = `id
@@ -6,7 +6,7 @@ userName
 email
 ts
 devices{
-  ${HUE_Device_fields_noUser}
+  ${Device_fields_noUser}
 }`
 
 /** 

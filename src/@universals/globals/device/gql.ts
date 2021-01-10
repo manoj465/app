@@ -2,7 +2,7 @@ import { HUE_User_fields_no_devices } from "../user/userGqlFieldsWithNoDevices"
 
 
 
-export const HUE_Device_fields_compactUserWithNoDevices = `id
+export const Device_fields_compactUserWithNoDevices = `id
 Hostname
 deviceName
 Mac
@@ -18,7 +18,7 @@ user{
 
 
 
-export const HUE_Device_fields_noUser = `id
+export const Device_fields_noUser = `id
 Hostname
 deviceName
 Mac

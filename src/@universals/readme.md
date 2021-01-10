@@ -1,3 +1,7 @@
+## universals
+
+contains venderr specific constans
+
 ## @types
 
 decleration of types, interface, enum and js helperFunctions
@@ -22,4 +26,11 @@ decleration of types, interface, enum and js helperFunctions
 
 - #### gqlsStrings
 
-- [ ] move gql to specific folders
+- [x] move gql to specific folders
+
+## @changelogs
+
+- added universal for vender specfic constants over project
+- modified `universals` module structure
+- refactor - rename=>@universals/types-@universals/globals
+- removed HUE prefix from global folder types
