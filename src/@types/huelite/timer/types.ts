@@ -3,6 +3,7 @@ export type HUE_TIMER_group_t = HUE_TIMER_t & { devices: string[] }
 
 /** @description >- Client side Local representation of timer Object */
 export interface HUE_TIMER_t {
+    id: string,
     H: number,
     M: number,
     DT: number,
