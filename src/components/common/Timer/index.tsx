@@ -12,6 +12,7 @@ import { logger } from "../../../util/logger";
 import STYLES from "../../common/styles"
 import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
 import { TimePicker } from "../TimePicker";
+import { Feather } from "@expo/vector-icons"
 
 const days = [
   { day: "M" },
@@ -104,7 +105,6 @@ export const Timer = ({ device, log }: Props) => {
   const [hrIndex, setHrIndex] = useState<number>(8);
   const [minIndex, setMinIndex] = useState<number>(0);
 
-  log?.print("size of device timers list is " + JSON.stringify(device))
 
   return (
     <ScrollView /* Sec1: ListView for Timers in the group  */
@@ -364,9 +364,18 @@ export const Timer = ({ device, log }: Props) => {
                 borderRadius: 20,
                 margin: 5,
                 height: 100,
-                width: "97%"
+                width: "97%",
+                justifyContent: "flex-end",
+                paddingLeft: 10
               }}>
-
+              <Feather name="sun" size={24} color="white" />
+              <Text style={[
+                STYLES.H1
+                , {
+                  color: "white",
+                  marginBottom: 10,
+                  marginLeft: 0
+                }]}>{(hrs[hrIndex].val > 9 ? "" : "0") + hrs[hrIndex].val + " : " + "00"}</Text>
             </View>
             <View /* Sec4: middle container */
               style={{
@@ -398,7 +407,7 @@ export const Timer = ({ device, log }: Props) => {
                 setIndex={setMinIndex}
               />
             </View>
-            <View /* Sec4: button container */
+            <View /* Sec4: modal button container */
               style={{
                 display: "flex",
                 flexDirection: "row",
