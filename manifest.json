@@ -4,7 +4,7 @@
   "lang": "en",
   "name": "HUElite",
   "short_name": "HUElite",
-  "start_url": "/?utm_source=web_app_manifest",
+ "start_url": "/utm_source=homescreen",
   "orientation": "portrait",
   "related_applications": [
     {
