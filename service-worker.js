@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/huelite/precache-manifest.ecbf027c60925e921c5e6aae20c71a33.js"
+  "/HUElite_App_Expo/precache-manifest.be7211046ef8c4a9cebb001fbca1e99f.js"
 );
 
 workbox.skipWaiting();
@@ -29,7 +29,7 @@ self.__precacheManifest = [].concat(self.__precacheManifest || []);
 workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
-workbox.routing.registerNavigationRoute("\\huelite\\index.html", {
+workbox.routing.registerNavigationRoute("\\HUElite_App_Expo\\index.html", {
   
   blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
 });
