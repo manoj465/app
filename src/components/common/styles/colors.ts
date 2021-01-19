@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-export const colors = {
+export const textColors = {
     primary: "#333",
     secondary: "#555",
     tertiary: "#777",
@@ -8,20 +8,24 @@ export const colors = {
     feather: "#aaa"
 }
 
+export const themeColors = {
+    primary: "#5555ff"
+}
+
 export default StyleSheet.create({
     primaryTextColors: {
-        color: colors.primary
+        color: textColors.primary
     },
     secondaryTextColor: {
-        color: colors.secondary
+        color: textColors.secondary
     },
     tertiaryTextColor: {
-        color: colors.tertiary
+        color: textColors.tertiary
     },
     warningText: {
-        color: colors.warning
+        color: textColors.warning
     },
     textFeather: {
-        color: colors.feather
+        color: textColors.feather
     }
 })

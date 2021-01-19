@@ -1,25 +1,23 @@
-import { useActionSheet } from "@expo/react-native-action-sheet";
-import { Entypo } from '@expo/vector-icons';
-import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { concat } from "react-native-reanimated";
-import { ReText } from "react-native-redash";
-import { navigationProp } from "..";
-import { types } from "../../../../@types/huelite/globalTypes";
-import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color";
-import { deviceListOperation } from "../../../../util/app.operator/device.operator";
-import { logger } from "../../../../util/logger";
-import BrightnessSlider from "../../../common/BrightnessSlider";
-/* import ColorBlending from "gl-react-color-blending"; */
+import { useActionSheet } from "@expo/react-native-action-sheet"
+import { Entypo } from '@expo/vector-icons'
+import { LinearGradient } from "expo-linear-gradient"
+import React from "react"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { navigationProp } from ".."
+import UNIVERSALS from "../../../../@universals"
+import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color"
+import { logger } from "../../../../util/logger"
+import BrightnessSlider from "../../../common/BrightnessSlider"
+import BrightnessSliderNew from "../../../common/BrightnessSlider_optmizedForWeb"
+/* import ColorBlending from "gl-react-color-blending" */
 
 
 export const deviceCardHeight = 150;
 
 interface props {
   navigation: navigationProp,
-  device: types.HUE_DEVICE_t,
-  log?: logger,
+  device: UNIVERSALS.GLOBALS.DEVICE_t
+  log?: logger
   setToBeDeletedDevice?: React.Dispatch<React.SetStateAction<string>>
 }
 export const DeviceCard = ({
@@ -50,7 +48,7 @@ export const DeviceCard = ({
       style={[styles.container, { height: deviceCardHeight }]}
       activeOpacity={0.9}
       onPress={() => {
-        if (device.Hostname.includes("HUE_OW") || device.Hostname.includes("HUE_CW") || device.Hostname.includes("HUE_WW")) {
+        if (device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_OW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_CW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_WW")) {
         } else {
           navigation.navigate("devicePage", {
             device
@@ -143,7 +141,7 @@ export const DeviceCard = ({
         {/* ///brightness container <percentageText &  brightnessBar> */}
         <View style={styles.brightnessSliderContainer}>
           {/*  <ReText style={styles.brightnessNumber} text={concat( BR )}/> */}
-          <BrightnessSlider
+          <BrightnessSliderNew
             initBrValue={device.hsv ? device.hsv.v : 50}
             deviceMac={[device.Mac]}
             log={log}

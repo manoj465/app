@@ -1,13 +1,12 @@
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import types from "../@types/huelite";
+import UNIVERSALS from "../@universals";
 import AppConfigScreen from "../components/screens/appConfig";
 import { Dashboard } from "../components/screens/dashboard";
 import DevicePage from "../components/screens/devicePage";
 import { WelcomeScreen } from "../components/screens/onboarding/WelcomeScreen";
 import { pairingRouter } from "../components/screens/pairing";
 import UserProfileScreen from "../components/screens/userProfile";
-import { GetStarted } from "../components/screens/userProfile/login";
 import { deviceContainerType } from "../util/dummyData/DummyData";
 
 export type MainRouterStackParamList = {
@@ -18,7 +17,7 @@ export type MainRouterStackParamList = {
   config: undefined;
   user: undefined;
   dashboard: undefined;
-  devicePage: { device: types.HUE_DEVICE_t };
+  devicePage: { device: UNIVERSALS.GLOBALS.DEVICE_t };
   deviceObjectPage: { group: deviceContainerType };
 };
 

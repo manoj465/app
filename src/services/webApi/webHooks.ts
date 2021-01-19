@@ -1,44 +1,56 @@
 import React, { useEffect, useState } from "react";
+import { logger } from "../../util/logger";
 import api from "../api";
-import { scan_result_i } from "../api/v1/device/scan.api";
 
-const useFetchData: (timeout: number) => [scan_result_i[], number, boolean, boolean, () => Promise<void>, React.Dispatch<React.SetStateAction<scan_result_i[]>>] = (timeout) => {
-  const [data, setData] = useState<scan_result_i[]>([]);
+interface userScanApiHelper_props {
+  timeout?: number
+  autoStart?: boolean
+  log?: logger
+}
+type userScanApiHelper_t = (props: userScanApiHelper_props) => [
+  api.deviceAPI.scanAPI.ScanApiReturnType | undefined,
+  number,
+  boolean,
+  boolean, () => Promise<void>
+]
+const useScanApiHook: userScanApiHelper_t = ({ timeout = 0, autoStart, log }) => {
+  const [data, setData] = useState<api.deviceAPI.scanAPI.ScanApiReturnType | undefined>(undefined);
   const [status, setStatus] = useState(-4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-
-  async function load() {
-    setLoading(true);
-    try {
-      const res = await api.v1.deviceAPI.scanAPI()
-      if (res.RES?.networks) {
-        setData(res.RES.networks);
-      } else {
-        console.log("No Networks Found -- -- Starting Timeout");
-        setTimeout(() => {
-          load();
-        }, 5500);
-      }
-    } catch (e) {
-      setError(true);
-      console.log("Starting Timeout -- Error:: " + e);
-      setTimeout(() => {
-        load();
-      }, 5500);
-    }
-    setLoading(false);
-  }
+  log?.print("---------------")
 
   useEffect(() => {
-    console.log("useFetchData");
-    return () => {
-      console.log("useFetchData unsubscribe");
-    };
-  }, []);
+    if (data) {
+      log?.print("data is -- " + JSON.stringify(data))
+      if (data.RES?.status == -2) {
+        log?.print("wifi started scanning, wait for 5 sec")
+        setTimeout(() => {
+          load()
+        }, 3000);
+      }
+      else if (data.RES?.status == -1) {
+        log?.print("wifi currently scanning, wait for few sec and try again")
+        setTimeout(() => {
+          load()
+        }, 3000);
+      }
+    }
+    if (autoStart && !data) {
+      load()
+    }
+    return () => { }
+  }, [data])
 
-  return [data, status, loading, error, load, setData];
+  async function load() {
+    log?.print("hitting scan api request")
+    const res = await api.deviceAPI.scanAPI.v1({ IP: "192.168.4.1", log: log ? new logger("pair-API", log) : undefined })
+    log?.print("RES - scanAPI " + JSON.stringify(res, null, 2))
+    setData(res)
+  }
+
+  return [data, status, loading, error, load];
 };
 
 
-export default useFetchData
+export default useScanApiHook

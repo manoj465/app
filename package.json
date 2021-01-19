@@ -1,4 +1,5 @@
 {
+  "homepage": "https://abhimanyu6676.github.io/HUElite_App_Expo/",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -6,6 +7,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
+    "deploy_web": "gh-pages -d web-build",
     "buildReleaseIOS": "expo build:ios --release-channel release",
     "buildReleaseANDROID": "expo build:android --release-channel release",
     "publish_RELEASE": "expo publish --release-channel release",
@@ -43,6 +45,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-linear-gradient": "^2.5.6",
+    "react-native-paho-mqtt": "^0.1.1",
     "react-native-reanimated": "~1.13.0",
     "react-native-redash": "^14.2.3",
     "react-native-safe-area-context": "3.1.9",
@@ -56,9 +59,11 @@
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
+    "@expo/webpack-config": "^0.12.53",
     "@types/react": "~16.9.35",
     "@types/react-dom": "~16.9.8",
     "@types/react-native": "~0.63.2",
+    "gh-pages": "^3.1.0",
     "typescript": "~4.0.0"
   },
   "private": true

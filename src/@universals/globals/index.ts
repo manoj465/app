@@ -1,1 +1,3 @@
-export * as GLOBALS from "./globalTypes"
+import * as GLOBALS from "./globalTypes"
+
+export { GLOBALS }

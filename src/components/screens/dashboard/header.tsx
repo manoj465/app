@@ -5,14 +5,17 @@ import Animated from 'react-native-reanimated';
 import { MaterialIcons, SimpleLineIcons, MaterialCommunityIcons, FontAwesome } from '@expo/vector-icons';
 import { RectButton } from 'react-native-gesture-handler';
 import { navigationProp } from "./index"
+//@ts-ignore
 import { activateKeepAwake, deactivateKeepAwake } from 'expo-keep-awake';
 import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom"
+import UNIVERSALS from '../../../@universals';
 
 interface Props {
     navigation: navigationProp
+    user?: UNIVERSALS.GLOBALS.USER_t
 }
 
-export default ({ navigation }: Props) => {
+export default ({ navigation, user }: Props) => {
     return (
         <View style={{ paddingHorizontal: 10 }}>
             <View style={{ backgroundColor: "#fff", marginTop: 25, marginBottom: 15 }}>
@@ -37,7 +40,7 @@ export default ({ navigation }: Props) => {
                     </View>
                 </View>
                 <View style={{}}>
-                    <Text style={{ fontSize: 25, fontWeight: "bold", }}>Hi, Good morning</Text>
+                    <Text style={{ fontSize: 25, fontWeight: "bold", }}>{"Hi, " + (user?.userName ? user?.userName : "")}</Text>
                 </View>
             </View>
             <Animated.ScrollView horizontal style={{ flexDirection: "row", backgroundColor: "#fff", width: "100%", paddingBottom: 10 }}>

@@ -6,7 +6,7 @@ import { _delay } from "../../sagas/helper";
 import { logger } from "../../../util/logger";
 import { appCTXReducerState_Prop, _actions } from "../reducers/AppCTXReducer"
 import { _appState } from "../../rootReducer"
-import types from "../../../@types/huelite";
+import UNIVERSALS from "../../../@universals";
 
 
 /*
@@ -75,7 +75,7 @@ export const [appCtxSagaWatcher, appCtxSagaAction] = _getWorker<appCtxSaga_props
 */
 
 interface userSaga_props {
-  user: types.HUE_USER_t | undefined
+  user: UNIVERSALS.GLOBALS.USER_t | undefined
   /** `default - false` weather to save to DB or not */
   saveToDB?: boolean
   log?: logger

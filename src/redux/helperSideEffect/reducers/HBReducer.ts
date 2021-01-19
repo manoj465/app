@@ -1,3 +1,4 @@
+import { reduxConstant } from "../..";
 import { _reduxConstant } from "../../ReduxConstant";
 import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
 
@@ -13,7 +14,9 @@ type HBDeviceList_msgRecType = {
 
 export interface HBSocketList_t {
   Mac: string
-  socket?: WebSocket | null
+  socket?: WebSocket
+  lastMsgSentTs?: number;
+  lastMsgRecTs?: number;
   //hsv?: { h: number, s: number, v: number }
 }
 
@@ -72,23 +75,29 @@ export const HBReducer = (
       break;
 
     case _reduxConstant.HB_SOCKET_LIST:
-      let __deviceFound = false
-      const __newList = state.HBSocketList.map((item, index) => {
-        if (item.Mac == action.props.Mac) {
-          __deviceFound = true
-          return Object.assign({}, item, { socket: action.props.socket })
-        }
-        return item
-      })
-      if (!__deviceFound) {
-        __newList.push({ Mac: action.props.Mac, socket: action.props.socket })
+      let preState = state.HBSocketList.find(item => item.Mac == action.props.item.Mac)
+      let newItem = Object.assign({}, preState ? preState : {}, action.props.item)
+      let __newList = state.HBSocketList
+      if (preState)
+        __newList = state.HBSocketList.map((item, index) => {
+          if (item.Mac == action.props.item.Mac) {
+            return newItem
+          }
+          return item
+        })
+      else {
+        __newList.push(newItem)
       }
       console.log("SOCKET LIST LENGTH >> " + __newList.length)
       return Object.assign({}, state, { HBSocketList: __newList })
       break;
 
+    case reduxConstant.HB_SOCKET_LIST_CLEAR:
+      return Object.assign({}, state, { HBSocketList: [] })
+      break;
+
     default:
-      return state;
+      return { ...state };
   }
 };
 
@@ -98,10 +107,14 @@ interface HBDeviceListReduxAction_Props {
   HBDeviceList: HBReducerReducerState_Prop;
 }
 export const _actions = {
+  /** @deprecated */
   HBList: _getBaseAction<HBDeviceListReduxAction_Props>(_reduxConstant.HB_DEVICELIST_REDUX),
+  /** @deprecated */
   HBMsgSent: _getBaseAction<HBDeviceList_msgSentType>(_reduxConstant.HB_DEVICELIST_MSG_SENT),
+  /** @deprecated */
   HBMsgRec: _getBaseAction<HBDeviceList_msgRecType>(_reduxConstant.HB_DEVICELIST_MSG_REC),
-  HBSocket: _getBaseAction<HBSocketList_t>(_reduxConstant.HB_SOCKET_LIST)
+  HBSocket: _getBaseAction<{ item: HBSocketList_t }>(_reduxConstant.HB_SOCKET_LIST),
+  HBSocketClear: _getBaseAction<{}>(_reduxConstant.HB_SOCKET_LIST_CLEAR)
 }
 
 export type _actionReturnTypes =
@@ -114,6 +127,9 @@ export type _actionReturnTypes =
   | __baseAction_Props<HBDeviceList_msgRecType> & {
     type: _reduxConstant.HB_DEVICELIST_MSG_REC
   }
-  | __baseAction_Props<HBSocketList_t> & {
+  | __baseAction_Props<{ item: HBSocketList_t }> & {
     type: _reduxConstant.HB_SOCKET_LIST
+  }
+  | __baseAction_Props<{}> & {
+    type: _reduxConstant.HB_SOCKET_LIST_CLEAR
   }

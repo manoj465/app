@@ -1,5 +1,4 @@
 import { call, CallEffect, PutEffect, takeEvery, takeLatest } from "redux-saga/effects";
-import types from "../../@types/huelite";
 import { _reduxConstant } from "../ReduxConstant";
 
 

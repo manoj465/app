@@ -1,13 +1,13 @@
-import types from "../../../@types/huelite";
 import { storeData } from "../../../services/db/storage";
 import { logger } from "../../../util/logger";
 import { _reduxConstant } from "../../ReduxConstant";
 import { appCtxDBAction } from "../saga/appCTXSagas"
 import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
+import UNIVERSALS from "../../../@universals";
 
 export interface appCTXReducerState_Prop {
   welcomeScreenStatus: boolean
-  user?: types.HUE_USER_t
+  user?: UNIVERSALS.GLOBALS.USER_t
 }
 
 export const initialState: appCTXReducerState_Prop = {
@@ -29,7 +29,7 @@ export const appCTXReducer = (
     case _reduxConstant.APPCTX_REDUX:
       action.props.log?.print("appCtxRedux state for update>> " + JSON.stringify(state))
       if (action.props.data)
-        return action.props.data
+        return Object.assign({}, state, action.props.data)
       else
         return state
       break;
@@ -40,7 +40,7 @@ export const appCTXReducer = (
 };
 
 interface userReduxAction_Props {
-  user?: types.HUE_USER_t
+  user?: UNIVERSALS.GLOBALS.USER_t
   log?: logger
 }
 interface appCtxReduxAction_Props {

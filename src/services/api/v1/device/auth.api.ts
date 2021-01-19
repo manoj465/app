@@ -1,4 +1,6 @@
+import Axios from "axios"
 import { logger } from "../../../../util/logger"
+import { serverURL } from "../../baseAxios"
 import { axiosBaseErrors_e, baseError } from "../../baseErrors"
 import { defaultRequest } from "../../baseRequest"
 
@@ -45,7 +47,7 @@ export const v1: fun_t =
                     log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
                 }
                 if (RES?.Mac && RES.Hostname) {
-                    log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                    log?.print("RES - resolve Data " + IP + " " + JSON.stringify(RES, null, 2))
                     return { RES }
                 }
                 return { ERR: { errCode: authApiErrors_e.AUTH_API_UNHANDLED } }

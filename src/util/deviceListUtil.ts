@@ -1,7 +1,7 @@
-import types from "../@types/huelite";
+import UNIVERSALS from "../@universals";
 import { reduxStore } from "../redux";
 
-export const getSafeDeviceList = (deviceList?: types.HUE_DEVICE_t[]) => {
+export const getSafeDeviceList = (deviceList?: UNIVERSALS.GLOBALS.DEVICE_t[]) => {
     if (!deviceList)
         deviceList = reduxStore.store.getState().deviceReducer.deviceList
     return deviceList.map(device => {

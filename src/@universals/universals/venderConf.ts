@@ -1,5 +1,5 @@
-//const vender = "HUElite"
-const vender: string = "BDE"
+const vender = "HUElite"
+//const vender: string = "BDE"
 
 
 export const venderConf = {

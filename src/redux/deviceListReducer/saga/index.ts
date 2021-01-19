@@ -1,5 +1,5 @@
 import { all } from "redux-saga/effects";
-import { _deviceListSaga_watcher, _deviceSaga_watcher, _deviceListDB_watcher, _deviceListSaga_action, _deviceSaga_action } from "./deviceList";
+import { _deviceSaga_watcher, _deviceSaga_action, _deviceListSaga_watcher, _deviceListDB_watcher, _deviceListSaga_action, } from "./deviceList";
 import { _colorSaga_action, _colorSaga_watcher/* , _brSaga_action, _brSaga_watcher */ } from "./color.saga"
 
 export default function* _saga() {

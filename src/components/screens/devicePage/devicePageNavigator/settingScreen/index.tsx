@@ -5,12 +5,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { types } from "../../../../../@types/huelite";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../common/styles"
-import { deviceListOperation } from "../../../../../util/app.operator/device.operator"
 import { useSelector } from "react-redux";
 import { _appState } from "../../../../../redux/rootReducer";
+import UNIVERSALS from "../../../../../@universals";
+import { appOperator } from "../../../../../util/app.operator";
 
 type navigation_t = StackNavigationProp<
   devicePageStackParamList,
@@ -58,9 +58,9 @@ export const DeviceSettingScreen = ({
         onPress={() => {
           if (name.length >= 6) {
             //console.log("old device is " + JSON.stringify(device, null, 2))
-            let tempDevice: types.HUE_DEVICE_t = { ...device, deviceName: name }
+            let tempDevice: UNIVERSALS.GLOBALS.DEVICE_t = { ...device, deviceName: name }
             //console.log("new device is " + JSON.stringify(tempDevice, null, 2))
-            deviceListOperation({ props: { cmd: "ADD_NEW_DEVICE", newDevice: tempDevice, forceUpdate: true } })
+            appOperator.device({ cmd: "ADD_UPDATE_DEVICES", newDevices: [tempDevice] })
             setName("")
           } else if (name.length) {
             Alert.alert("DEVICE NAME TOO SHORT", "Device name must be atleast 6 characters log. consider using suffix or prefix with " + name)

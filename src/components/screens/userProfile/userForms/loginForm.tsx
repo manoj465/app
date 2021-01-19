@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
 import { navigationProp } from "../index";
 
 
@@ -86,7 +87,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                     secureTextEntry={true}
                 />
 
-                <RectButton /* Sec3: Login Input */
+                <NewRectButtonWithChildren /* Sec3: Login Button */
                     onPress={async () => {
                         log?.print("login button pressed")
                         appOperator.user({
@@ -116,7 +117,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                         elevation: 5,
                     }}>
                     <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}> Login</Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
             </View>
             <RectButton /* Sec2: Signup Form switch button */
                 style={{ marginTop: "5%" }}

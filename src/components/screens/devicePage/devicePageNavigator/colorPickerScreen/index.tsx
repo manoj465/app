@@ -7,12 +7,12 @@ import Animated, { add, max, min } from "react-native-reanimated";
 import { hsv2color, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
-import { deviceListOperation } from "../../../../../util/app.operator/device.operator";
 import { logger } from "../../../../../util/logger";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../common/styles";
 import { DevicePageHeader } from "../../DevicePageHeader";
 import { ColorPickerSection } from "./colorPickerSection";
+import { appOperator } from "../../../../../util/app.operator";
 
 export enum viewTypeEnum {
   DEVICE_COLOR_PICKER_SCREEN = 0,
@@ -67,14 +67,12 @@ export const DeviceColorPickerScreen = ({
     s: number
   }
   const updateColor = ({ h, s }: updateColorProps) => {
-    deviceListOperation({
-      props: {
-        cmd: "COLOR_UPDATE",
-        deviceMac: [device.Mac],
-        hsv: { h, s },
-        gestureState: State.END,
-        log
-      },
+    appOperator.device({
+      cmd: "COLOR_UPDATE",
+      deviceMac: [device.Mac],
+      hsv: { h, s },
+      gestureState: State.END,
+      log
     })
   }
 

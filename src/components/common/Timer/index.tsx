@@ -1,18 +1,16 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Modal, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { RectButton, ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
-import types from "../../../@types/huelite";
+import UNIVERSALS from "../../../@universals";
 import { appState } from "../../../redux";
 import { appNegativeColor, appPositiveColor } from "../../../theme/colors/highlightColors";
-import { timerDaytimeType, timerEventType } from "../../../util/dummyData/timerTypes";
+import { appOperator } from "../../../util/app.operator";
+import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
 import { logger } from "../../../util/logger";
-import STYLES from "../../common/styles"
-import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
-import { TimePicker } from "../TimePicker";
-import { Feather } from "@expo/vector-icons"
+import { NewTimerDialog } from "./NewTimerDialog";
 
 const days = [
   { day: "M" },
@@ -23,87 +21,20 @@ const days = [
   { day: "S" },
   { day: "S" },
 ];
-const hrs = [
-  { _data: "01", val: 1 },
-  { _data: "02", val: 2 },
-  { _data: "03", val: 3 },
-  { _data: "04", val: 4 },
-  { _data: "05", val: 5 },
-  { _data: "06", val: 6 },
-  { _data: "07", val: 7 },
-  { _data: "08", val: 8 },
-  { _data: "09", val: 9 },
-  { _data: "10", val: 10 },
-  { _data: "11", val: 11 },
-  { _data: "12", val: 12 },
-];
-const mins = [
-  { _data: "00", val: 0 },
-  { _data: "05", val: 5 },
-  { _data: "10", val: 10 },
-  { _data: "15", val: 15 },
-  { _data: "20", val: 20 },
-  { _data: "25", val: 25 },
-  { _data: "30", val: 30 },
-  { _data: "35", val: 35 },
-  { _data: "40", val: 40 },
-  { _data: "45", val: 45 },
-  { _data: "50", val: 50 },
-
-  { _data: "55", val: 55 },
-  /* { _data: "12" },
-  { _data: "13" },
-  { _data: "14" },
-  { _data: "15" },
-  { _data: "16" },
-  { _data: "17" },
-  { _data: "18" },
-  { _data: "19" },
-  { _data: "20" },
-
-  { _data: "21" },
-  { _data: "22" },
-  { _data: "23" },
-  { _data: "24" },
-  { _data: "25" },
-  { _data: "26" },
-  { _data: "27" },
-  { _data: "28" },
-  { _data: "29" },
-  { _data: "30" },
-
-  { _data: "41" },
-  { _data: "42" },
-  { _data: "43" },
-  { _data: "44" },
-  { _data: "45" },
-  { _data: "46" },
-  { _data: "47" },
-  { _data: "48" },
-  { _data: "49" },
-  { _data: "50" },
-
-  { _data: "51" },
-  { _data: "52" },
-  { _data: "53" },
-  { _data: "54" },
-  { _data: "55" },
-  { _data: "56" },
-  { _data: "57" },
-  { _data: "58" },
-  { _data: "59" }, */
-];
 
 interface Props {
-  device: types.HUE_DEVICE_t
+  device: UNIVERSALS.GLOBALS.DEVICE_t
   log?: logger
 }
-
+/** 
+ * 
+ * ## todo
+ * featureRequest timer delete action conformation to avoid unwanted delete operation
+ */
 export const Timer = ({ device, log }: Props) => {
   const deviceFromStore = useSelector((state: appState) => state.deviceReducer.deviceList.find(item => item.Mac == device.Mac))
-  const [showTimerEditorDialog, setShowTimerEditorDialog] = useState<types.HUE_TIMER_t | undefined>(undefined)
-  const [hrIndex, setHrIndex] = useState<number>(8);
-  const [minIndex, setMinIndex] = useState<number>(0);
+  const [timerInEditor, setTimerInEditor] = useState<Omit<UNIVERSALS.GLOBALS.TIMER_t, "id"> & { id?: string } | undefined>(undefined)
+
 
 
   return (
@@ -112,9 +43,9 @@ export const Timer = ({ device, log }: Props) => {
       style={{
         width: "100%",
       }} >
-      {device.timers?.length && device?.timers.map((timerFromProp, index) => {
+      {deviceFromStore && deviceFromStore.timers.map((timerFromProp, index) => { /* Sec2: timer block container */
         return (
-          <View /* Sec2: timer block container */
+          <View
             style={styles.timerBlockConatiner}
             key={index}>
             <View /* Sec3: Left Side Section */
@@ -130,7 +61,7 @@ export const Timer = ({ device, log }: Props) => {
                 style={{
                   width: 1,
                   borderLeftColor:
-                    timerFromProp?.ET == timerEventType.ON
+                    timerFromProp?.ET == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON
                       ? appPositiveColor
                       : "#aaa",
                   borderLeftWidth: 2,
@@ -149,7 +80,7 @@ export const Timer = ({ device, log }: Props) => {
                 {":"}
                 {timerFromProp.M < 10 ? "0" : ""}
                 {timerFromProp.M + " "}
-                {timerFromProp.DT == timerDaytimeType.AM ? "AM" : "PM"}
+                {timerFromProp.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM ? "AM" : "PM"}
               </Text>
             </View>
             <View /* Sec3: Timer Card */
@@ -191,7 +122,7 @@ export const Timer = ({ device, log }: Props) => {
                 <View /* Sec5: Event Type */
                   style={{ marginLeft: 20, marginTop: 10 }}>
                   <Text style={{ color: "white", fontSize: 12 }}>
-                    {timerFromProp?.ET == timerEventType.ON
+                    {timerFromProp?.ET == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON
                       ? "TURN ON"
                       : "TURN OFF"}
                   </Text>
@@ -214,7 +145,7 @@ export const Timer = ({ device, log }: Props) => {
                     {timerFromProp?.H + " : "}
                     {timerFromProp?.M && timerFromProp.M < 10 ? "0" : ""}
                     {timerFromProp?.M + " "}
-                    {timerFromProp?.DT == timerDaytimeType.AM
+                    {timerFromProp?.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM
                       ? "AM"
                       : "PM"}
                   </Text>
@@ -255,7 +186,7 @@ export const Timer = ({ device, log }: Props) => {
                     height: 30,
                   }}
                   onPress={() => {
-                    setShowTimerEditorDialog(timerFromProp)
+                    setTimerInEditor(timerFromProp)
 
                   }}>
                   <Text
@@ -283,29 +214,22 @@ export const Timer = ({ device, log }: Props) => {
                     alignItems: "center",
                     //backgroundColor: "#EC7063",
                   }}
-                /* onPress={() => {
-                  if (!deviceMacFromNavigator) {
-                    dispatch(
-                      groupTimerSagaAction({
-                        timer: Object.assign({}, timerFromProp, {
-                          devicesMac: [],
-                        }),
-                        groupUUID: group.groupUUID,
-                      })
-                    );
-                  } else {
-                    dispatch(
-                      groupTimerSagaAction({
-                        timer: Object.assign({}, timerFromProp, {
-                          devicesMac: timerFromProp.devicesMac.filter(
-                            (item) => item != deviceMacFromNavigator
-                          ),
-                        }),
-                        groupUUID: group.groupUUID,
-                      })
-                    );
-                  }
-                }} */
+                  onPress={() => {
+                    log?.print("currentTimersList is " + JSON.stringify(deviceFromStore.timers))
+                    let newTimers: UNIVERSALS.GLOBALS.TIMER_t[] = []
+                    deviceFromStore.timers.forEach((deleteTimerObj, deleteTimerObjIndex) => {
+                      if (deleteTimerObj.id == timerFromProp.id) {
+                        log?.print("timer to be deleted at index " + deleteTimerObjIndex + ", timerId is " + deleteTimerObj.id)
+                      }
+                      newTimers.push(deleteTimerObj)
+                    })
+                    log?.print("timersList after deletion " + JSON.stringify({ ...device, timers: newTimers }))
+                    appOperator.device({
+                      cmd: "ADD_UPDATE_DEVICES",
+                      newDevices: [{ ...device, timers: newTimers, localTimeStamp: getCurrentTimeStampInSeconds() }],
+                      log
+                    })
+                  }}
                 >
                   <Text
                     style={{
@@ -322,126 +246,35 @@ export const Timer = ({ device, log }: Props) => {
           </View>
         );
       })}
-      <RectButton /* Sec2: AddNew Event Button */
+      {(deviceFromStore && deviceFromStore.timers?.length < 5) && <RectButton /* Sec2: AddNew Event Button */
         style={[
-          styles.timerBlockConatiner,
-          { justifyContent: "center", alignItems: "center", minHeight: 120 },
+          {
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 120
+          },
         ]}
-      /*   onPress={() => {
-          dispatch(
-            timerDialogShowHideReduxAction({
-              showTimerDialog: true,
-            })
-          );
-        }} */
+        onPress={() => {
+          setTimerInEditor({
+            DAYS: [true, true, true, true, true, false, false],
+            H: 10,
+            M: 0,
+            ET: UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON,
+            DT: UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM,
+            STATUS: 1
+          })
+        }}
       >
         <Ionicons name="ios-add-circle" size={50} color="#555" />
         <Text style={{ position: "absolute", bottom: 10, fontWeight: "bold" }}>
           ADD NEW EVENT
         </Text>
-      </RectButton>
-      <Modal /* Sec2: timer editor dialog */
-        animationType="slide"
-        transparent
-        visible={showTimerEditorDialog != undefined} >
-        <View /* Sec3: modal container */
-          style={{
-            flex: 1,
-            //backgroundColor: "red",
-            justifyContent: "center",
-            alignItems: "center"
-          }}>
-          <View /* Sec3: modal inner container */
-            style={[{
-              width: "85%",
-              minHeight: 300,
-              backgroundColor: "white",
-              borderRadius: 20
-            }, STYLES.shadow]}>
-            <View /* Sec4:  header */
-              style={{
-                backgroundColor: "green",
-                borderRadius: 20,
-                margin: 5,
-                height: 100,
-                width: "97%",
-                justifyContent: "flex-end",
-                paddingLeft: 10
-              }}>
-              <Feather name="sun" size={24} color="white" />
-              <Text style={[
-                STYLES.H1
-                , {
-                  color: "white",
-                  marginBottom: 10,
-                  marginLeft: 0
-                }]}>{(hrs[hrIndex].val > 9 ? "" : "0") + hrs[hrIndex].val + " : " + "00"}</Text>
-            </View>
-            <View /* Sec4: middle container */
-              style={{
-                display: "flex",
-                flexDirection: "row"
-              }}>
-              <TimePicker
-                initValue={1}
-                heading="HRS"
-                maxVal={hrs.length}
-                value={hrs[hrIndex] ? hrs[hrIndex]._data : ""}
-                index={hrIndex}
-                setIndex={setHrIndex}
-              />
-              <TimePicker
-                initValue={5}
-                heading="MIN"
-                maxVal={mins.length}
-                value={mins[minIndex] ? mins[minIndex]._data : ""}
-                index={minIndex}
-                setIndex={setMinIndex}
-              />
-              <TimePicker
-                initValue={5}
-                heading="MIN"
-                maxVal={mins.length}
-                value={mins[minIndex] ? mins[minIndex]._data : ""}
-                index={minIndex}
-                setIndex={setMinIndex}
-              />
-            </View>
-            <View /* Sec4: modal button container */
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                marginBottom: 10
-              }}>
-              <View /* Sec5: save/update button */
-                style={{ flex: 1, paddingHorizontal: 5 }}>
-                <NewRectButtonWithChildren /* Sec5: close dialog button */
-                  onPress={() => {
-                    // - [ ] print incoming timer
-                    // - [ ] process the timer addition/update here
-                    // - [ ] update local state with local timetamp of device
-                    // - [ ] update the new device tate to cloud
-                  }}
-                  useReanimated={false}
-                  style={{ backgroundColor: "green" }}>
-                  <Text>Update</Text>
-                </NewRectButtonWithChildren>
-              </View>
-              <View /* Sec5: close dialog button */
-                style={{ flex: 1, paddingHorizontal: 5 }}>
-                <NewRectButtonWithChildren
-                  onPress={() => {
-                    setShowTimerEditorDialog(undefined)
-                  }}
-                  useReanimated={false}
-                  style={{ backgroundColor: "red" }}>
-                  <Text>cancel</Text>
-                </NewRectButtonWithChildren>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      </RectButton>}
+      <NewTimerDialog /* Sec2: timer dialog */
+        device={deviceFromStore} // IMP send device from redux state so that receiving component can have latest state of device always
+        timerInEditor={timerInEditor}
+        setTimerInEditor={setTimerInEditor}
+        log={log ? new logger("timer editor dialog", log) : undefined} />
     </ScrollView>
   );
 };
@@ -450,7 +283,7 @@ const styles = StyleSheet.create({
   container: {},
   timerBlockConatiner: {
     width: "100%",
-    height: 160,
+    minHeight: 120,
     backgroundColor: "#fff",
     overflow: "hidden",
     display: "flex",

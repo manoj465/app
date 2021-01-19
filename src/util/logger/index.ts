@@ -1,4 +1,4 @@
-import types from "../../@types/huelite";
+import UNIVERSALS from "../../@universals";
 import { getSafeDeviceList } from "../deviceListUtil";
 
 /** @deprecated */
@@ -13,17 +13,19 @@ export enum printType {
 
 
 export class logger {
-    owner: string
+    prefix: string
     printAll = false
     printable = [
         "MAIN ACTIVITY", /* App.ts */
-        "DEVICE MODES SCREEN", /* device modes screen in device page */
+        "BG SERVICE",
+        //"DEVICE MODES SCREEN", /* device modes screen in device page */
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
         //"DASHBOARD",/* DAHSBOARD SCREEN */
         //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
         //"TEST FUNCTION", /* testfunction prints */
         "USER PROFILE",
-        //"APP SETTING"
+        //"APP SETTING",
+        //"PAIRING_SCREEN",
     ]
     /**
      * 
@@ -31,29 +33,55 @@ export class logger {
      */
     constructor(prefix?: string, _log?: logger) {
         let temp = (_log ? _log?.getPrefix() : "")
-        this.owner = temp + " [[ " + prefix?.toUpperCase() + " ]]"
+        this.prefix = temp + " [[ " + prefix?.toUpperCase() + " ]]"
     }
 
     /** @deprecated */
     addStack = (s: string) => {
-        this.owner += " | [" + s + "]"
+        this.prefix += " | [" + s + "]"
     }
     /** @deprecated */
     removeStack = () => {
-        this.owner = this.owner.substring(0, this.owner.lastIndexOf('|') - 1)
+        this.prefix = this.prefix.substring(0, this.prefix.lastIndexOf('|') - 1)
     }
 
     /** return class prefix --without bracket */
     getPrefix = () => {
-        return this.owner ? this.owner : ""
+        return this.prefix ? this.prefix : ""
+    }
+
+    /**
+     * @description print without prefix
+     */
+    _print = (s: string, type?: printType) => {
+        if (this.canPrint())
+            console.log(" " + s + " ")
+        return this
     }
 
     print = (s: string, type?: printType) => {
         if (this.canPrint())
-            console.log(this.owner + " >> " + s)
+            console.log(" " + this.prefix + " >> " + s + " ")
+        return this
     }
 
-    printDeviceList = (deviceList?: types.HUE_DEVICE_t[],) => {
+    printPretty = (s: string) => {
+        if (this.canPrint())
+            this.print(JSON.stringify(s, null, 2))
+        return this
+    }
+
+    /**
+     * @description print without prefix
+     */
+    _printPretty = (s: object | undefined) => {
+        if (this.canPrint() && s)
+            console.log(" " + JSON.stringify(s, null, 2) + " ")
+        return this
+    }
+
+    /** @deprecated */
+    printDeviceList = (deviceList?: UNIVERSALS.GLOBALS.DEVICE_t[],) => {
         /*   if (!deviceList)
               deviceList = reduxStore.store.getState().deviceReducer.deviceList
           console.log(this.owner + " >> " + JSON.stringify(getSafeDeviceList(deviceList), null, 2)) */
@@ -64,7 +92,7 @@ export class logger {
             return true
         let cprint = false
         this.printable.forEach(item => {
-            if (this.owner.includes(item.toUpperCase()))
+            if (this.prefix.includes(item.toUpperCase()))
                 cprint = true
         });
         return cprint

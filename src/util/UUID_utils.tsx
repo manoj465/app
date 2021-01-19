@@ -1,4 +1,4 @@
-import UNIVERSALS from "../@types"
+import UNI from "../@universals"
 import { reduxStore } from "../redux";
 
 export function uuidv4() {
@@ -10,7 +10,7 @@ export function uuidv4() {
 }
 
 export function generate_UUID_10_withVenderPrefix() {
-  return UNIVERSALS.venderConf.venderPrefix + "xxxxxxxxxx".replace(/[xy]/g, function (c) {
+  return UNI.venderConf.venderPrefix + "_xxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);

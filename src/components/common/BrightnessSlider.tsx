@@ -1,11 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Dimensions, View, Text } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
-import Animated, { add, block, call, cond, divide, eq, event, multiply, set, useCode, concat } from "react-native-reanimated";
+import Animated, { add, block, call, concat, cond, divide, eq, event, multiply, set, useCode } from "react-native-reanimated";
 import { clamp, ReText, round, useValue } from "react-native-redash";
-import { deviceListOperation } from "../../util/app.operator/device.operator";
-import { getCurrentTimeStamp, getTimeDiffNowInMs } from "../../util/DateTimeUtil";
+import { appOperator } from "../../util/app.operator";
+import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 import { logger } from "../../util/logger";
 
 const sliderHeight = 35;
@@ -28,24 +28,26 @@ export default ({
   bgColor = ["#ffffff00", "#ffffff77"],
   deviceMac,
   color = "#ffffff",
-  log
+  log,
+  ...props
 }: Props) => {
   //console.log("initBr : " + initBrValue);
   const pinState = useValue(State.UNDETERMINED);
   const [sliderWidth, setSliderWidth] = useState(0);
   const offset = useValue((initBrValue / 100) * (width * 0.9));
   const offsetX = clamp(offset, 0, sliderWidth - sliderHeight);
+  //@ts-ignore
   const BR = round(multiply(divide(offsetX, (sliderWidth - sliderHeight)), 100))
-  let timeStamp = getCurrentTimeStamp();
+  let timeStamp = Date.now();
 
   const gestureHandler = event(
     [
       {
         //@ts-ignore
-        nativeEvent: ({ x, state: temp1state }) =>
+        nativeEvent: ({ translationX, state: temp1state }) =>
           block([
             set(pinState, temp1state),
-            cond(eq(temp1state, State.ACTIVE), set(offset, add(offset, x))),
+            cond(eq(temp1state, State.ACTIVE), set(offset, add(offset, translationX))),
           ]),
       },
     ],
@@ -55,14 +57,12 @@ export default ({
   const updateColor = (v: number, gestureState: State, log?: logger) => {
     if (v < 5)
       v = 0
-    deviceListOperation({
-      props: {
-        cmd: "COLOR_UPDATE",
-        deviceMac,
-        hsv: { v },
-        gestureState,
-        log
-      },
+    appOperator.device({
+      cmd: "COLOR_UPDATE",
+      deviceMac,
+      hsv: { v },
+      gestureState,
+      log
     })
   }
 
@@ -71,7 +71,7 @@ export default ({
       call([BR, pinState], ([BR, pinState]) => {
         if (getTimeDiffNowInMs(timeStamp) > 200 && pinState == State.ACTIVE) {
           console.log("<<<< Sending Bightness- >>>>")
-          timeStamp = getCurrentTimeStamp();
+          timeStamp = Date.now();
           updateColor(BR, pinState, log)
         }
         else {
@@ -102,11 +102,13 @@ export default ({
         alignSelf: "flex-end",
         marginBottom: 6,
       }}>
-        <ReText style={{
-          color: "#fff",
-          fontSize: 25,
-          fontWeight: "bold",
-        }} text={concat(BR)} />
+        <ReText
+          style={{
+            color: "#fff",
+            fontSize: 25,
+            fontWeight: "bold",
+          }}
+          text={concat(BR)} />
         <Text
           style={{
             color: "#fff",

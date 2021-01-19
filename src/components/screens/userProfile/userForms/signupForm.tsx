@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native'
+import React, { useState } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { RectButton, TextInput } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
-import { _appState } from '../../../../redux/rootReducer';
+import UNIVERSALS from '../../../../@universals';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
-import { navigationProp } from "../index"
+import { navigationProp } from "../index";
 
 /**
  * 
@@ -157,7 +156,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                             onSignupFailed: ({ ERR }) => {
                                 Alert.alert(ERR?.errCode ? ERR?.errCode : "UNKNOWN ERROR", ERR?.errMsg ? ERR.errMsg : "This could be due to technical error at backend, you can report the issue our forum. We regret for the inconveniences")
                             },
-                            onSignupSuccess: () => {
+                            onSignupSuccess: (user) => {
                                 navigation.replace("dashboard")
                             },
                             log: log ? new logger("user signup operator", log) : undefined

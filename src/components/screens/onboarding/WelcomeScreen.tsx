@@ -1,79 +1,35 @@
-import React, { useRef } from "react";
-import { Dimensions, Platform, StyleSheet, View } from "react-native";
-import Animated, { multiply } from "react-native-reanimated";
-import { interpolateColor, onScrollEvent, useValue } from "react-native-redash";
-import { useDispatch, useSelector } from "react-redux";
-import { WelcomeFooterSlide } from "./WelcomeFooterSlide";
-import { SLIDE_HEIGHT, WelcomeSlide } from "./WelcomeSlide";
-import api from "../../../services/api"
-import Axios from "axios";
-import { reduxStore } from "../../../redux";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
-import { MainRouterStackParamList } from "../../../routers/MainRouter"
-import { _appState } from "../../../redux/rootReducer";
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useState } from "react";
+import { Image, Text, View } from "react-native";
+import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { NewRectButton } from "../../common/buttons/RectButtonCustom";
+import styles from "../../common/styles";
 
-const { width, height } = Dimensions.get("window");
-const BORDER_RADIUS = 75;
-
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flex: 1,
-    backgroundColor: "white",
-  },
-  slideContainer: {
-    flex: 0.6,
-    backgroundColor: "cyan",
-    borderBottomRightRadius: BORDER_RADIUS,
-  },
-  footer: { flex: 0.4 },
-  footerContent: {
-    flex: 1,
-    flexDirection: "row",
-    backgroundColor: "white",
-    borderTopLeftRadius: BORDER_RADIUS,
-  },
-});
 
 const slides = [
   {
-    label: "Relaxed",
-    color: "#BFEAF5",
-    footerContent: {
-      title: "Relaxed",
-      description:
-        "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    },
+    heading: "Playful",
+    subText: "choose with different preset and scenes, and play with million of colors",
+    assest: require("../../../../assets/images/onboarding/OB_3.png"),
   },
   {
-    label: "Playful",
-    color: "#BEECC4",
-    footerContent: {
-      title: "Playful",
-      description:
-        "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    },
+    heading: "Voice Control",
+    subText: "Now pair your light with voice assistants like alexa, Google Assistant to enjoy effortless and voice controls",
+    assest: require("../../../../assets/images/onboarding/OB_4.png"),
   },
   {
-    label: "Excentric",
-    color: "#FFE4D9",
-    footerContent: {
-      title: "Excentric",
-      description:
-        "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    },
-  },
+    heading: "Control from Anywhere",
+    subText: "Control your appliances from anywhere in the world with HUElite Smart App",
+    assest: require("../../../../assets/images/onboarding/OB_2.png"),
+  }
+  ,
   {
-    label: "Funky",
-    color: "#FFDDDD",
-    footerContent: {
-      title: "Funky",
-      description:
-        "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...",
-    },
-  },
-];
+    heading: "Ease of Use",
+    subText: "Full control weather you have singler or multiple lights, from one screen. Just pair your device and you are good to go",
+    assest: require("../../../../assets/images/onboarding/OB_1.png"),
+  }
+]
 
 type navigationProp_t = StackNavigationProp<MainRouterStackParamList, "onboarding">;
 type routeProp_t = RouteProp<MainRouterStackParamList, "onboarding">;
@@ -84,73 +40,145 @@ interface props_t {
 }
 
 export const WelcomeScreen = ({ navigation }: props_t) => {
-  const dispatch = useDispatch();
-  const appCTX = useSelector<_appState>(({ appCTXReducer: { appCTX } }) => appCTX);
-  const scroll = useRef(null);
-  const x = useValue(0);
-  const onScroll = onScrollEvent({ x });
-  const backgroundColor: any = interpolateColor(x, {
-    inputRange: slides.map((_, i) => i * width),
-    outputRange: slides.map((slide) => slide.color),
-  });
+  const [slideIndex, setSlideIndex] = useState(0)
 
   return (
-    <View style={styles.container}>
-      <Animated.View style={[styles.slideContainer, { backgroundColor }]}>
-        <Animated.ScrollView
-          ref={scroll}
-          horizontal
-          snapToInterval={width}
-          decelerationRate="fast"
-          showsHorizontalScrollIndicator={false}
-          bounces={false}
-          scrollEventThrottle={1}
-          {...{ onScroll }}
-        >
-          {slides.map(({ label }, index) => (
-            <WelcomeSlide key={index} right={!!(index % 2)} {...{ label }} />
-          ))}
-        </Animated.ScrollView>
-      </Animated.View>
-      <View style={styles.footer}>
-        <Animated.View
-          style={{ ...StyleSheet.absoluteFillObject, backgroundColor }}
-        />
-        <Animated.View
-          style={[
-            styles.footerContent,
-            {
-              width: width * slides.length,
-              transform: [{ translateX: multiply(x, -1) }],
-            },
-          ]}
-        >
-          {slides.map(({ footerContent }, index) => (
-            <WelcomeFooterSlide
-              key={index}
-              onPress={async () => {
-                if (Platform.OS == "web") {
-                  navigation.replace("user");
-                } else
-                  if (scroll?.current && slides.length - 1 != index) {
-                    try {
-                      //@ts-ignore
-                      scroll.current.getNode().scrollTo({ x: width * (index + 1), animated: true });
-                      console.log("index is = " + index)
-                    } catch (error) { }
-                  } else if (slides.length - 1 == index) {
-                    navigation.replace("user");
-                  }
-              }}
-              /*  onPress={() => {
-                 reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: { userName: "test_user 2", email: "testmail@gmail.com", ts: 0 }, log: (s) => { console.log("[REDUX TEST]" + s) } }))
-               }} */
-              last={index === slides.length - 1}
-              {...{ footerContent }}
-            />
-          ))}
-        </Animated.View>
-      </View>
+    <View style={{
+      backgroundColor: styles.themeColors.primary,
+      flex: 1,
+      display: "flex"
+    }}>
+      <Header slideIndex={slideIndex} />
+      <Footer
+        onNext={() => {
+          if (slideIndex < slides.length - 1)
+            setSlideIndex(slideIndex + 1)
+          else if (slideIndex == slides.length - 1)
+            navigation.replace("user")
+        }}
+        onSkip={() => {
+          navigation.replace("user")
+        }} />
     </View>
   );
 };
+
+
+const Header = ({ slideIndex }: { slideIndex: number }) => {
+
+  return (
+    <View style={{
+      backgroundColor: "white",
+      flex: 0.85,
+      borderBottomLeftRadius: 25,
+      borderBottomRightRadius: 25,
+      overflow: "hidden"
+    }}>
+      <View /** header slides container */
+        style={{
+          flex: 1,
+          height: "100%",
+          width: slides.length + "00%",
+          display: "flex",
+          flexDirection: "row",
+          position: "absolute",
+          top: 0,
+          left: "-" + slideIndex + "00%"
+        }}>
+        {slides.map((item, index) => {
+          return (
+            <View style={{
+              paddingHorizontal: 20,
+              flex: 1,
+              //backgroundColor: "red",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+              <Image
+                source={item.assest}
+                style={{
+                  height: 300,
+                  width: 250
+                }} />
+              <Text style={[
+                styles.H1,
+                {
+                  textAlign: "center",
+                  marginTop: 50
+                }]}>{item.heading}</Text>
+              <Text style={[styles.H7, { textAlign: "center", marginTop: 20 }]}>{item.subText}</Text>
+            </View>
+          )
+        })}
+      </View >
+      <View /** slider dots container */
+        style={{
+          position: "absolute",
+          width: "100%",
+          bottom: 15,
+          left: 0,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          //backgroundColor: "green"
+        }}>
+        {slides.map((item, index) => {
+          return (
+            <View style={{
+              height: 8,
+              width: slideIndex == index ? 15 : 8,
+              borderRadius: 10,
+              backgroundColor: styles.themeColors.primary,
+              marginHorizontal: 5
+            }} />
+          )
+        })}
+      </View>
+    </View >
+
+  )
+}
+
+const Footer = ({ onNext, onSkip }: { onNext: () => void, onSkip: () => void }) => {
+
+  return (
+    <View style={{
+      //backgroundColor: 'red',
+      backgroundColor: styles.themeColors.primary,
+      justifyContent: "flex-end",
+      flex: 0.15,
+    }}>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          paddingHorizontal: 20
+        }}>
+        <NewRectButton
+          text="Skip"
+          textStyle={[styles.H6, { color: "white" }]}
+          buttonStyle={{
+            width: 100,
+            alignSelf: "center",
+            backgroundColor: "transparent",
+            shadowOpacity: 0,
+            elevation: 0
+          }}
+          onPress={onSkip} />
+        <NewRectButton
+          text="Next"
+          textStyle={[styles.H6, { color: "white" }]}
+          buttonStyle={{
+            width: 100,
+            alignSelf: "center",
+            backgroundColor: "transparent",
+            shadowOpacity: 0,
+            elevation: 0
+          }}
+          onPress={onNext} />
+      </View>
+    </View >
+  )
+}

@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
-import types from "../../../@types/huelite";
+import UNIVERSALS from "../../../@universals";
 import { _appState } from "../../../redux/rootReducer";
 
 const modes = [
@@ -37,7 +37,7 @@ const modes = [
 ];
 
 interface Props {
-  device: types.HUE_DEVICE_t;
+  device: UNIVERSALS.GLOBALS.DEVICE_t;
 }
 
 export const Modes = ({ device }: Props) => {

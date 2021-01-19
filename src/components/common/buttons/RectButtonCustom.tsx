@@ -17,7 +17,7 @@ interface Props {
 /** 
  * //TODO add support for dynamic JSX.elsment as children
  */
-export const NewRectButton = ({ buttonStyle, textStyle, text, onPress = () => { }, useReanimated = true }: Props) => {
+export const NewRectButton = ({ buttonStyle, textStyle, text, onPress = () => { }, useReanimated = false }: Props) => {
     return (
         <View style={[STYLES.shadow, _styles.buttonContainer, buttonStyle]}>
             {useReanimated ? <RectButton style={[_styles.innerbutton]}
@@ -48,7 +48,7 @@ interface NewRectButtonWithChildrenProps {
  * @param children `React.Node` children component
  * @returns  
  */
-export const NewRectButtonWithChildren = ({ style, innerCompStyle, onPress = () => { }, useReanimated = true, children, shadow }: NewRectButtonWithChildrenProps) => {
+export const NewRectButtonWithChildren = ({ style, innerCompStyle, onPress = () => { }, useReanimated = false, children, shadow }: NewRectButtonWithChildrenProps) => {
     return (
         <View style={[_styles.buttonContainer, shadow ? STYLES.shadow : {}, style,]}>
             {useReanimated ?

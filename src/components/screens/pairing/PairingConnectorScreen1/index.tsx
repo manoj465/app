@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import LottieView from "lottie-react-native";
 //native imports
 import api from "../../../../services/api";
-import { logFun } from "../../../../util/logger";
+import { logFun, logger } from "../../../../util/logger";
 import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
 
 
@@ -24,18 +24,19 @@ interface Props {
 
 const { width, height } = Dimensions.get("window");
 export const PairingConnectorScreen1 = ({ navigation }: Props) => {
-  const log = logFun("PAIRING_SCREEN_1", undefined, true)
+  const log = new logger("PAIRING_SCREEN_1")
   const [groupName, setGroupName] = useState("BedRoom");
   const dispatch = useDispatch();
   let _animation = null;
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1" })
+      const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: log ? new logger("auth api", log) : undefined })
       console.log("<><><> " + JSON.stringify(res))
       if (res.RES?.Mac) {
         clearInterval(interval)
-        navigation.replace("PairScreen_2", { newDevice: { ...res.RES, ts: getCurrentTimeInSeconds(), IP: "192.168.4.1", hsv: { h: 0, s: 100, v: 100 }, deviceName: "" } });
+        console.log("navigating to next screen - screen-2")
+        navigation.replace("PairScreen_2", { newDevice: { ...res.RES, localTimeStamp: getCurrentTimeInSeconds(), IP: "192.168.4.1", hsv: { h: 0, s: 100, v: 100 }, deviceName: "", timers: [] } });
       }
 
     }, 3000);

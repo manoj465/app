@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { RectButton, TextInput } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import types from '../../../../@types/huelite';
+import UNIVERSALS from '../../../../@universals';
 import { _appState } from '../../../../redux/rootReducer';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
@@ -16,7 +16,7 @@ import { navigationProp } from "../index"
 interface SignUpHeader_t {
     navigation: navigationProp
     setHeaderView?: React.Dispatch<React.SetStateAction<string>>
-    user?: types.HUE_USER_t
+    user?: UNIVERSALS.GLOBALS.USER_t
     log?: logger
 }
 export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpHeader_t) => {

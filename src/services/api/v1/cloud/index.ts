@@ -1,8 +1,7 @@
-import * as loginAPI from "./login.api"
-import * as signupAPI from "./signup.api"
-import * as userUpdateAPI from "./userUpdate.api"
+import * as device from "./device"
+import * as user from "./user"
 
 
-export { loginAPI, signupAPI, userUpdateAPI }
+export { user, device }
 
 

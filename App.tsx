@@ -1,6 +1,8 @@
+//@ts-ignore
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { NavigationContainer } from "@react-navigation/native";
+//@ts-ignore
 import AppLoading from "expo-app-loading";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -28,8 +30,8 @@ const client = new ApolloClient({
 export default function App() {
   const log = new logger("MAIN ACTIVITY")
   const [appLoading, setAppLoading] = useState(true);
-  const [appCTX, setappCTX] = useState({});
-  const bgService = useMemo(() => new BGService(6000), [])
+  const [appCTX, setappCTX] = useState<any>(undefined);
+  const bgService = useMemo(() => new BGService({ interval: 6000, log: new logger("bg service", log) }), [])
   const linking = {
     prefixes: ['https://app.example.com', 'hueliteapp://'],
     config: {
@@ -46,18 +48,12 @@ export default function App() {
     //log("Dummy Data data ::  " + JSON.stringify(HallRGBGroupDummyData));
     //await storeData("deviceList", HallRGBGroupDummyData);
     //EXP: remove data from storage
-    //await storeData("containers", null);//REMOVE
-    //await storeData("appCTX", null);//REMOVE
-
+    await storeData("deviceList", null);//REMOVE
+    await storeData("appCTX", null);//REMOVE
     const deviceList = await getData("deviceList");
-    //REMOVElog("deviceList Size is  " + deviceList?.length);
-    //let deviceList: types.HUE_DEVICE_t[] = []
-    //deviceList = await getData("deviceList");
-    if (deviceList) {
-      log.print("deviceList data ::  " + JSON.stringify(deviceList));
-      reduxStore.store.dispatch(reduxStore.actions.deviceList.redux({ deviceList }));
-    } else log.print("NO devices data Found in storage");
-
+    log.print("deviceList data ::  " + JSON.stringify(deviceList));
+    if (deviceList)
+      reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListRedux({ deviceList }));
 
     const _appCTX = await getData("appCTX");
     log.print("[APPCTX] >>" + JSON.stringify(_appCTX))
@@ -65,13 +61,21 @@ export default function App() {
       log.print("appCTX is  " + JSON.stringify(_appCTX));
       setappCTX(_appCTX)
       reduxStore.store.dispatch(reduxStore.actions.appCTX.appCtxSagaAction({ data: _appCTX, saveToDB: false /*, log */ }));
-      bgService.startInterval()
     }
+    else
+      setappCTX({})
     setTimeout(async () => {
       await SplashScreen.hideAsync();
+      setTimeout(async () => {
+        const deletedDeviceList = await getData("deletedDeviceList")
+        if (deletedDeviceList)
+          reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({ deletedDeviceList }))
+
+      }, 5000);
+      bgService.startInterval()
       setAppLoading(false);
     }, 100);
-  };
+  }
 
   useEffect(() => {
     try {
@@ -79,15 +83,10 @@ export default function App() {
     } catch (e) { }
     loadAppData();
     return () => {
-    }
-  }, [])
-
-  useEffect(() => {
-    bgService.startInterval()
-    return () => {
       bgService.clearInterval()
     }
   }, [])
+
 
 
   if (appLoading) return <AppLoading />;
@@ -101,7 +100,7 @@ export default function App() {
               <Application />
             </ActionSheetProvider>
           </SafeAreaProvider>
-          <StatusBar style="auto" />
+          <StatusBar style="light"/*  hidden={true} */ />
         </NavigationContainer>
       </Provider>
     </ApolloProvider>

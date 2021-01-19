@@ -27,14 +27,32 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/icon-no-bg.png",
+        "foregroundImage": "./assets/icons/icon-no-bg-otaTest.png",
         "backgroundColor": "#FFFFFF"
       },
+      "icon": "./assets/icons/icon-no-bg-otaTest.png",
       "versionCode": 1,
       "package": "com.sternet.huelite"
     },
     "web": {
-      "favicon": ".assets/icons/icon-no-bg.png"
+      "name": "HUElite",
+      "short_name": "HUElite",
+      "start_url": "https://abhimanyu6676.github.io/HUElite_App_Expo/?utm_source=homescreen",
+      "orientation": "portrait",
+      "description": "lightup with HUElite",
+      "favicon": "./assets/icons/icon-no-bg.png",
+      "background_color": "#ffffff",
+      "theme_color": "#ffffff",
+      "primaryColor": "#ffffff",
+      "icons": [
+        {
+          "src": "icon/fox-icon.png./assets/icons/icon-no-bg.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "splash": ["./assets/icons/icon-no-bg.png"],
+      "display": "fullscreen"
     }
   }
 }

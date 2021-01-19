@@ -6,12 +6,12 @@ import { deviceType } from "../../../util/dummyData/DummyData";
 import { PairingConnectorScreen1 } from "./PairingConnectorScreen1";
 import { PairingConnectorScreen2 } from "./PairingConnectorScreen2";
 import { PairingConnectorScreen3 } from "./PairingConnectorScreen3";
-import { HUE_DEVICE_t } from "../../../@types/huelite/globalTypes";
+import UNIVERSALS from "../../../@universals";
 
 export type PairingStackParamList = {
   PairScreen_1: {};
-  PairScreen_2: { newDevice: HUE_DEVICE_t };
-  PairScreen_3: { newDevice: HUE_DEVICE_t };
+  PairScreen_2: { newDevice: UNIVERSALS.GLOBALS.DEVICE_t };
+  PairScreen_3: { newDevice: UNIVERSALS.GLOBALS.DEVICE_t };
 };
 const Stack = createStackNavigator<PairingStackParamList>();
 

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useState } from "react";
+import { Alert, Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
 import { RectButton, TextInput } from "react-native-gesture-handler";
 import Animated, { add, call, divide, interpolate, round, useCode } from "react-native-reanimated";
 import { onScrollEvent, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
-import useFetchData from "../../../../services/webApi/webHooks";
-import { logFun } from "../../../../util/logger";
-import { deviceListOperation, doesDeviceNameAlreadyExists } from "../../../../util/app.operator/device.operator"
-import { HUE_DEVICE_t } from "../../../../@types/huelite/device";
+import { reduxStore } from "../../../../redux";
+import useScanApiHook from "../../../../services/webApi/webHooks";
+import { appOperator } from "../../../../util/app.operator";
+import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
+import { logger } from "../../../../util/logger";
 
 const deviceNames = [
   "Bedroom Light",
@@ -40,8 +41,11 @@ export const PairingConnectorScreen2 = ({
     params: { newDevice },
   },
 }: Props) => {
-  const log = logFun("PAIRING SCREEN 2", undefined, true);
-  const [data, status, loading, error, load, setData] = useFetchData(10000);
+  const log = new logger("PAIRING_SCREEN_2");
+  const [data, status, loading, error, load] = useScanApiHook({
+    log: log ? new logger("scan API Hook", log) : undefined,
+    autoStart: true
+  });
   const debug = true;
   const [Wifi, setWifi] = useState("");
   const [deviceName, setDeviceName] = useState("");
@@ -54,10 +58,10 @@ export const PairingConnectorScreen2 = ({
   useCode(
     () => [
       call([selected], ([selected]) => {
-        if (data[selected]) {
-          //console.log("-- " + data[selected].ssid);
-          if (Wifi != data[selected].ssid) {
-            setWifi(data[selected].ssid);
+        if (data?.RES?.networks && data?.RES?.networks[selected]) {
+          if (Wifi != data?.RES?.networks[selected].ssid) {
+            log.print("-- " + data?.RES?.networks[selected].ssid);
+            setWifi(data?.RES?.networks[selected].ssid);
             Vibration.vibrate(25);
           }
         }
@@ -83,8 +87,15 @@ export const PairingConnectorScreen2 = ({
           { cancelable: false }
         );
         return false
-      } else if (doesDeviceNameAlreadyExists({ deviceName })) {
-        log("validating device name >>")
+      } else if ((() => {
+        let sameDeviceNameFound = false
+        reduxStore.store.getState().deviceReducer.deviceList.forEach((__device) => {
+          if (__device.deviceName == deviceName)
+            sameDeviceNameFound = true
+        })
+        return sameDeviceNameFound
+      })()) {
+        log.print("validating device name >>")
         Alert.alert(
           "DUPLICATE DEVICE NAME",
           "device name  \"" + deviceName + "\", try another name for this device",
@@ -141,31 +152,30 @@ export const PairingConnectorScreen2 = ({
   const onInteraction = async ({ opID }: onInteraction_t) => {
     switch (opID) {
       case "PAIR":
-        log("now pairing")
+        log.print("now pairing")
         if (validateNewDeviceData("PAIR")) {
           navigation.replace("PairScreen_3", { newDevice: { ...newDevice, ssid: Wifi, deviceName } });
         }
         break;
 
       case "SKIP":
-        log('SKIP LOGIN')
+        log.print('SKIP LOGIN')
         if (validateNewDeviceData("SKIP")) {
-          log("validation passed, adding new device without pairing")
-          const newContainerList = await deviceListOperation({ props: { cmd: "ADD_NEW_DEVICE", newDevice: { ...newDevice, deviceName }, conName: "" } })
+          log.print("validation passed, adding new device without pairing")
+          const newContainerList = appOperator.device({ cmd: "ADD_UPDATE_DEVICES", newDevices: [{ ...newDevice, deviceName, localTimeStamp: getCurrentTimeStampInSeconds() }] })
           console.log("updated conatiner list >> >> " + JSON.stringify(newContainerList))
           //@ts-ignore
           navigation.replace("dashboard");
           navigation.reset({
             index: 0,
+            //@ts-ignore
             routes: [{ name: "dashboard" }],
           });
         }
         else {
-          log("validation failed")
+          log.print("validation failed")
 
         }
-        //- [ ] skip login functionality
-        //await store.dispatch(containersSagaAction({ containers: user.containers ? convert_hueContainer_backendToLocal({ containers: user.containers }) : [], _log: log }))
         break;
 
       default:
@@ -173,12 +183,6 @@ export const PairingConnectorScreen2 = ({
     }
 
   };
-
-  useEffect(() => {
-    //console.log("PAIR SCREEN 2 LOADING API");
-    load();
-    return () => { };
-  }, []);
 
   return (
     <SafeAreaView style={styles.conatiner}>
@@ -260,12 +264,8 @@ export const PairingConnectorScreen2 = ({
         <RectButton
           style={styles.refreshButton}
           onPress={() => {
-            console.log(
-              "------------testing newDevice saga reducer------------"
-            );
-            setData([]);
-            setWifi("");
-            load();
+            log.print("refresh wifi scan api response")
+            load()
             Vibration.vibrate(50);
           }}
         >
@@ -288,8 +288,8 @@ export const PairingConnectorScreen2 = ({
             scrollEventThrottle={1}
             {...{ onScroll }}
           >
-            {data?.length > 0 &&
-              data.map((item, index) => {
+            {data?.RES?.networks && data?.RES?.networks?.length > 0 &&
+              data?.RES?.networks.map((item, index) => {
                 const positionY = add(y, -index * 60);
                 const opacity = interpolate(positionY, {
                   inputRange: [-60, 0, 60],
@@ -322,14 +322,14 @@ export const PairingConnectorScreen2 = ({
                         {item.ssid}
                       </Animated.Text>
                     </View>
-                    {index == data?.length - 1 && (
+                    {(data?.RES?.networks && index == data?.RES?.networks?.length - 1) && (
                       <View style={{ height: 60 }}></View>
                     )}
                   </View>
                 );
               })}
 
-            {data?.length == 0 && (
+            {(data?.RES?.networks && data?.RES?.networks.length == 0) && (
               <View
                 style={{
                   justifyContent: "center",

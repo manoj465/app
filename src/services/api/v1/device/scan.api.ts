@@ -1,9 +1,11 @@
-import { URLSearchParams } from "url"
+//import { URLSearchParams } from "url"
 import { logger } from "../../../../util/logger"
 import { axiosBaseErrors_e, baseError } from "../../baseErrors"
 import { defaultRequest } from "../../baseRequest"
 
 export enum ScanApiErrors_e {
+    SCAN_API_WAIT_UNTIL_SCANNING = "SCANAPI : CURRENTLY SCANNING",
+    SCAN_API_NO_NETWORK_FOUND = "SCANAPI : NO NETWORK FOUND",
     SCAN_API_UNHANDLED = "ScanAPI_UNHANDLED"
 }
 
@@ -11,9 +13,17 @@ export enum ScanApiErrors_e {
 export interface ScanApiErrors_i {
     testError?: any
 }
-
+interface network_i {
+    rssi: any,
+    "ssid": string,
+    "bssid": string,
+    "channel": any,
+    "secure": any,
+    "hidden": boolean
+}
 interface ScanApiRes_i {
-    testData?: any
+    status: number // - [ ] make an enum for scanAPi status codes
+    networks?: network_i[]
 }
 
 export interface ScanApiReturnType {
@@ -52,6 +62,7 @@ export const v1: fun_t =
                 }
                 if (RES) {
                     log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                    return { RES }
                 }
                 return { ERR: { errCode: ScanApiErrors_e.SCAN_API_UNHANDLED } }
             },

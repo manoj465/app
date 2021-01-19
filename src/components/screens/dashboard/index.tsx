@@ -16,8 +16,8 @@ import { DeviceCard } from "./deviceCard";
 import Header from './Header';
 import STYLES from "../../common/styles"
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
-import { deviceListOperation } from "../../../util/app.operator/device.operator";
 import { LinearGradient } from "expo-linear-gradient";
+import { appOperator } from "../../../util/app.operator";
 
 const navigationIconSize = 25;
 
@@ -36,6 +36,7 @@ interface Props {
 export const Dashboard = ({ navigation, route: { params } }: Props) => {
   let log = new logger("DASHBOARD")
   const deviceList = useSelector(({ deviceReducer: { deviceList } }: _appState) => deviceList);
+  const user = useSelector(({ appCTXReducer: { user } }: _appState) => user);
   //const user = useSelector(({ appCTXReducer: { user } }: _appState) => user);
   const scrollViewRef = useRef(null)
   const [state_deleteDeviceModal, set_state_deleteDeviceModal] = useState("")
@@ -45,7 +46,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} />
+      <Header navigation={navigation} user={user} />
       {/* /Sec1: deviceListContainer */}
       <Animated.ScrollView
         ref={scrollViewRef}
@@ -85,7 +86,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           );
         }}
       /> */}
-      <Modal /*///Modal */
+      {false && <Modal /*///Modal */
         animationType="slide"
         transparent
         visible={state_deleteDeviceModal.length > 0}
@@ -123,14 +124,10 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
                 text="delete"
                 onPress={() => {
                   console.log("REMOVE DEVICE")
-                  const newContainerList = deviceListOperation({
-                    props: {
-                      cmd: "REMOVE_DEVICE",
-                      Mac: state_deleteDeviceModal
-                    },
-                    //log
+                  appOperator.device({
+                    cmd: "REMOVE_DEVICE",
+                    Mac: state_deleteDeviceModal
                   })
-                  console.log("DEVICE REMOVED : " + JSON.stringify(newContainerList))
                   set_state_deleteDeviceModal("")
                 }} />
               <NewRectButton /* Sec3: cancel button */
@@ -182,7 +179,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal>}
       {/* Sec:  */}
       {false && <View style={styles.navigatorMenu}>
         <RectButton

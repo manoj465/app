@@ -14,8 +14,8 @@ import Animated from "react-native-reanimated";
 import ColorPickerPin from "./ColorPickerPin";
 //import Svg, { Circle } from "react-native-svg";
 import { deviceType } from "../../util/dummyData/DummyData.jsx";
-import { types } from "../../@types/huelite";
 import { logger } from "../../util/logger";
+import UNIVERSALS from "../../@universals";
 
 const styles = StyleSheet.create({
   container: {
@@ -75,7 +75,7 @@ interface Props {
   hue: Animated.Value<number>;
   saturation: Animated.Value<number>;
   backgroundColor: Animated.Node<number>;
-  device: types.HUE_DEVICE_t;
+  device: UNIVERSALS.GLOBALS.DEVICE_t
   log?: logger
 }
 

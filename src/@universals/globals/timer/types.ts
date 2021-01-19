@@ -1,17 +1,14 @@
 export enum TIMER_EVENT_TYPE_e {
-    undefined,
     ON,
     OFF
 }
 
 export enum TIMER_DAYTIME_e {
-    undefined,
     AM,
     PM
 }
 
 export enum TIMER_STATUS_e {
-    undefined,
     INACTIVE,
     ONCE,
     REPEAT
@@ -30,3 +27,24 @@ export interface TIMER_t {
     DAYS: TIMER_DAYS_t,
 }
 
+
+export const getBit = (bitIndex: number, bitHolderNumber: number) => {
+    let b = false;
+    if (bitIndex >= 0) {
+        let t = 1;
+        let nt = bitHolderNumber >> (bitIndex);
+        t = nt & t;
+        if (t > 0)
+            b = true;
+    }
+    return b;
+}
+
+export const setBit = (bitIndex: number, bitHolderNumber: number, b: boolean) => {
+    if (b) {
+        let t = 1;
+        t = t << bitIndex;
+        bitHolderNumber = bitHolderNumber | t;
+    }
+    return bitHolderNumber
+};

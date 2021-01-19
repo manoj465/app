@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  * @param {* key_<String> >> dataKey} key
  * @param {* value_<Object> >> dataSet} value
  */
-export const storeData = async (key: "appCTX" | "deviceList", value: Object) => {
+export const storeData = async (key: "appCTX" | "deviceList" | "deletedDeviceList", value: Object) => {
   //console.log("SAVING DATA >> " + JSON.stringify(value))
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -21,7 +21,7 @@ export const storeData = async (key: "appCTX" | "deviceList", value: Object) => 
  * @returns {* null:: in case dataSet doesn't exists}
  * @returns {* Object: if data exists}
  */
-export const getData = async (key: "appCTX" | "deviceList") => {
+export const getData = async (key: "appCTX" | "deviceList" | "deletedDeviceList") => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue != null ? JSON.parse(jsonValue) : null;

@@ -11,7 +11,7 @@ import { appPositiveColor } from "../../../theme/colors/highlightColors";
 import { deviceContainerType } from "../../../util/dummyData/DummyData";
 import { EmptyWeekDayList, timerDaytimeType, timerEventType, timerType, weekDaysType } from "../../../util/dummyData/timerTypes";
 import { uuidv4 } from "../../../util/UUID_utils";
-import { TimePicker } from "../TimePicker";
+import { NewSelector } from "../NewSelector";
 
 const hrs = [
   { _data: "01", val: 1 },
@@ -346,7 +346,7 @@ const Item = ({
           >
             {/* Sec: HOUR SELECTOR */}
             <View>
-              <TimePicker
+              <NewSelector
                 initValue={1}
                 heading="HRS"
                 maxVal={hrs.length}
@@ -357,7 +357,7 @@ const Item = ({
             </View>
             {/* Sec: Minute SELECTOR */}
             <View>
-              <TimePicker
+              <NewSelector
                 initValue={5}
                 heading="MIN"
                 maxVal={mins.length}
@@ -368,7 +368,7 @@ const Item = ({
             </View>
             {/* Sec: Daytime SELCETOR */}
             <View>
-              <TimePicker
+              <NewSelector
                 initValue={0}
                 heading="DAYTIME"
                 maxVal={dayTimeTable.length}

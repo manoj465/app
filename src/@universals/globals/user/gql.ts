@@ -24,6 +24,15 @@ allUsers(where:{email:$email}, first:1){
 }
 }`)
 
+
+export const User_queryWithId = `query(
+  $id:ID!
+){
+  User(where:{id:$id}){
+    ${HUE_User_fields}
+	}
+}`
+
 /**
  * @param userName 
  * @param email `isUnique` `isRequired`

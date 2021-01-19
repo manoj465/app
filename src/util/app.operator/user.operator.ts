@@ -1,8 +1,10 @@
-import types from "../../@types/huelite";
-import { convert_hueDevice_backendToLocal } from "../../@types/huelite/user";
+import { Alert } from "react-native"
+import UNIVERSALS from "../../@universals";
 import { reduxStore } from "../../redux";
 import API from "../../services/api";
 import { logger } from "../logger";
+import deviceOperator from "./device.operator"
+import * as Facebook from 'expo-facebook';
 
 /*
 '##::::::::'#######:::'######::::'#######::'##::::'##:'########::::'########:'##::::'##:'##::: ##::'######::'########:'####::'#######::'##::: ##:
@@ -27,6 +29,7 @@ interface logoutFunction_props {
 const logoutFunction = ({ onLogout }: logoutFunction_props) => {
     reduxStore.store.dispatch(reduxStore.actions.appCTX.userSagaAction({ user: undefined, saveToDB: true }))
     reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({ deviceList: [], saveToDB: true }))
+    reduxStore.store.dispatch(reduxStore.actions.HBReducer.HBSocketClear({}))
     if (onLogout)
         onLogout()
     return {}
@@ -53,12 +56,12 @@ interface loginFunction_props {
     cmd: "LOGIN"
     email: string
     password: string
-    onLoginSuccess?: (user: types.HUE_USER_t) => void
+    onLoginSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
     onValidateDataFailed?: (props: API.baseError<any, loginValidationError_e>) => void
-    onLoginFailed?: (props: Pick<API.cloudAPI.loginAPI._loginAPi_returnType, "ERR"> | { ERR?: API.baseError<any, loginValidationError_e> }) => void
+    onLoginFailed?: (props: Pick<API.cloudAPI.user.loginAPI._loginAPi_returnType, "ERR"> | { ERR?: API.baseError<any, loginValidationError_e> }) => void
     log?: logger
 }
-type loginFunction_t = (props: loginFunction_props) => Promise<API.cloudAPI.loginAPI._loginAPi_returnType>
+type loginFunction_t = (props: loginFunction_props) => Promise<API.cloudAPI.user.loginAPI._loginAPi_returnType>
 /**
  * @description
  * - validates the input and return appropriate errors
@@ -81,24 +84,26 @@ const loginFunction: loginFunction_t = async ({
         onLoginFailed ? onLoginFailed({ ERR: tempError }) : {}
         return {}
     }
-    const res = await API.cloudAPI.loginAPI.v1({
+    const res = await API.cloudAPI.user.loginAPI.v1({
         email,
         password,
         //log: log ? new logger("login API", log) : undefined
     })
-    log?.print("res >>>>-- " + JSON.stringify(res, null, 2))
     if (res.RES?.id) {
-        log?.print("user >>>> " + JSON.stringify(res.RES, null, 2))
-        reduxStore.store.dispatch(reduxStore.actions.appCTX.userSagaAction({ user: res.RES, saveToDB: true }))
-        if (res.RES.devices?.length) {
-            log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
-            log?.print("device converted to local" + JSON.stringify(convert_hueDevice_backendToLocal({ devices: res.RES.devices }), null, 2))
-            reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({ deviceList: res.RES.devices ? convert_hueDevice_backendToLocal({ devices: res.RES.devices }) : [], saveToDB: true }))
-        }
-        onLoginSuccess ? onLoginSuccess(res.RES) : {}
+        log?.print("user found >>>> " + JSON.stringify(res.RES, null, 2))
+        userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES }) })
+        log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
+        log?.print("device converted to local" + JSON.stringify(UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices ? res.RES.devices : [] }), null, 2))
+        deviceOperator({
+            cmd: "ADD_UPDATE_DEVICES",
+            newDevices: res.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices }) : [],
+            log: log ? new logger("device-operator add_update_devices", log) : undefined
+        })
+        onLoginSuccess ? onLoginSuccess(UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })) : {}
         return res
     }
     else {
+        log?.print("ERR no user found >>>>-- " + JSON.stringify(res, null, 2))
         onLoginFailed ? onLoginFailed(res) : {}
     }
     return res
@@ -131,12 +136,12 @@ interface signupFunction_props {
     password: string
     re_password: string
     userName: string
-    onSignupSuccess?: (user: types.HUE_USER_t) => void
+    onSignupSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
     onValidateDataFailed?: (props: API.baseError<any, signupValidationError_e>) => void
-    onSignupFailed?: (props: Pick<API.cloudAPI.signupAPI._signupAPi_returnType, "ERR"> | { ERR?: API.baseError<any, signupValidationError_e> }) => void
+    onSignupFailed?: (props: Pick<API.cloudAPI.user.signupAPI._signupAPi_returnType, "ERR"> | { ERR?: API.baseError<any, signupValidationError_e> }) => void
     log?: logger
 }
-type signupFunction_t = (props: signupFunction_props) => Promise<API.cloudAPI.signupAPI._signupAPi_returnType>
+type signupFunction_t = (props: signupFunction_props) => Promise<API.cloudAPI.user.signupAPI._signupAPi_returnType>
 /**
  * @description
  * - validates the input and return appropriate errors
@@ -187,7 +192,7 @@ const signupFunction: signupFunction_t = async ({
         onSignupFailed ? onSignupFailed({ ERR: tempError }) : {}
         return {}
     }
-    const res = await API.cloudAPI.signupAPI.v1({
+    const res = await API.cloudAPI.user.signupAPI.v1({
         userName,
         email,
         password,
@@ -196,8 +201,8 @@ const signupFunction: signupFunction_t = async ({
     log?.print("res >>>> " + JSON.stringify(res, null, 2))
     if (res.RES?.id) {
         log?.print("user >>>> " + JSON.stringify(res.RES, null, 2))
-        reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: res.RES }))
-        onSignupSuccess ? onSignupSuccess(res.RES) : {}
+        userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES }) })
+        onSignupSuccess ? onSignupSuccess(UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })) : {}
         return res
     }
     else {
@@ -209,14 +214,140 @@ const signupFunction: signupFunction_t = async ({
 
 
 /*
-'##::::'##::'######::'########:'########:::::::::::'##::::'##:'########::'########:::::'###::::'########:'########::::'########:'##::::'##:'##::: ##::'######::'########:'####::'#######::'##::: ##:
- ##:::: ##:'##... ##: ##.....:: ##.... ##:::::::::: ##:::: ##: ##.... ##: ##.... ##:::'## ##:::... ##..:: ##.....::::: ##.....:: ##:::: ##: ###:: ##:'##... ##:... ##..::. ##::'##.... ##: ###:: ##:
- ##:::: ##: ##:::..:: ##::::::: ##:::: ##:::::::::: ##:::: ##: ##:::: ##: ##:::: ##::'##:. ##::::: ##:::: ##:::::::::: ##::::::: ##:::: ##: ####: ##: ##:::..::::: ##::::: ##:: ##:::: ##: ####: ##:
- ##:::: ##:. ######:: ######::: ########::::::::::: ##:::: ##: ########:: ##:::: ##:'##:::. ##:::: ##:::: ######:::::: ######::: ##:::: ##: ## ## ##: ##:::::::::: ##::::: ##:: ##:::: ##: ## ## ##:
- ##:::: ##::..... ##: ##...:::: ##.. ##:::::::::::: ##:::: ##: ##.....::: ##:::: ##: #########:::: ##:::: ##...::::::: ##...:::: ##:::: ##: ##. ####: ##:::::::::: ##::::: ##:: ##:::: ##: ##. ####:
- ##:::: ##:'##::: ##: ##::::::: ##::. ##::::::::::: ##:::: ##: ##:::::::: ##:::: ##: ##.... ##:::: ##:::: ##:::::::::: ##::::::: ##:::: ##: ##:. ###: ##::: ##:::: ##::::: ##:: ##:::: ##: ##:. ###:
-. #######::. ######:: ########: ##:::. ##:'#######:. #######:: ##:::::::: ########:: ##:::: ##:::: ##:::: ########:::: ##:::::::. #######:: ##::. ##:. ######::::: ##::::'####:. #######:: ##::. ##:
-:.......::::......:::........::..:::::..::.......:::.......:::..:::::::::........:::..:::::..:::::..:::::........:::::..:::::::::.......:::..::::..:::......::::::..:::::....:::.......:::..::::..::
+'########::::'###:::::'######::'########:'########:::'#######:::'#######::'##:::'##::::'##::::::::'#######:::'######:::'####:'##::: ##:
+ ##.....::::'## ##:::'##... ##: ##.....:: ##.... ##:'##.... ##:'##.... ##: ##::'##::::: ##:::::::'##.... ##:'##... ##::. ##:: ###:: ##:
+ ##::::::::'##:. ##:: ##:::..:: ##::::::: ##:::: ##: ##:::: ##: ##:::: ##: ##:'##:::::: ##::::::: ##:::: ##: ##:::..:::: ##:: ####: ##:
+ ######:::'##:::. ##: ##::::::: ######::: ########:: ##:::: ##: ##:::: ##: #####::::::: ##::::::: ##:::: ##: ##::'####:: ##:: ## ## ##:
+ ##...:::: #########: ##::::::: ##...:::: ##.... ##: ##:::: ##: ##:::: ##: ##. ##:::::: ##::::::: ##:::: ##: ##::: ##::: ##:: ##. ####:
+ ##::::::: ##.... ##: ##::: ##: ##::::::: ##:::: ##: ##:::: ##: ##:::: ##: ##:. ##::::: ##::::::: ##:::: ##: ##::: ##::: ##:: ##:. ###:
+ ##::::::: ##:::: ##:. ######:: ########: ########::. #######::. #######:: ##::. ##:::: ########:. #######::. ######:::'####: ##::. ##:
+..::::::::..:::::..:::......:::........::........::::.......::::.......:::..::::..:::::........:::.......::::......::::....::..::::..::
+*/
+
+
+enum FBLoginValidationError_e {
+    FB_LOGIN_VALIDATION_EMAIL_INVALID = "FB_VALIDATION : EMAIL INVALID",
+    FB_LOGIN_VALIDATION_USERNAME_INVALID = "FB_VALIDATION : USERNAME INVALID",
+}
+interface fbLogin_props {
+    cmd: "FB_LOGIN"
+    onFbLoginSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
+    onValidateDataFailed?: (props: API.baseError<any, FBLoginValidationError_e>) => void
+    onFbLoginFailed?: (props: Pick<API.cloudAPI.user.signupAPI._signupAPi_returnType | API.cloudAPI.user.loginAPI._loginAPi_returnType, "ERR"> | { ERR?: API.baseError<any, FBLoginValidationError_e> }) => void
+    log?: logger
+}
+type fbLoginFunction_t = (props: fbLogin_props) => Promise<API.cloudAPI.user.loginAPI._loginAPi_returnType | API.cloudAPI.user.signupAPI._signupAPi_returnType>
+const fbLoginFunction: fbLoginFunction_t = async ({ log, ...props }) => {
+    try {
+        await Facebook.initializeAsync({ appId: "366634227889659" });
+        log?.print("facebook login initialized");
+        const fbProps = await Facebook.logInWithReadPermissionsAsync({
+            permissions: ["public_profile", "email"],
+        });
+        if (fbProps.type === "success") {
+            // Get the user's name using Facebook's Graph API
+            const response = await fetch(`https://graph.facebook.com/me?fields=id,name,email&access_token=${fbProps.token}`);
+            log?.print('fb-auth response <<< ' + JSON.stringify(response));
+            let fbRes = await response.json()
+            let fbEmail = fbRes.email
+            let fbName = fbRes.name
+            if (fbEmail && fbName) {
+                log?.print("found email and username >> ")._print(fbEmail)._print(fbName)
+                loginFunction({
+                    cmd: "LOGIN",
+                    email: "fb-" + fbEmail,
+                    password: "tempFbLoginPass@1",
+                    onLoginFailed: ({ ERR }) => {
+                        log?.print("login failed at fbLoginFunction ")._printPretty(ERR)
+                        if (ERR?.errCode == API.cloudAPI.user.loginAPI.loginApiErrors_e.LOGIN_API_UNKNOWN_EMAIL) {
+                            signupFunction({
+                                cmd: "SIGNUP",
+                                email: "fb-" + fbEmail,
+                                password: "tempFbLoginPass@1",
+                                re_password: "tempFbLoginPass@1",
+                                userName: fbName,
+                                onSignupSuccess: (res) => {
+                                    log?.print("signUp success at fbLogin")._printPretty(res)
+                                    props.onFbLoginSuccess ? props.onFbLoginSuccess(res) : {}
+                                },
+                                onSignupFailed: (res) => {
+                                    log?.print("signUp failed at fbLogin")._printPretty(res)
+                                    throw new Error("signup failed");
+                                }
+                            })
+                        }
+                        else {
+                            throw new Error("loginFailed");
+                        }
+                    },
+                    onLoginSuccess: (res) => {
+                        log?.print("loginSuccess at fbLogin")._printPretty(res)
+                        props.onFbLoginSuccess ? props.onFbLoginSuccess(res) : {}
+                    }
+                })
+            } else {
+                log?.print("email and username not found")
+                throw new Error("");
+            }
+        } else {
+            log?.print('fb-auth initialize error >>> ');
+            throw new Error("fb-auth initialize error >>> ");
+        }
+    } catch ({ message }) {
+        log?.print('fb-auth error >>> ' + JSON.stringify(message));
+        Alert.alert("Facebook Login Error:", "you can try logging in with " + (UNIVERSALS.venderConf.venderPrefix == "HUE" ? "HUElite" : UNIVERSALS.venderConf.venderPrefix) + " ID");
+    }
+    return {}
+}
+
+
+/*
+'##::::'##::'######::'########:'########::::::'######::'########::'#######::'########::'########::::'##::::'##:'########::'########:::::'###::::'########:'########:
+ ##:::: ##:'##... ##: ##.....:: ##.... ##::::'##... ##:... ##..::'##.... ##: ##.... ##: ##.....::::: ##:::: ##: ##.... ##: ##.... ##:::'## ##:::... ##..:: ##.....::
+ ##:::: ##: ##:::..:: ##::::::: ##:::: ##:::: ##:::..::::: ##:::: ##:::: ##: ##:::: ##: ##:::::::::: ##:::: ##: ##:::: ##: ##:::: ##::'##:. ##::::: ##:::: ##:::::::
+ ##:::: ##:. ######:: ######::: ########:::::. ######::::: ##:::: ##:::: ##: ########:: ######:::::: ##:::: ##: ########:: ##:::: ##:'##:::. ##:::: ##:::: ######:::
+ ##:::: ##::..... ##: ##...:::: ##.. ##:::::::..... ##:::: ##:::: ##:::: ##: ##.. ##::: ##...::::::: ##:::: ##: ##.....::: ##:::: ##: #########:::: ##:::: ##...::::
+ ##:::: ##:'##::: ##: ##::::::: ##::. ##:::::'##::: ##:::: ##:::: ##:::: ##: ##::. ##:: ##:::::::::: ##:::: ##: ##:::::::: ##:::: ##: ##.... ##:::: ##:::: ##:::::::
+. #######::. ######:: ########: ##:::. ##::::. ######::::: ##::::. #######:: ##:::. ##: ########::::. #######:: ##:::::::: ########:: ##:::: ##:::: ##:::: ########:
+:.......::::......:::........::..:::::..::::::......::::::..::::::.......:::..:::::..::........::::::.......:::..:::::::::........:::..:::::..:::::..:::::........::
+*/
+
+
+
+
+interface userStoreUpdareFunction_props {
+    user: UNIVERSALS.GLOBALS.USER_t
+    log?: logger
+}
+type userStoreUpdateFunction_t = (props: userStoreUpdareFunction_props) => void
+export const userStoreUpdateFunction: userStoreUpdateFunction_t = async ({ user, log }) => {
+    const localUserState = reduxStore.store.getState().appCTXReducer.user
+    let latestUserState = user
+    if (localUserState && user.ts) {
+        if (localUserState.localTimeStamp > user.ts) {
+            latestUserState = localUserState
+            latestUserState.ts = user.ts
+        }
+        else if (user.ts > localUserState.localTimeStamp) {
+            latestUserState = user
+        }
+    }
+    if (latestUserState.localTimeStamp != localUserState?.localTimeStamp && latestUserState.ts != localUserState?.ts) {
+        reduxStore.store.dispatch(reduxStore.actions.appCTX.userSagaAction({ user: latestUserState, saveToDB: true }))
+    }
+}
+
+
+
+/*
+'##::::'##:'########::'########:::::'###::::'########:'########:::::::'###::::'########::'####:
+ ##:::: ##: ##.... ##: ##.... ##:::'## ##:::... ##..:: ##.....:::::::'## ##::: ##.... ##:. ##::
+ ##:::: ##: ##:::: ##: ##:::: ##::'##:. ##::::: ##:::: ##:::::::::::'##:. ##:: ##:::: ##:: ##::
+ ##:::: ##: ########:: ##:::: ##:'##:::. ##:::: ##:::: ######::::::'##:::. ##: ########::: ##::
+ ##:::: ##: ##.....::: ##:::: ##: #########:::: ##:::: ##...::::::: #########: ##.....:::: ##::
+ ##:::: ##: ##:::::::: ##:::: ##: ##.... ##:::: ##:::: ##:::::::::: ##.... ##: ##::::::::: ##::
+. #######:: ##:::::::: ########:: ##:::: ##:::: ##:::: ########:::: ##:::: ##: ##::::::::'####:
+:.......:::..:::::::::........:::..:::::..:::::..:::::........:::::..:::::..::..:::::::::....::
 */
 
 
@@ -234,12 +365,12 @@ interface updateFunction_props {
     password: string
     re_password: string
     userName: string
-    onUpdateSuccess?: (user: types.HUE_USER_t) => void
+    onUpdateSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
     onValidateDataFailed?: (props: API.baseError<any, updateValidationError_e>) => void
-    onUpdateFailed?: (props: Pick<API.cloudAPI.userUpdateAPI._userUpdate_returnType, "ERR"> | { ERR?: API.baseError<any, updateValidationError_e> }) => void
+    onUpdateFailed?: (props: Pick<API.cloudAPI.user.userUpdateAPI._userUpdate_returnType, "ERR"> | { ERR?: API.baseError<any, updateValidationError_e> }) => void
     log?: logger
 }
-type updateFunction_t = (props: updateFunction_props) => Promise<API.cloudAPI.userUpdateAPI._userUpdate_returnType>
+type updateFunction_t = (props: updateFunction_props) => Promise<API.cloudAPI.user.userUpdateAPI._userUpdate_returnType>
 const updateFunction: updateFunction_t = async ({
     id,
     password,
@@ -283,7 +414,7 @@ const updateFunction: updateFunction_t = async ({
         onUpdateFailed ? onUpdateFailed({ ERR: tempError }) : {}
         return {}
     }
-    const res = await API.cloudAPI.userUpdateAPI.v1({
+    const res = await API.cloudAPI.user.userUpdateAPI.v1({
         id,
         userName,
         password,
@@ -292,8 +423,8 @@ const updateFunction: updateFunction_t = async ({
     log?.print("res >>>> " + JSON.stringify(res, null, 2))
     if (res.RES?.id) {
         log?.print("user >>>> " + JSON.stringify(res.RES, null, 2))
-        reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({ user: res.RES }))
-        onUpdateSuccess ? onUpdateSuccess(res.RES) : {}
+        userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES }) })
+        onUpdateSuccess ? onUpdateSuccess(UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })) : {}
         return res
     }
     else {
@@ -319,7 +450,7 @@ const updateFunction: updateFunction_t = async ({
 :.......::::......:::........::..:::::..::::::.......:::..:::::::::........::..:::::..::..:::::..:::::..:::::....:::.......:::..::::..::
 */
 
-type containerListOperation_t = (props: logoutFunction_props | loginFunction_props | signupFunction_props | updateFunction_props) => Promise<{ RES?: types.HUE_USER_t, ERR?: API.baseError<any, any> }>
+type containerListOperation_t = (props: logoutFunction_props | loginFunction_props | signupFunction_props | updateFunction_props | fbLogin_props) => Promise<{ RES?: UNIVERSALS.GLOBALS.USER_t, ERR?: API.baseError<any, any> }>
 const userOperation: containerListOperation_t = async (props) => {
     switch (props.cmd) {
         case "LOGOUT":
@@ -340,9 +471,12 @@ const userOperation: containerListOperation_t = async (props) => {
         case "UPDATE":
             let updateRes = await updateFunction(props)
             return updateRes
-            break;
+            break
 
-
+        case "FB_LOGIN":
+            let fbLoginRes = await fbLoginFunction(props)
+            return fbLoginRes
+            break
 
         default:
             break;

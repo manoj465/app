@@ -2,8 +2,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
-import types from '../../../../@types/huelite';
 import { reduxStore } from '../../../../redux';
+import { appOperator } from '../../../../util/app.operator';
+import { getCurrentTimeStampInSeconds } from '../../../../util/DateTimeUtil';
 import { logger } from "../../../../util/logger";
 import { navigationProp } from "../index";
 import { LoginHeader } from "./loginForm";
@@ -69,7 +70,13 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
           </RectButton>}
           <RectButton
             onPress={() => {
-              /* - [ ] facebookLogIn(navigation, _log) */
+              appOperator.user({
+                cmd: "FB_LOGIN",
+                onFbLoginSuccess: (user) => {
+                  navigation.replace("dashboard")
+                },
+                log: log ? new logger("fb login", log) : undefined
+              })
             }}>
             <View style={{ borderColor: "#fff", borderWidth: 0.5, height: 50, width: 50, borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
               <FontAwesome name="facebook-f" size={30} color="#fff" />
@@ -80,11 +87,12 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
         <RectButton
           style={{ position: "absolute", bottom: 10, paddingVertical: 10, }}
           onPress={() => {
-            reduxStore.store.dispatch(reduxStore.actions.appCTX.userRedux({
+            appOperator.userStoreUpdateFunction({
               user: {
-                email: "testmail@huelite.in"
+                email: "testmail@huelite.in",
+                localTimeStamp: getCurrentTimeStampInSeconds()
               }
-            }))
+            })
             navigation.navigate("dashboard")
           }}
         >

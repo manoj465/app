@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { types } from "../../../@types/huelite";
+import UNIVERSALS from "../../../@universals";
 import { logger } from "../../../util/logger";
 import BrightnessSlider from "../../common/BrightnessSlider";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
 
 interface Props {
   navigation: navigation_t;
-  device: types.HUE_DEVICE_t;
+  device: UNIVERSALS.GLOBALS.DEVICE_t;
   log?: logger
 }
 

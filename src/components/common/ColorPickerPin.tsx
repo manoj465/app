@@ -3,13 +3,10 @@ import { StyleSheet, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, cond, divide, eq, event, modulo, pow, set, useCode } from "react-native-reanimated";
 import { canvas2Polar, clamp, polar2Canvas, translate, useValue, vec } from "react-native-redash";
+import UNIVERSALS from "../../@universals";
+import { appOperator } from "../../util/app.operator";
 //import { Path } from "react-native-svg";
-import { types } from "../../@types/huelite";
-import { deviceListOperation } from "../../util/app.operator/device.operator";
-import {
-  getCurrentTimeStamp,
-  getTimeDiffNowInMs
-} from "../../util/DateTimeUtil";
+import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 import { logger } from "../../util/logger";
 
 //const AnimatedPath = Animated.createAnimatedComponent(Path);
@@ -19,11 +16,11 @@ const PICKER_HEIGHT = 60;
 const STROKE_WIDTH = 4;
 
 interface Props {
-  canvasWidth: number;
-  h: Animated.Value<number>;
-  s: Animated.Value<number>;
-  backgroundColor: Animated.Node<number>;
-  device: types.HUE_DEVICE_t;
+  canvasWidth: number
+  h: Animated.Value<number>
+  s: Animated.Value<number>
+  backgroundColor: Animated.Node<number>
+  device: UNIVERSALS.GLOBALS.DEVICE_t
   log?: logger
 }
 
@@ -36,7 +33,7 @@ const ColorPickerPin = ({
   log
 }: Props) => {
   const state = useValue(State.UNDETERMINED);
-  let timeStamp = getCurrentTimeStamp();
+  let timeStamp = Date.now();
   const CENTER = { x: canvasWidth / 2, y: canvasWidth / 2, };
   const v = polar2Canvas({ theta: (device.hsv?.h ? device.hsv?.h : 0) * (Math.PI / 180), radius: (canvasWidth / 2) * Math.sqrt((device.hsv?.s ? device.hsv?.s : 100) / 100), }, CENTER);
   const offset = { x: useValue(0), y: useValue(0) };
@@ -67,14 +64,14 @@ const ColorPickerPin = ({
   );
 
   const updateColor = (h: number, s: number, gestureState: State, log?: logger) => {
-    deviceListOperation({
-      props: {
-        cmd: "COLOR_UPDATE",
-        deviceMac: [device.Mac],
-        hsv: { h: Math.min(Math.round(h * 360), 360), s: Math.min(Math.round(s * 100), 100) },
-        gestureState,
-        log
-      },
+
+
+    appOperator.device({
+      cmd: "COLOR_UPDATE",
+      deviceMac: [device.Mac],
+      hsv: { h: Math.min(Math.round(h * 360), 360), s: Math.min(Math.round(s * 100), 100) },
+      gestureState,
+      log
     })
   }
 
@@ -94,10 +91,10 @@ const ColorPickerPin = ({
             //console.log("<<<< cannot send Bightness- >>>>")
           } */
           if (state == State.ACTIVE) {
-            console.log("Sending hex >>>>>>>>>>>>>>>>")
             if (getTimeDiffNowInMs(timeStamp) > 200) {
+              console.log("Sending hex >>>>>>>>>>>>>>>>")
               //console.log("can send")
-              timeStamp = getCurrentTimeStamp();
+              timeStamp = Date.now();
               updateColor(h, s, state, log)
             } else {
               //console.log("cannot send")
@@ -105,7 +102,7 @@ const ColorPickerPin = ({
           } else if (state == State.END) {
             console.log("Sending hex >>>>>>>>>>>>>>>>")
             setTimeout(() => {
-              timeStamp = getCurrentTimeStamp();
+              timeStamp = Date.now();
               updateColor(h, s, state, log)
             }, 200);
           }
@@ -119,8 +116,7 @@ const ColorPickerPin = ({
     <View style={StyleSheet.absoluteFill}>
       <PanGestureHandler
         onGestureEvent={gestureHandler}
-        onHandlerStateChange={gestureHandler}
-      >
+        onHandlerStateChange={gestureHandler}>
         <Animated.View
           style={{
             width: 50,

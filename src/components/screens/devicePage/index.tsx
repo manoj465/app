@@ -1,29 +1,21 @@
+import { RouteProp } from "@react-navigation/native";
+import { CardStyleInterpolators, createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-  StackNavigationProp,
-} from "@react-navigation/stack";
+import UNIVERSALS from "../../../@universals";
+import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { DeviceColorPickerScreen } from "./devicePageNavigator/colorPickerScreen";
 import { DeviceModesScreen } from "./devicePageNavigator/modesScreen";
 import { DeviceSettingScreen } from "./devicePageNavigator/settingScreen";
-import {
-  deviceContainerType,
-  deviceType,
-} from "../../../util/dummyData/DummyData";
-import { DeviceColorPickerScreen } from "./devicePageNavigator/colorPickerScreen";
-import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import { RouteProp } from "@react-navigation/native";
-import { types } from "../../../@types/huelite";
 
 export type devicePageStackParamList = {
   DeviceColorPicker: {
-    device: types.HUE_DEVICE_t;
+    device: UNIVERSALS.GLOBALS.DEVICE_t;
   };
   DeviceModesScreen: {
-    device: types.HUE_DEVICE_t;
+    device: UNIVERSALS.GLOBALS.DEVICE_t;
   };
   DeviceSettingScreen: {
-    device: types.HUE_DEVICE_t
+    device: UNIVERSALS.GLOBALS.DEVICE_t
   };
 };
 

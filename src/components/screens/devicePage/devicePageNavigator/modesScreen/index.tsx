@@ -34,9 +34,9 @@ export const DeviceModesScreen = ({
     params: { device },
   },
 }: Props) => {
-  const log = new logger("device modes screen")
+  const log = new logger("device modes screen " + device.Mac)
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
+    <SafeAreaView style={{ display: "flex", flex: 1, backgroundColor: "#ffffff" }}>
       <View /* Sec1: header - back arrow */
         style={{ height: 60, justifyContent: "center", width: 200 }}>
         <RectButton
@@ -94,6 +94,7 @@ export const DeviceModesScreen = ({
       </View>
       <View /* Sec1: Timer container */
         style={{
+          flex: 1,
           backgroundColor: "#fff",
           marginTop: 20,
           borderRadius: 10,
@@ -120,7 +121,7 @@ export const DeviceModesScreen = ({
             marginBottom: 10,
           }}
         >
-          From dawn to dusk, schedule your day with HUE
+          From dawn to dusk, schedule your day with HUElite
           </Text>
         <Timer device={device} log={new logger("TIMER COMP", log)} />
       </View>

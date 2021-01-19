@@ -1,22 +1,14 @@
-import React, { useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { GroupHeader } from "./GroupHeader";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import Animated, { interpolate } from "react-native-reanimated";
+import { mix, useValue } from "react-native-redash";
+import { useSpringTransition } from "../../../common/transitions/Transition";
 import { DeviceCard, deviceCardHeight } from "../deviceCard";
-import Animated, { interpolate, log } from "react-native-reanimated";
-import { useValue, mix } from "react-native-redash";
-import {
-  deviceContainerType,
-  deviceType,
-  GROUP_TYPES,
-} from "../../../../util/dummyData/DummyData";
-import { useSpringTransition, useTimingTransition } from "../../../common/transitions/Transition";
-import { ScrollView } from "react-native-gesture-handler";
-import { HUE_CONTAINER_t, HUE_CONTAINER_TYPE_e } from "../../../../@types/huelite/globalTypes";
-import { reduxStore } from "../../../../redux";
+import { GroupHeader } from "./GroupHeader";
 
 interface Props {
   navigation: any;
-  containerObject: HUE_CONTAINER_t;
+  containerObject: any;
 }
 
 export const DeviceObjectContainer = ({
@@ -79,7 +71,7 @@ export const DeviceObjectContainer = ({
             ></Animated.View>
           </RectButton> */}
         {group.devices.length > 0 &&
-          group.devices.map((device, d_index) => {
+          group.devices.map((device: any, d_index: any) => {
             const top = interpolate(transition, {
               inputRange: [0, 1],
               outputRange: [d_index * 5, d_index * (deviceCardHeight + 15)],
@@ -97,7 +89,7 @@ export const DeviceObjectContainer = ({
               >
                 <DeviceCard
                   device={device}
-                  deviceContainer={group}
+                  //deviceContainer={group}
                   navigation={navigation}
                 />
               </Animated.View>

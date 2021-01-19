@@ -7,13 +7,9 @@ export enum saveWifiConfigApiErrors_e {
 }
 
 
-export interface saveWifiConfigApiErrors_i {
-    testError?: any
-}
+export type saveWifiConfigApiErrors_i = "ERR-048"
 
-interface saveWifiConfigApiRes_i {
-    testData?: any
-}
+type saveWifiConfigApiRes_i = "RES-551"
 
 export interface saveWifiConfigApiReturnType {
     RES?: saveWifiConfigApiRes_i
@@ -45,13 +41,17 @@ export const v1: fun_t =
             address: 'http://' + IP,
             path: "/config",
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            params: _params,
+            body: _params,
+            config: {
+                timeout: 5000
+            },
             resolveData: ({ RES, ERR }) => {
                 if (ERR) {
                     log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
                 }
                 if (RES) {
                     log?.print("RES - resolve Data" + JSON.stringify(RES, null, 2))
+                    return { RES }
                 }
                 return { ERR: { errCode: saveWifiConfigApiErrors_e.SAVE_WIFI_CONFIG_API_UNHANDLED } }
             },

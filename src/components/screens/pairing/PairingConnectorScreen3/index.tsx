@@ -1,21 +1,17 @@
-import { types } from "../../../../@types/huelite";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import LottieView from "lottie-react-native";
 import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
 import { RectButton, TextInput } from "react-native-gesture-handler";
 import Animated, { Value } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 //native imports
 import { PairingStackParamList } from "..";
-import { reduxStore } from "../../../../redux";
-import { newDeviceSagaAction } from "../../../../redux/actions/pairingActions";
 import usePairApiHook, { pairing_state_e } from "../../../../services/webApi/pairAPI_Hook";
-import { dummyDevice, GROUP_TYPES } from "../../../../util/dummyData/DummyData";
-import { HUE_CONTAINER_t, HUE_CONTAINER_TYPE_e } from "../../../../@types/huelite/container";
-import { deviceListOperation } from "../../../../util/app.operator/device.operator";
+import { appOperator } from "../../../../util/app.operator";
+import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
+import { logger } from "../../../../util/logger";
 
 const groupNames = ["Bedroom", "Kitchen", "Garden", "Drawing Lamps", "Stairs"];
 
@@ -28,7 +24,6 @@ type NavigationProp = StackNavigationProp<
 
 type _RouteProp = RouteProp<PairingStackParamList, "PairScreen_3">;
 
-type connectProps = (ssid: string, pass: string) => Promise<boolean>;
 
 interface Props {
   navigation: NavigationProp;
@@ -41,15 +36,16 @@ export const PairingConnectorScreen3 = ({
     params: { newDevice },
   },
 }: Props) => {
+  const log = new logger("PAIRING_SCREEN_3")
   const [pass, setPass] = useState("Ioplmkjnb@1");
   const [groupName, setGroupName] = useState("");
-  const progress = new Value(0);
   let _animation = null;
-  const [socket, IP, pair, pairStatus] = usePairApiHook({
+  const [data, socket, pair, pairStatus, hitSaveAPI] = usePairApiHook({
     IP: "192.168.4.1",
     _onMsg: (msg) => {
       //console.log("socket msg on Pairing Screen---- " + JSON.stringify(msg));
     },
+    log: log ? new logger("pairing hook", log) : undefined
   });
 
   const validateData = () => {
@@ -58,7 +54,7 @@ export const PairingConnectorScreen3 = ({
     return true
   }
 
-  interface onInteraction_t { opID: "PAIR" | "BACK" }
+  interface onInteraction_t { opID: "PAIR" | "BACK" | "SAVE_CONF" }
   const onInteraction = ({ opID }: onInteraction_t) => {
     switch (opID) {
       case "BACK":
@@ -71,6 +67,10 @@ export const PairingConnectorScreen3 = ({
           pair(newDevice.ssid, pass);
         break;
 
+      case "SAVE_CONF":
+        hitSaveAPI()
+        break;
+
       default:
         break;
     }
@@ -78,20 +78,23 @@ export const PairingConnectorScreen3 = ({
 
   useEffect(() => {
     if (pairStatus == pairing_state_e.PAIR_READY)
-      Vibration.vibrate(250);
-    else if (pairStatus == pairing_state_e.SAVE_CONFIG_SUCCESS) {
+      Vibration.vibrate(250)
+    else if (pairStatus == pairing_state_e.PAIR_SUCCESS) {
+      console.log("paired successfully " + JSON.stringify(data, null, 2));
+    } else if (pairStatus == pairing_state_e.SAVE_CONFIG_SUCCESS) {
       (async () => {
-        const newContainerList = await deviceListOperation({ props: { cmd: "ADD_NEW_DEVICE", newDevice: { ...newDevice, IP, groupName }, forceUpdate: true } })
-        //@ts-ignore
-        navigation.replace("dashboard");
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "dashboard" }],
-        });
+        if (data?.RES?.IP) {
+          appOperator.device({ cmd: "ADD_UPDATE_DEVICES", newDevices: [{ ...newDevice, IP: data.RES.IP, ssid: newDevice.ssid, localTimeStamp: getCurrentTimeStampInSeconds() }] })
+          //@ts-ignore
+          navigation.replace("dashboard")
+          //@ts-ignore
+          navigation.reset({ index: 0, routes: [{ name: "dashboard" }], })
+        } else {
+        }
       })()
     } else if (pairStatus == pairing_state_e.SAVE_CONFIG_ERROR) { }
-    return () => { };
-  }, [pairStatus]);
+    return () => { }
+  }, [pairStatus, data])
 
 
   return (
@@ -237,8 +240,8 @@ export const PairingConnectorScreen3 = ({
             backgroundColor: "#fff",
           }}
           source={pairStatus == pairing_state_e.PAIR_SUCCESS ? require("../../../../../assets/lottie/success.json")
-            : pairStatus == pairing_state_e.PAIR_REQUEST_SENT || pairStatus == pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING ? require("../../../../../assets/lottie/progress.json")
-              : pairStatus == pairing_state_e.PAIR_TIMEOUT || pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR || pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD ? require("../../../../../assets/lottie/error.json")
+            : pairStatus == pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING ? require("../../../../../assets/lottie/progress.json")
+              : (pairStatus == pairing_state_e.SAVE_CONFIG_ERROR || pairStatus == pairing_state_e.PAIR_NO_SSID || pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR || pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD) ? require("../../../../../assets/lottie/error.json")
                 : require("../../../../../assets/lottie/progress.json")
           }
           autoPlay
@@ -266,7 +269,10 @@ export const PairingConnectorScreen3 = ({
           activeOpacity={0.3}
           style={styles.Button1}
           onPress={() => {
-            onInteraction({ opID: "PAIR" })
+            if (pairStatus == pairing_state_e.PAIR_SUCCESS)
+              onInteraction({ opID: "SAVE_CONF" })
+            else
+              onInteraction({ opID: "PAIR" })
           }}
         >
           <Animated.Text
@@ -278,17 +284,14 @@ export const PairingConnectorScreen3 = ({
               },
             ]}
           >
-            {pairStatus < pairing_state_e.PAIR_READY
-              ? "Waiting for Connection"
-              : pairStatus == pairing_state_e.PAIR_READY
-                ? "START PAIRING"
-                : pairStatus == pairing_state_e.PAIR_REQUEST_SENT || pairStatus == pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING
-                  ? "Connecting..."
-                  : pairStatus == pairing_state_e.PAIR_SUCCESS
-                    ? "Go To Dashboard"
-                    : pairStatus == pairing_state_e.PAIR_TIMEOUT || pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR || pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD
-                      ? "Try Again"
-                      : ""}
+            {pairStatus == pairing_state_e.IDLE ? "Waiting for Connection"
+              : pairStatus == pairing_state_e.PAIR_READY ? "START PAIRING"
+                : pairStatus == pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING ? "Connecting..."
+                  : pairStatus == pairing_state_e.PAIR_SUCCESS ? "Go To Dashboard"
+                    : pairStatus == pairing_state_e.PAIR_NO_SSID ? "no ssid, Try Again"
+                      : pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR ? "Try Again"
+                        : pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD ? "wrong, pass, Try Again"
+                          : ""}
           </Animated.Text>
         </RectButton>
 
