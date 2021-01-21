@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/HUElite_App_Expo/precache-manifest.be7211046ef8c4a9cebb001fbca1e99f.js"
+  "/HUElite_App_Expo/precache-manifest.815b31ac412d2f4774deb074baa9fa47.js"
 );
 
 workbox.skipWaiting();

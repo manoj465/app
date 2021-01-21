@@ -1,19 +1,39 @@
 self.__precacheManifest = [
   {
-    "revision": "346976934a831cf742e018ab174810b3",
-    "url": "/HUElite_App_Expo/static/media/deepocean.0aee9a72.png"
+    "revision": "cba28a0dca20f5375449c53a6a0d8e56",
+    "url": "/HUElite_App_Expo/static/media/sunrise.a239aa8e.png"
   },
   {
-    "revision": "1344e9a0633f5feb2afb",
-    "url": "/HUElite_App_Expo/static/js/app.af55ad95.chunk.js"
+    "revision": "9691fa43c32693c94ea9",
+    "url": "/HUElite_App_Expo/static/js/app.f720e6b9.chunk.js"
   },
   {
     "revision": "6e008895cc75c89d54f0460c9502233e",
     "url": "/HUElite_App_Expo/static/media/usageMeter.42872b19.png"
   },
   {
+    "revision": "8530afb000845b484b122dd5ee97b655",
+    "url": "/HUElite_App_Expo/static/media/icon-no-bg.45a53ee9.png"
+  },
+  {
     "revision": "2ca5be296d900971bb32f3726a2e647a",
     "url": "/HUElite_App_Expo/static/media/testIMG.922f6a75.jpg"
+  },
+  {
+    "revision": "9738c55c41056e9cc975d4f3364177e4",
+    "url": "/HUElite_App_Expo/static/media/OB_1.f30516fd.png"
+  },
+  {
+    "revision": "7f21c4f2589737bc9457625f10a41507",
+    "url": "/HUElite_App_Expo/static/media/OB_2.7d402914.png"
+  },
+  {
+    "revision": "a8413ec191641a5016575f277473d999",
+    "url": "/HUElite_App_Expo/static/media/OB_4.7d8c9d8f.png"
+  },
+  {
+    "revision": "feeedaa3e2d66167675ff576398e5add",
+    "url": "/HUElite_App_Expo/static/media/OB_3.09f592d0.png"
   },
   {
     "revision": "588cd85ff0450a1d7ebf09abeee78459",
@@ -24,24 +44,8 @@ self.__precacheManifest = [
     "url": "/HUElite_App_Expo/static/media/sunset.8780ce1b.png"
   },
   {
-    "revision": "cba28a0dca20f5375449c53a6a0d8e56",
-    "url": "/HUElite_App_Expo/static/media/sunrise.a239aa8e.png"
-  },
-  {
-    "revision": "1d82c0a284e7e9107ec750546bf6ff90",
-    "url": "/HUElite_App_Expo/static/media/spring1.f58006c7.png"
-  },
-  {
     "revision": "d73272f6fc10a91dff13",
     "url": "/HUElite_App_Expo/static/js/runtime~app.0b889b6d.js"
-  },
-  {
-    "revision": "cf7ac762ea8be26546f2c8721991552e",
-    "url": "/HUElite_App_Expo/static/media/autumn.c72bcc06.png"
-  },
-  {
-    "revision": "ea7c735dff7f720f32d58d5a64290edd",
-    "url": "/HUElite_App_Expo/static/media/aurora.d7429eea.png"
   },
   {
     "revision": "10471d5b987caea2a8ee8b8d97a709d0",
@@ -68,6 +72,22 @@ self.__precacheManifest = [
     "url": "/HUElite_App_Expo/static/media/setting.97214bba.png"
   },
   {
+    "revision": "ea7c735dff7f720f32d58d5a64290edd",
+    "url": "/HUElite_App_Expo/static/media/aurora.d7429eea.png"
+  },
+  {
+    "revision": "cf7ac762ea8be26546f2c8721991552e",
+    "url": "/HUElite_App_Expo/static/media/autumn.c72bcc06.png"
+  },
+  {
+    "revision": "346976934a831cf742e018ab174810b3",
+    "url": "/HUElite_App_Expo/static/media/deepocean.0aee9a72.png"
+  },
+  {
+    "revision": "1d82c0a284e7e9107ec750546bf6ff90",
+    "url": "/HUElite_App_Expo/static/media/spring1.f58006c7.png"
+  },
+  {
     "revision": "b49ae8ab2dbccb02c4d11caaacf09eab",
     "url": "/HUElite_App_Expo/./fonts/Fontisto.ttf"
   },
@@ -77,7 +97,7 @@ self.__precacheManifest = [
   },
   {
     "revision": "4383575f587bdc07224770f7813ef928",
-    "url": "/HUElite_App_Expo/static/js/2.2ddef792.chunk.js.LICENSE.txt"
+    "url": "/HUElite_App_Expo/static/js/2.09c4b168.chunk.js.LICENSE.txt"
   },
   {
     "revision": "8230017bdd0f83ef5f9f7ebd414f7306",
@@ -88,8 +108,8 @@ self.__precacheManifest = [
     "url": "/HUElite_App_Expo/serve.json"
   },
   {
-    "revision": "6ae208e22cd8933f64e4",
-    "url": "/HUElite_App_Expo/static/js/2.2ddef792.chunk.js"
+    "revision": "e13ae9d33045c6c01533",
+    "url": "/HUElite_App_Expo/static/js/2.09c4b168.chunk.js"
   },
   {
     "revision": "744ce60078c17d86006dd0edabcd59a7",
@@ -120,7 +140,7 @@ self.__precacheManifest = [
     "url": "/HUElite_App_Expo/./fonts/Foundation.ttf"
   },
   {
-    "revision": "751990387037aca63d59b639cf558e88",
+    "revision": "e619c52f32fb805c9b3fb6bec3470aa4",
     "url": "/HUElite_App_Expo/index.html"
   },
   {

@@ -4,13 +4,8 @@
   "lang": "en",
   "name": "HUElite",
   "short_name": "HUElite",
-  "start_url": "https://abhimanyu6676.github.io/HUElite_App_Expo/?utm_source=homescreen",
+  "start_url": "/?utm_source=web_app_manifest",
   "orientation": "portrait",
-  "description": "lightup with HUElite",
-  "favicon": "./assets/icons/icon-no-bg.png",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "primaryColor": "#ffffff",
   "related_applications": [
     {
       "platform": "itunes",

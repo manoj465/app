@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/HUElite_App_Expo/static/js/app.af55ad95.chunk.js",
-    "app.js.map": "/HUElite_App_Expo/static/js/app.af55ad95.chunk.js.map",
+    "app.js": "/HUElite_App_Expo/static/js/app.f720e6b9.chunk.js",
+    "app.js.map": "/HUElite_App_Expo/static/js/app.f720e6b9.chunk.js.map",
     "runtime~app.js": "/HUElite_App_Expo/static/js/runtime~app.0b889b6d.js",
     "runtime~app.js.map": "/HUElite_App_Expo/static/js/runtime~app.0b889b6d.js.map",
-    "static/js/2.2ddef792.chunk.js": "/HUElite_App_Expo/static/js/2.2ddef792.chunk.js",
-    "static/js/2.2ddef792.chunk.js.map": "/HUElite_App_Expo/static/js/2.2ddef792.chunk.js.map",
+    "static/js/2.09c4b168.chunk.js": "/HUElite_App_Expo/static/js/2.09c4b168.chunk.js",
+    "static/js/2.09c4b168.chunk.js.map": "/HUElite_App_Expo/static/js/2.09c4b168.chunk.js.map",
     "fonts/AntDesign.ttf": "/HUElite_App_Expo/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/HUElite_App_Expo/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/HUElite_App_Expo/./fonts/Feather.ttf",
@@ -24,13 +24,18 @@
     "index.html": "/HUElite_App_Expo/index.html",
     "manifest.json": "/HUElite_App_Expo/manifest.json",
     "serve.json": "/HUElite_App_Expo/serve.json",
-    "static/js/2.2ddef792.chunk.js.LICENSE.txt": "/HUElite_App_Expo/static/js/2.2ddef792.chunk.js.LICENSE.txt",
+    "static/js/2.09c4b168.chunk.js.LICENSE.txt": "/HUElite_App_Expo/static/js/2.09c4b168.chunk.js.LICENSE.txt",
     "static/media/1.png": "/HUElite_App_Expo/static/media/1.0b297109.png",
+    "static/media/OB_1.png": "/HUElite_App_Expo/static/media/OB_1.f30516fd.png",
+    "static/media/OB_2.png": "/HUElite_App_Expo/static/media/OB_2.7d402914.png",
+    "static/media/OB_3.png": "/HUElite_App_Expo/static/media/OB_3.09f592d0.png",
+    "static/media/OB_4.png": "/HUElite_App_Expo/static/media/OB_4.7d8c9d8f.png",
     "static/media/aurora.png": "/HUElite_App_Expo/static/media/aurora.d7429eea.png",
     "static/media/autumn.png": "/HUElite_App_Expo/static/media/autumn.c72bcc06.png",
     "static/media/background.jpg": "/HUElite_App_Expo/static/media/background.76e3813d.jpg",
     "static/media/colorPicker.png": "/HUElite_App_Expo/static/media/colorPicker.116187dc.png",
     "static/media/deepocean.png": "/HUElite_App_Expo/static/media/deepocean.0aee9a72.png",
+    "static/media/icon-no-bg.png": "/HUElite_App_Expo/static/media/icon-no-bg.45a53ee9.png",
     "static/media/preset.png": "/HUElite_App_Expo/static/media/preset.696f2cd2.png",
     "static/media/setting.png": "/HUElite_App_Expo/static/media/setting.97214bba.png",
     "static/media/splash-icon.png": "/HUElite_App_Expo/static/media/splash-icon.642f417a.png",
@@ -43,7 +48,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.0b889b6d.js",
-    "static/js/2.2ddef792.chunk.js",
-    "static/js/app.af55ad95.chunk.js"
+    "static/js/2.09c4b168.chunk.js",
+    "static/js/app.f720e6b9.chunk.js"
   ]
 }
