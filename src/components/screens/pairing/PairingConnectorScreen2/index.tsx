@@ -1,7 +1,7 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Alert, Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
 import { RectButton, TextInput } from "react-native-gesture-handler";
 import Animated, { add, call, divide, interpolate, round, useCode } from "react-native-reanimated";
 import { onScrollEvent, useValue } from "react-native-redash";
@@ -13,6 +13,7 @@ import useScanApiHook from "../../../../services/webApi/webHooks";
 import { appOperator } from "../../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
 import { logger } from "../../../../util/logger";
+import Alert from "../../../common/Alert"
 
 const deviceNames = [
   "Bedroom Light",

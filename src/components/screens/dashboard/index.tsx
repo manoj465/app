@@ -2,7 +2,7 @@ import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useRef, useState } from "react";
-import { Modal, StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
 import { red, useValue } from "react-native-redash";
@@ -18,6 +18,8 @@ import STYLES from "../../common/styles"
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
 import { LinearGradient } from "expo-linear-gradient";
 import { appOperator } from "../../../util/app.operator";
+//@ts-ignore
+import Modal from "../../common/modal";
 
 const navigationIconSize = 25;
 
@@ -86,7 +88,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           );
         }}
       /> */}
-      {false && <Modal /*///Modal */
+      <Modal /*///Modal */
         animationType="slide"
         transparent
         visible={state_deleteDeviceModal.length > 0}
@@ -123,10 +125,11 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
                 }}
                 text="delete"
                 onPress={() => {
-                  console.log("REMOVE DEVICE")
+                  console.log("REMOVE DEVICE >> " + state_deleteDeviceModal)
                   appOperator.device({
                     cmd: "REMOVE_DEVICE",
-                    Mac: state_deleteDeviceModal
+                    Mac: state_deleteDeviceModal,
+                    log: new logger("test function delete device")
                   })
                   set_state_deleteDeviceModal("")
                 }} />
@@ -179,7 +182,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
             </View>
           </View>
         </View>
-      </Modal>}
+      </Modal>
       {/* Sec:  */}
       {false && <View style={styles.navigatorMenu}>
         <RectButton

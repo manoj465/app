@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Dimensions, Image, Linking, Platform, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Image, Linking, Platform, StyleSheet, Text, View } from "react-native";
 import { PairingStackParamList } from "..";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
@@ -11,6 +11,7 @@ import LottieView from "lottie-react-native";
 import api from "../../../../services/api";
 import { logFun, logger } from "../../../../util/logger";
 import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
+import Alert from "../../../common/Alert";
 
 
 

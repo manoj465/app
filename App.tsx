@@ -48,8 +48,14 @@ export default function App() {
     //log("Dummy Data data ::  " + JSON.stringify(HallRGBGroupDummyData));
     //await storeData("deviceList", HallRGBGroupDummyData);
     //EXP: remove data from storage
-    await storeData("deviceList", null);//REMOVE
-    await storeData("appCTX", null);//REMOVE
+    //await storeData("deviceList", null);//REMOVE
+    //await storeData("appCTX", null);//REMOVE
+    const deletedDeviceList = await getData("deletedDeviceList")
+    if (deletedDeviceList) {
+      log.print("deletedDeviceList " + JSON.stringify(deletedDeviceList, null, 1))
+      reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({ deletedDeviceList, isDbState: true }))
+    }
+
     const deviceList = await getData("deviceList");
     log.print("deviceList data ::  " + JSON.stringify(deviceList));
     if (deviceList)
@@ -66,12 +72,6 @@ export default function App() {
       setappCTX({})
     setTimeout(async () => {
       await SplashScreen.hideAsync();
-      setTimeout(async () => {
-        const deletedDeviceList = await getData("deletedDeviceList")
-        if (deletedDeviceList)
-          reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({ deletedDeviceList }))
-
-      }, 5000);
       bgService.startInterval()
       setAppLoading(false);
     }, 100);

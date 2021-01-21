@@ -88,7 +88,6 @@ export const HBReducer = (
       else {
         __newList.push(newItem)
       }
-      console.log("SOCKET LIST LENGTH >> " + __newList.length)
       return Object.assign({}, state, { HBSocketList: __newList })
       break;
 

@@ -46,6 +46,28 @@ export const getDeviceWithMac_query = `query($Mac: String!) {
     }
   }`
 
+
+export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
+  $id:ID!
+  $deviceID:ID!
+){
+  updateUser(
+    id:$id
+    data:{
+      devices:{${connect ? "connect" : "disconnect"}:{id:$deviceID}}
+    }
+  ){
+    id
+    devices{
+      id
+      Mac
+      user{
+        id
+      }
+    }
+  }
+}`
+
 export const createNewDevice_mutation = `mutation(
     $userID:ID!
     $Mac:String!,

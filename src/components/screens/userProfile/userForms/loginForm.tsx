@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import { RectButton, TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
+import Alert from '../../../common/Alert';
 import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
 import { navigationProp } from "../index";
 
@@ -46,7 +47,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                 </Text>
                 <TextInput /* Sec3: Email Input  */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -68,7 +69,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
 
                 <TextInput /* Sec3: Password Input  */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -119,7 +120,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                     <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}> Login</Text>
                 </NewRectButtonWithChildren>
             </View>
-            <RectButton /* Sec2: Signup Form switch button */
+            <NewRectButtonWithChildren /* Sec2: Signup Form switch button */
                 style={{ marginTop: "5%" }}
                 onPress={() => {
                     log?.print("Signup button pressed");
@@ -132,7 +133,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                     color: "#5555ff",
                     fontWeight: "bold"
                 }}>SignUP</Text></Text>
-            </RectButton>
+            </NewRectButtonWithChildren>
         </View>
     )
 }

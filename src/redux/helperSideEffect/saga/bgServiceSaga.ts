@@ -46,9 +46,9 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
                         let socket = null
                         let res = await api.deviceAPI.authAPI.v1({
                             IP: device.IP,
-                            log: log ? new logger("authAPI", log) : undefined
+                            //log: log ? new logger("authAPI", log) : undefined
                         })
-                        log?.print("authAPI from device : " + device.Mac + " >> " + JSON.stringify(res))
+                        //log?.print("authAPI from device : " + device.Mac + " >> " + JSON.stringify(res))
                         if (res.RES?.Mac == device.Mac) {
                             log?.print(device.ts + "getting socket for device : " + device.Mac)
                             try {
@@ -65,7 +65,7 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
                                             reduxStore.store.dispatch(_actions.HBSocket({ item: { Mac: device.Mac, lastMsgRecTs: getCurrentTimeStampInSeconds() } }))
                                             //log("SOCKET MSG >> " + JSON.stringify(data))
                                         } catch (error) {
-                                            console.log(error);
+                                            log?.print(error);
                                         }
                                     },
                                     onErr: (e) => {
@@ -99,6 +99,19 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
     }
 })
 
+
+/*
+'##::::'##::::'###::::'####:'##::: ##:::::'######::'####:'########::'########::::'########:'########:'########:'########::'######::'########:
+ ###::'###:::'## ##:::. ##:: ###:: ##::::'##... ##:. ##:: ##.... ##: ##.....::::: ##.....:: ##.....:: ##.....:: ##.....::'##... ##:... ##..::
+ ####'####::'##:. ##::: ##:: ####: ##:::: ##:::..::: ##:: ##:::: ##: ##:::::::::: ##::::::: ##::::::: ##::::::: ##::::::: ##:::..::::: ##::::
+ ## ### ##:'##:::. ##:: ##:: ## ## ##::::. ######::: ##:: ##:::: ##: ######:::::: ######::: ######::: ######::: ######::: ##:::::::::: ##::::
+ ##. #: ##: #########:: ##:: ##. ####:::::..... ##:: ##:: ##:::: ##: ##...::::::: ##...:::: ##...:::: ##...:::: ##...:::: ##:::::::::: ##::::
+ ##:.:: ##: ##.... ##:: ##:: ##:. ###::::'##::: ##:: ##:: ##:::: ##: ##:::::::::: ##::::::: ##::::::: ##::::::: ##::::::: ##::: ##:::: ##::::
+ ##:::: ##: ##:::: ##:'####: ##::. ##::::. ######::'####: ########:: ########:::: ########: ##::::::: ##::::::: ########:. ######::::: ##::::
+..:::::..::..:::::..::....::..::::..::::::......:::....::........:::........:::::........::..::::::::..::::::::........:::......::::::..:::::
+*/
+
+
 /**
  * @description performs data sideEffects for app and Cloud state sync
  * 
@@ -106,14 +119,14 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
  * - [ ] onFirstIteration get cloudState and operate upon data
  *      - [ ] remove deleted devices from user DataSetdevicesList
  */
-const performSideEffects = async ({ user, iteration, log }: { user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
+const performSideEffects = async ({ user, iteration, log = new logger("test function") }: { user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
     if ((iteration == 0 || iteration % 5 == 0) && user?.id) {
-        log?.print("fetching user")
+        //log?.print("fetching user")
         const userRes = await api.cloudAPI.user.userQuery.v1({
             id: user.id,
-            log: log ? new logger("userQueryAPI", log) : undefined
+            //log: log ? new logger("userQueryAPI", log) : undefined
         })
-        log?.print("userQueryRes " + JSON.stringify(userRes, null, 2))
+        //log?.print("userQueryRes " + JSON.stringify(userRes, null, 2))
         if (userRes.RES?.id) {
             appOperator.userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: userRes.RES }) })
         }
@@ -126,7 +139,57 @@ const performSideEffects = async ({ user, iteration, log }: { user?: UNIVERSALS.
             })
         }
     }
+    else if (iteration % 2 == 0 && user?.id) {
+        const localDeletedDeviceList = reduxStore.store.getState().deviceReducer.deletedDevices
+        log?.print("deleted device list length - " + localDeletedDeviceList.length + "  >>  " + JSON.stringify(localDeletedDeviceList))
+        if (localDeletedDeviceList.length) {
+            let list = await Promise.all(localDeletedDeviceList.map(async (device, index) => {
+                if (device.id && user.id) {
+                    const updateUserDevicesRes = await api.cloudAPI.user.userDeviceUpdateMutation.v1({
+                        id: user.id,
+                        deviceID: device.id
+                    })
+                    log?.print("updateUserDeviceApiRes >> " + JSON.stringify(updateUserDevicesRes, null, 2))
+                    if (updateUserDevicesRes.RES?.updateUser) {
+                        let deviceInMutationRes = updateUserDevicesRes.RES.updateUser.devices.find(item => item.id == device.id)
+                        if (deviceInMutationRes) {
+                            log?.print("device still present in user DB")
+                            return device
+                        }
+                        else {
+                            log?.print("device removed from user deviceList from cloud")
+                            return undefined
+                        }
+                    } else {
+                        log?.print("coudn't get valid response from cloud, keeping device as it si in redux state")
+                        return device
+                    }
+                }
+                return undefined
+            }))
+            list = list.filter(item => item)
+            log?.print("list after performing delete operations " + JSON.stringify(list, null, 2))
+            if (localDeletedDeviceList.length != list.length) {
+                log?.print("updating deleted device list in redux")
+                //@ts-ignore - as newDeletedDeviceList is already filtered for undefined objects
+                reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({ deletedDeviceList: list.length ? list : [] }))
+            }
+        }
+    }
 }
+
+
+/*
+'########::'########:'##::::'##:'####::'######::'########:::::'######::'####:'########::'########::::'########:'########:'########:'########::'######::'########:
+ ##.... ##: ##.....:: ##:::: ##:. ##::'##... ##: ##.....:::::'##... ##:. ##:: ##.... ##: ##.....::::: ##.....:: ##.....:: ##.....:: ##.....::'##... ##:... ##..::
+ ##:::: ##: ##::::::: ##:::: ##:: ##:: ##:::..:: ##:::::::::: ##:::..::: ##:: ##:::: ##: ##:::::::::: ##::::::: ##::::::: ##::::::: ##::::::: ##:::..::::: ##::::
+ ##:::: ##: ######::: ##:::: ##:: ##:: ##::::::: ######::::::. ######::: ##:: ##:::: ##: ######:::::: ######::: ######::: ######::: ######::: ##:::::::::: ##::::
+ ##:::: ##: ##...::::. ##:: ##::: ##:: ##::::::: ##...::::::::..... ##:: ##:: ##:::: ##: ##...::::::: ##...:::: ##...:::: ##...:::: ##...:::: ##:::::::::: ##::::
+ ##:::: ##: ##::::::::. ## ##:::: ##:: ##::: ##: ##::::::::::'##::: ##:: ##:: ##:::: ##: ##:::::::::: ##::::::: ##::::::: ##::::::: ##::::::: ##::: ##:::: ##::::
+ ########:: ########:::. ###::::'####:. ######:: ########::::. ######::'####: ########:: ########:::: ########: ##::::::: ##::::::: ########:. ######::::: ##::::
+........:::........:::::...:::::....:::......:::........::::::......:::....::........:::........:::::........::..::::::::..::::::::........:::......::::::..:::::
+*/
+
 
 
 const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVERSALS.GLOBALS.DEVICE_t, user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
@@ -136,12 +199,22 @@ const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVE
                 log?.print("getting device ID for device " + device.Mac + " - " + device.deviceName)
                 const res = await api.cloudAPI.device.deviceQueryWithMac.v1({ device, log: log ? new logger("device_query Api", log) : undefined })
                 if (res.RES?.id && device.Mac == res.RES.Mac) {
+                    //@ts-ignore - as we have already checked for `user.id` field
+                    const updateUserDevicesRes = await api.cloudAPI.user.userDeviceUpdateMutation.v1({ id: user.id, deviceID: res.RES?.id, connect: true })
+                    let containsDevice = false
+                    if (updateUserDevicesRes.RES?.updateUser.devices.length) {
+                        updateUserDevicesRes.RES?.updateUser.devices.forEach(element => {
+                            if (element.id == res.RES?.id)
+                                containsDevice = true
+                        });
+                    }
                     // - [ ] compare both local and api response data and save the latest one to redux store
-                    appOperator.device({
-                        cmd: "ADD_UPDATE_DEVICES",
-                        newDevices: [{ ...UNIVERSALS.GLOBALS.convert_Device_backendToLocal({ device: res.RES }), localTimeStamp: device.localTimeStamp }],
-                        log: log ? new logger("device-operator add/update devices", log) : undefined
-                    })
+                    if (containsDevice)
+                        appOperator.device({
+                            cmd: "ADD_UPDATE_DEVICES",
+                            newDevices: [{ ...UNIVERSALS.GLOBALS.convert_Device_backendToLocal({ device: res.RES }), localTimeStamp: device.localTimeStamp }],
+                            log: log ? new logger("device-operator add/update devices", log) : undefined
+                        })
                 }
                 else if (res.ERR?.errCode == api.cloudAPI.device.deviceQueryWithMac.deviceQueryWithMacApiErrors_e.DEVICE_QUERY_NO_DEVICES_FOUND) {
                     //@ts-ignore - [error]=> due to user.id(could be undefined) field. [resolution]=> but we have already check for user.id field at the begning of the method

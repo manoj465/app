@@ -112,8 +112,9 @@ export const DeviceCard = ({
                 async (index) => {
                   switch (index) {
                     case 0:
-                      if (setToBeDeletedDevice)
+                      if (setToBeDeletedDevice) {
                         setToBeDeletedDevice(device.Mac)
+                      }
                       break;
 
                     default:

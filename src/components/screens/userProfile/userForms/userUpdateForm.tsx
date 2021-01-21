@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Alert } from 'react-native'
-import { RectButton, TextInput } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import UNIVERSALS from '../../../../@universals';
 import { _appState } from '../../../../redux/rootReducer';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
 import { navigationProp } from "../index"
+import Alert from "../../../common/Alert"
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
+
 
 /**
  * 
@@ -54,7 +57,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
         </Text>
                 <TextInput /* Sec3: userName textField */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -76,7 +79,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
 
                 <TextInput /* Sec3: oldPassword textField */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -98,7 +101,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
 
                 <TextInput /* Sec3: newPassword textField */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -118,7 +121,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                 />
                 <TextInput /* Sec3: retype password */
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -137,7 +140,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                     secureTextEntry={true}
                 />
 
-                <RectButton /* Sec3: SignUp button */
+                <NewRectButtonWithChildren /* Sec3: SignUp button */
                     style={{
                         backgroundColor: "#5555ff",
                         height: 50,
@@ -174,9 +177,9 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                     <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
                         Update
                  </Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
             </View>
-            <RectButton
+            <NewRectButtonWithChildren
                 style={{ marginTop: "5%" }}
                 onPress={() => {
                     console.log("Signup");
@@ -187,7 +190,7 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                     Everythings is in place
                     <Text style={{ color: "#5555ff", fontWeight: "bold" }}>{" "}discard changes</Text>
                 </Text>
-            </RectButton>
+            </NewRectButtonWithChildren>
         </View>
     )
 }

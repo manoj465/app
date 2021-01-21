@@ -15,9 +15,7 @@ interface beforeUpdateDevice_props {
     deletedObject?: UNIVERSALS.GLOBALS.DEVICE_t
 }
 type beforeUpdateDevice_t = (props: beforeUpdateDevice_props) => void
-const beforeUpdateDeviceSideEffect: beforeUpdateDevice_t = async ({ device }) => {
-    // - [ ] compare timestamp and return latest accordingly
-}
+const beforeUpdateDeviceSideEffect: beforeUpdateDevice_t = async ({ device }) => { }
 
 
 
@@ -68,24 +66,27 @@ const add_updateDevices: add_updateDevices_t = ({ newDevices, cloudState, ...pro
             props.log?.print("device not found in local state")
             /* check if device is present in deletedDeviceList */
             let deviceMatchFromDeletedDeviceList = reduxStore.store.getState().deviceReducer.deletedDevices.find(item => item.Mac == newDevice.Mac)
-            if (deviceMatchFromDeletedDeviceList && cloudState && deviceMatchFromDeletedDeviceList.localTimeStamp > newDevice.localTimeStamp) {// IMP - only filter deletedDeviceList in case if its a cloudState comparision, generally user could be re-pairing the device after delete
+            if (deviceMatchFromDeletedDeviceList) {
+                props.log?.print("device found in deleted device list ")
+                //props.log?.print("device from deleted list")._printPretty(deviceMatchFromDeletedDeviceList)
+                //props.log?.print("device from cloud")._printPretty(newDevice)
+            }
+            if (deviceMatchFromDeletedDeviceList && deviceMatchFromDeletedDeviceList.localTimeStamp >= newDevice.localTimeStamp) {// IMP - only filter deletedDeviceList in case if its a cloudState comparision, generally user could be re-pairing the device after delete
                 /** 
-                 * if device is present is present in deletedDeviceList and timeStamp
+                 * if device is present in deletedDeviceList and timeStamp
                  * is latest compared to `newDevice.ts`, then in that case it is assumed
                  * that the deviec delete is not yet updated to cloud and newDevice shouldn't
                  * be added to list
                  */
-                props.log?.print(newDevice.Mac)._print("is present in deleted deviceList, doesn't need to be updated")
+                props.log?.print("not adding device " + newDevice.Mac + " to device list as it is deleted and not updated to cloud yet")
             }
             else {
                 requireReduxUpdate = true
                 newDeviceList.push(newDevice)
-                if (deviceMatchFromDeletedDeviceList && deviceMatchFromDeletedDeviceList.localTimeStamp < newDevice.localTimeStamp) {
-                    props.log?.print("removing")._print(newDevice.Mac)._print("from deleted deviceList")
-                    reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({
-                        deletedDeviceList: reduxStore.store.getState().deviceReducer.deletedDevices.filter(item => item.Mac == newDevice.Mac)
-                    }))
-                }
+                props.log?.print("removing " + newDevice.Mac + " from deleted deviceList")
+                reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({
+                    deletedDeviceList: reduxStore.store.getState().deviceReducer.deletedDevices.filter(item => item.Mac == newDevice.Mac)
+                }))
                 beforeUpdateDeviceSideEffect({ device: newDevice })
             }
         }
@@ -103,7 +104,7 @@ const add_updateDevices: add_updateDevices_t = ({ newDevices, cloudState, ...pro
             requireReduxUpdate = true
             return false
         })()))
-        props.log?.print("filtered device list " + JSON.stringify(newDeviceList, null, 1))
+        //props.log?.print("filtered device list " + JSON.stringify(newDeviceList, null, 1))
     }
     if (requireReduxUpdate) {
         props.log?.print("Sending Saga Action with new list is " + JSON.stringify(newDeviceList, null, 2))
@@ -138,15 +139,15 @@ interface removeDeviceProps {
     log?: logger
 }
 const removeDevice = (props: removeDeviceProps) => {
-    let device = reduxStore.store.getState().deviceReducer.deviceList.find(device => device.Mac != props.Mac)
-    let newDeviceList = reduxStore.store.getState().deviceReducer.deviceList.filter(device => device.Mac != props.Mac)
-    props.log?.print("device removed > sending saga update")._print(JSON.stringify(newDeviceList, null, 2))
+    let device = reduxStore.store.getState().deviceReducer.deviceList.find(item => item.Mac == props.Mac)
     if (device) {
-        if (device.id) {
-            /**
-             * add device in the deleted deviceList so as to remove it from the cloud later from background service
-             */
-            let __foo = reduxStore.store.getState().deviceReducer.deletedDevices.filter(item => item.Mac == props.Mac)
+        let newDeviceList = reduxStore.store.getState().deviceReducer.deviceList.filter(device => device.Mac != props.Mac)
+        props.log?.print("device removed > sending saga update")._print(JSON.stringify(newDeviceList, null, 2))
+        if (device.id) {/** if device is synced with cloud add device in the deleted deviceList so as to remove it from the cloud later from background service */
+            let __foo = reduxStore.store.getState().deviceReducer.deletedDevices
+            let deviceFromDeletedDeviceList = reduxStore.store.getState().deviceReducer.deletedDevices.find(item => item.Mac == props.Mac)
+            if (deviceFromDeletedDeviceList)
+                __foo = __foo.filter(item => item.Mac != props.Mac)
             __foo.push({ ...device, localTimeStamp: getCurrentTimeStampInSeconds() })
             reduxStore.store.dispatch(reduxStore.actions.deviceList.deletedDeviceListRedux({
                 deletedDeviceList: __foo

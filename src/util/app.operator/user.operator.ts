@@ -1,10 +1,11 @@
-import { Alert } from "react-native"
 import UNIVERSALS from "../../@universals";
 import { reduxStore } from "../../redux";
 import API from "../../services/api";
 import { logger } from "../logger";
 import deviceOperator from "./device.operator"
 import * as Facebook from 'expo-facebook';
+import Alert from "../../components/common/Alert"
+
 
 /*
 '##::::::::'#######:::'######::::'#######::'##::::'##:'########::::'########:'##::::'##:'##::: ##::'######::'########:'####::'#######::'##::: ##:

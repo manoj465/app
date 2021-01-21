@@ -1,6 +1,6 @@
 ## feature-request
 
-- [x] conver color hex range from 1-255 to 1-100
+- [x] convert color hex range from 1-255 to 1-100
 - [x] [user_functionality](https://app.clickup.com/t/1ve5nj)
 - [x] configure PairingScreen and pairing functionality with new appOperatorObject
 - [x] remove `types` dependency from redux folder
@@ -8,8 +8,10 @@
 - [x] remove `types` dependency from appOperator
 - [x] remove `types` dependency from
 - [x] delete @types folder after removing its dependency from app
+- [x] detach deletedDeviceList device from user cloudState upon background service sideEffect and remove them from redux state upon successfull detach
+- [x] colorPicker Optmization for PWA
 - [ ] optimize pairing screen for PWA
-- [ ] detach deletedDeviceList device from user cloudState upon background service sideEffect and remove them from redux state upon successfull detach
+- [ ] optimize deviceNavigator screens for web
 
 ## bugs/fixes
 

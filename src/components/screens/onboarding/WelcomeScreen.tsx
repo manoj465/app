@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Image, Text, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
+import Modal from "../../common/modal";
 import styles from "../../common/styles";
 
 
@@ -87,13 +88,15 @@ const Header = ({ slideIndex }: { slideIndex: number }) => {
         }}>
         {slides.map((item, index) => {
           return (
-            <View style={{
-              paddingHorizontal: 20,
-              flex: 1,
-              //backgroundColor: "red",
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
+            <View
+              key={index}
+              style={{
+                paddingHorizontal: 20,
+                flex: 1,
+                //backgroundColor: "red",
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
               <Image
                 source={item.assest}
                 style={{
@@ -125,13 +128,15 @@ const Header = ({ slideIndex }: { slideIndex: number }) => {
         }}>
         {slides.map((item, index) => {
           return (
-            <View style={{
-              height: 8,
-              width: slideIndex == index ? 15 : 8,
-              borderRadius: 10,
-              backgroundColor: styles.themeColors.primary,
-              marginHorizontal: 5
-            }} />
+            <View
+              key={index}
+              style={{
+                height: 8,
+                width: slideIndex == index ? 15 : 8,
+                borderRadius: 10,
+                backgroundColor: styles.themeColors.primary,
+                marginHorizontal: 5
+              }} />
           )
         })}
       </View>

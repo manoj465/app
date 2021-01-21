@@ -83,6 +83,7 @@ export const DeviceColorPickerScreen = ({
           <View /* Sec1: devicePage header */
             style={styles.header_container}>
             <Animated.View
+              //@ts-ignore
               style={[styles.header_AnimatedView, { backgroundColor: headBackgroundColor }]}
             >
               <DevicePageHeader

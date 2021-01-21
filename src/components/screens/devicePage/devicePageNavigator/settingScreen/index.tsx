@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Alert, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import TextField from "../../../../common/text/textField"
 import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { _appState } from "../../../../../redux/rootReducer";
 import UNIVERSALS from "../../../../../@universals";
 import { appOperator } from "../../../../../util/app.operator";
+import Alert from "../../../../common/Alert";
 
 type navigation_t = StackNavigationProp<
   devicePageStackParamList,

@@ -1,11 +1,12 @@
 import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { reduxStore } from '../../../../redux';
 import { appOperator } from '../../../../util/app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../../util/DateTimeUtil';
 import { logger } from "../../../../util/logger";
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
 import { navigationProp } from "../index";
 import { LoginHeader } from "./loginForm";
 import { SignUpHeader } from "./signupForm";
@@ -37,8 +38,7 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
 
   return (
     <View style={styles.container}>
-      {/* Sec: Body Section for login/signup/update form*/}
-      <View style={styles.contentView}>
+      <View style={styles.contentView} /* Sec2: Body Section for login/signup/update form*/ >
         {userPageView == "SIGNUP"
           ? <SignUpHeader
             setHeaderView={setUserPageView}
@@ -56,19 +56,18 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
                 log={log ? new logger("login header", log) : undefined} />
               : (<View></View>)}
       </View>
-      {/* Sec: Footer */}
-      <View style={styles.footer}>
-        {/* Sec: Login buttons */}
-        <View style={{ display: "flex", flexDirection: "row", width: 120, alignItems: "center", justifyContent: "center" }}>
-          {false && <RectButton
+      <View style={styles.footer} /* Sec2: Footer */ >
+        {false && <View /* Sec3: Login buttons */
+          style={{ display: "flex", flexDirection: "row", width: 120, alignItems: "center", justifyContent: "center" }}>
+          {false && <NewRectButtonWithChildren
             onPress={() => {
               /* - [ ] googleLogin() */
             }}>
             <View style={{ borderColor: "#fff", borderWidth: 0.5, height: 50, width: 50, borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
               <FontAwesome name="google" size={30} color="#fff" />
             </View>
-          </RectButton>}
-          <RectButton
+          </NewRectButtonWithChildren>}
+          <NewRectButtonWithChildren
             onPress={() => {
               appOperator.user({
                 cmd: "FB_LOGIN",
@@ -81,11 +80,15 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
             <View style={{ borderColor: "#fff", borderWidth: 0.5, height: 50, width: 50, borderRadius: 30, justifyContent: "center", alignItems: "center" }}>
               <FontAwesome name="facebook-f" size={30} color="#fff" />
             </View>
-          </RectButton>
-        </View>
-        {/* Sec: Skip Login */}
-        <RectButton
-          style={{ position: "absolute", bottom: 10, paddingVertical: 10, }}
+          </NewRectButtonWithChildren>
+        </View>}
+        <NewRectButtonWithChildren /* Sec3: Skip Login */
+          style={{
+            position: "absolute",
+            bottom: 10,
+            paddingVertical: 10,
+            backgroundColor: "transparent"
+          }}
           onPress={() => {
             appOperator.userStoreUpdateFunction({
               user: {
@@ -107,7 +110,7 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
               Will do Later
             </Text>
           </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
     </View >
   );
@@ -122,6 +125,7 @@ const styles = StyleSheet.create({
   },
   contentView: {
     flex: 0.7,
+    flexGrow: 1,
     borderBottomLeftRadius: width * 0.08,
     borderBottomRightRadius: width * 0.08,
     backgroundColor: "white",

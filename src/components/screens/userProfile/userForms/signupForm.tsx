@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
-import { RectButton, TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import UNIVERSALS from '../../../../@universals';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
 import { navigationProp } from "../index";
+import Alert from "../../../common/Alert"
+
 
 /**
  * 
@@ -50,7 +53,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
         </Text>
                 <TextInput
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -72,7 +75,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
 
                 <TextInput
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -94,7 +97,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
 
                 <TextInput
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -114,7 +117,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                 />
                 <TextInput
                     style={{
-                        height: 50,
+                        minHeight: 50,
                         width: "80%",
                         maxWidth: 400,
                         borderColor: "#5555ff7f",
@@ -133,7 +136,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                     secureTextEntry={true}
                 />
 
-                <RectButton /* Sec3: SignUp button */
+                <NewRectButtonWithChildren /* Sec3: SignUp button */
                     style={{
                         backgroundColor: "#5555ff",
                         height: 50,
@@ -166,9 +169,9 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                     <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
                         Signup
                  </Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
             </View>
-            <RectButton
+            <NewRectButtonWithChildren
                 style={{ marginTop: "5%" }}
                 onPress={() => {
                     console.log("Signup");
@@ -179,7 +182,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                     Already have an account
                     <Text style={{ color: "#5555ff", fontWeight: "bold" }}>Login</Text>
                 </Text>
-            </RectButton>
+            </NewRectButtonWithChildren>
         </View>
     )
 }

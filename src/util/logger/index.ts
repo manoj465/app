@@ -16,14 +16,14 @@ export class logger {
     prefix: string
     printAll = false
     printable = [
-        "MAIN ACTIVITY", /* App.ts */
-        "BG SERVICE",
+        //"MAIN ACTIVITY", /* App.ts */
+        //"BG SERVICE",
         //"DEVICE MODES SCREEN", /* device modes screen in device page */
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
         //"DASHBOARD",/* DAHSBOARD SCREEN */
         //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
-        //"TEST FUNCTION", /* testfunction prints */
-        "USER PROFILE",
+        "TEST FUNCTION", /* testfunction prints */
+        //"USER PROFILE",
         //"APP SETTING",
         //"PAIRING_SCREEN",
     ]

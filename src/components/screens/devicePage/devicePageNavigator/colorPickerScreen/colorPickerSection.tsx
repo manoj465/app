@@ -18,7 +18,6 @@ interface Props {
   log?: logger
 }
 
-const { width } = Dimensions.get("window");
 export const ColorPickerSection = ({
   hue,
   saturation,
@@ -41,7 +40,6 @@ export const ColorPickerSection = ({
         }}
       >
         <ColorPicker
-          canvasWidth={width * 0.85}
           hue={hue}
           saturation={saturation}
           backgroundColor={backgroundColor}
