@@ -1,1 +1,1 @@
-"serviceWorker"in navigator&&window.addEventListener("load",(function(){navigator.serviceWorker.register("/HUElite_App_Expo/expo-service-worker.js",{scope:"/HUElite_App_Expo/"}).then((function(e){})).catch((function(e){console.info("Failed to register service-worker",e)}))}));
+"serviceWorker"in navigator&&window.addEventListener("load",(function(){navigator.serviceWorker.register("/app/expo-service-worker.js",{scope:"/app/"}).then((function(e){})).catch((function(e){console.info("Failed to register service-worker",e)}))}));
