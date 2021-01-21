@@ -50,6 +50,17 @@ export default function App() {
     //EXP: remove data from storage
     //await storeData("deviceList", null);//REMOVE
     //await storeData("appCTX", null);//REMOVE
+
+    /* if (window.matchMedia('(display-mode: standalone)').matches) {
+      console.log("This is running as standalone.");
+    } else if (window.matchMedia('(display-mode: browser)').matches) {
+      console.log("This is running as browser.");
+    }
+    else {
+      console.log("This is not running as standalone.");
+    } */
+
+
     const deletedDeviceList = await getData("deletedDeviceList")
     if (deletedDeviceList) {
       log.print("deletedDeviceList " + JSON.stringify(deletedDeviceList, null, 1))
