@@ -26,10 +26,8 @@ const Stack = createStackNavigator<MainRouterStackParamList>();
 const MainRouter = (props: any) => {
   return (
     <Stack.Navigator
-      initialRouteName={
-        props.initialScreen ? props.initialScreen : "DashboardRouter"
-      }
-      //initialRouteName="test"
+      initialRouteName={props.initialScreen ? props.initialScreen : "DashboardRouter"}
+      //initialRouteName="user"
       screenOptions={{
         headerShown: false,
         cardStyle: {

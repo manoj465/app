@@ -1,7 +1,6 @@
 import React from 'react'
-import { View, Text, StyleProp, ViewStyle, TextStyle, TouchableOpacity, StyleSheet } from 'react-native'
+import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
-import styles from '../styles'
 import STYLES from "../styles"
 
 interface Props {
@@ -20,10 +19,10 @@ interface Props {
 export const NewRectButton = ({ buttonStyle, textStyle, text, onPress = () => { }, useReanimated = false }: Props) => {
     return (
         <View style={[STYLES.shadow, _styles.buttonContainer, buttonStyle]}>
-            {useReanimated ? <RectButton style={[_styles.innerbutton]}
+            {useReanimated ? <NewRectButtonWithChildren style={[_styles.innerbutton]}
                 onPress={onPress}>
                 <Text style={[{ textAlign: "center", fontSize: 18 }, textStyle]}>{text ? text : "BUTTON"}</Text>
-            </RectButton>
+            </NewRectButtonWithChildren>
                 : <TouchableOpacity style={[_styles.innerbutton]}
                     onPress={onPress}>
                     <Text style={[{ textAlign: "center", fontSize: 18 }, textStyle]}>{text ? text : "BUTTON"}</Text>
@@ -52,11 +51,11 @@ export const NewRectButtonWithChildren = ({ style, innerCompStyle, onPress = () 
     return (
         <View style={[_styles.buttonContainer, shadow ? STYLES.shadow : {}, style,]}>
             {useReanimated ?
-                <RectButton style={
+                <NewRectButtonWithChildren style={
                     [_styles.innerbutton, innerCompStyle]}
                     onPress={onPress}>
                     {children}
-                </RectButton>
+                </NewRectButtonWithChildren>
                 : <TouchableOpacity style={
                     [_styles.innerbutton, innerCompStyle]}
                     onPress={onPress}>
@@ -73,7 +72,6 @@ const _styles = StyleSheet.create({
         overflow: "hidden",
         borderRadius: 10,
         marginVertical: 5,
-        width: "100%",
         height: 50,
     },
     innerbutton: {

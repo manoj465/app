@@ -41,7 +41,7 @@
       "description": "lightup with HUElite",
       "favicon": "./assets/icons/icon-no-bg.png",
       "backgroundColor": "#ffffff",
-      "startUrl": "https://abhimanyu6676.github.io/HUElite_App_Expo/?utm_source=homescreen",
+      "startUrl": "https://app.huelite.in/?utm_source=homescreen",
       "themeColor": "#ffffff",
       "primaryColor": "#ffffff",
       "icons": [

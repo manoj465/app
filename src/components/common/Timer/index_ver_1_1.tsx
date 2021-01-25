@@ -19,6 +19,7 @@ import {
 } from "../../../util/dummyData/timerTypes";
 import { groupTimerSagaAction } from "../../../redux/actions/timerActions";
 import { LinearGradient } from "expo-linear-gradient";
+import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
 
 const days = [
   { day: "M" },
@@ -68,7 +69,7 @@ export const Timer = ({ group, deviceMacFromNavigator }: Props) => {
                 end={{ x: 1.3, y: 0 }}
               ></LinearGradient>
               {/* Sec: Middle Sec for TIME & EVENT TYPE */}
-              <RectButton
+              <NewRectButtonWithChildren
                 onPress={() => {
                   dispatch(
                     timerDialogShowHideReduxAction({
@@ -166,10 +167,10 @@ export const Timer = ({ group, deviceMacFromNavigator }: Props) => {
                     );
                   })}
                 </View>
-              </RectButton>
+              </NewRectButtonWithChildren>
               {/* Sec: BUTTON CONTAINER update & cancel */}
               <View style={{ display: "flex", flexDirection: "row" }}>
-                <RectButton
+                <NewRectButtonWithChildren
                   style={{
                     flex: 1,
                     justifyContent: "center",
@@ -193,8 +194,8 @@ export const Timer = ({ group, deviceMacFromNavigator }: Props) => {
                   >
                     EDIT
                   </Text>
-                </RectButton>
-                <RectButton
+                </NewRectButtonWithChildren>
+                <NewRectButtonWithChildren
                   style={{
                     flex: 1,
                     justifyContent: "center",
@@ -231,14 +232,14 @@ export const Timer = ({ group, deviceMacFromNavigator }: Props) => {
                   >
                     DELETE
                   </Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
               </View>
             </View>
           );
       })}
       {/* Sec: AddNew Event Button */}
       <View style={[styles.timerBlockConatiner]}>
-        <RectButton
+        <NewRectButtonWithChildren
           style={{
             flex: 1,
             justifyContent: "center",
@@ -263,7 +264,7 @@ export const Timer = ({ group, deviceMacFromNavigator }: Props) => {
           >
             ADD NEW EVENT
           </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
     </ScrollView>
   );

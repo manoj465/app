@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
 import Alert from '../../../common/Alert';
@@ -31,7 +30,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                         paddingHorizontal: 20,
                     }}
                 >
-                    Let's start with Login
+                    Let's get started
                 </Text>
                 <Text /* Sec3: Form Description text  */
                     style={{
@@ -62,7 +61,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                     onChangeText={(text) => {
                         setEmail(text);
                     }}
-                    placeholder="email/userID"
+                    placeholder="Email"
                     value={email}
                     autoCompleteType="email"
                 />
@@ -129,10 +128,10 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
             >
                 <Text style={{
                     textAlign: "center"
-                }}> Dont have an account<Text style={{
+                }}> Don't have an account?<Text style={{
                     color: "#5555ff",
                     fontWeight: "bold"
-                }}>SignUP</Text></Text>
+                }}>{" "}SignUp</Text></Text>
             </NewRectButtonWithChildren>
         </View>
     )

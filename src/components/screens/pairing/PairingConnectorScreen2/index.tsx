@@ -14,6 +14,7 @@ import { appOperator } from "../../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
 import { logger } from "../../../../util/logger";
 import Alert from "../../../common/Alert"
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 const deviceNames = [
   "Bedroom Light",
@@ -212,7 +213,7 @@ export const PairingConnectorScreen2 = ({
             data={deviceNames}
             numColumns={3}
             renderItem={({ item }) => (
-              <RectButton
+              <NewRectButtonWithChildren
                 onPress={() => {
                   setDeviceName(item);
                   //Vibration.vibrate(50); //TODO move this to useCode/call function for better feedback
@@ -238,7 +239,7 @@ export const PairingConnectorScreen2 = ({
                     {item}
                   </Text>
                 </View>
-              </RectButton>
+              </NewRectButtonWithChildren>
             )}
             keyExtractor={(item, index) => index.toString()}
           />
@@ -262,7 +263,7 @@ export const PairingConnectorScreen2 = ({
           If you don't find your network in list than refresh from below
           </Text>
         {/* Sec: Wifi refresh button */}
-        <RectButton
+        <NewRectButtonWithChildren
           style={styles.refreshButton}
           onPress={() => {
             log.print("refresh wifi scan api response")
@@ -275,7 +276,7 @@ export const PairingConnectorScreen2 = ({
               Refresh WiFi Scan
               </Text>
           </View>
-        </RectButton>
+        </NewRectButtonWithChildren>
         {/* Sec: Selector */}
         <View style={styles.selectorList} >
           <Animated.ScrollView
@@ -354,21 +355,21 @@ export const PairingConnectorScreen2 = ({
       </View>
       {debug && <Text style={{}}>{Wifi}</Text>}
       {/* Sec: Bottom buttons */}
-      <RectButton
+      <NewRectButtonWithChildren
         style={[styles.pairButton, { opacity: deviceName.length > 6 ? 1 : 0.9, }]}
         onPress={() => onInteraction({ opID: "PAIR" })}>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "#fff" }}>
           Pair Device
           </Text>
-      </RectButton>
-      <RectButton
+      </NewRectButtonWithChildren>
+      <NewRectButtonWithChildren
         style={styles.skipButton}
         onPress={() => onInteraction({ opID: "SKIP" })}
       >
         <Text style={{ fontSize: 12, fontWeight: "bold", color: "#555" }}>
           Continue without Wi-Fi Pairing
           </Text>
-      </RectButton>
+      </NewRectButtonWithChildren>
     </SafeAreaView >
   );
 };

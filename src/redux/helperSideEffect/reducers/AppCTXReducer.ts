@@ -8,11 +8,15 @@ import UNIVERSALS from "../../../@universals";
 export interface appCTXReducerState_Prop {
   welcomeScreenStatus: boolean
   user?: UNIVERSALS.GLOBALS.USER_t
+  quickActions: {
+    stayAwake?: boolean
+  }
 }
 
 export const initialState: appCTXReducerState_Prop = {
   welcomeScreenStatus: false,
-  user: undefined
+  user: undefined,
+  quickActions: {}
 };
 
 export const appCTXReducer = (

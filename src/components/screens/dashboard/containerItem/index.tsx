@@ -56,7 +56,7 @@ export const DeviceObjectContainer = ({
       <Animated.View
         style={[styles.devicesContainer, { height: deviceContainerheight }]}
       >
-        {/*  <RectButton
+        {/*  < RectButton
             style={{ zIndex: 100, width: "100%" }}
             activeOpacity={0.9}
             onPress={() => {

@@ -18,6 +18,7 @@ import Animated, {
   event,
 } from "react-native-reanimated";
 import { MaterialIcons } from "@expo/vector-icons";
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 
 interface props {
@@ -72,7 +73,7 @@ export const GroupHeader = ({
         }}
       >
         <TapGestureHandler onHandlerStateChange={gestureHandler}>
-          {/*  <RectButton
+          {/*  < RectButton
           onPress={() => {
             if (open == 0) setOpen(1);
             else setOpen(0);
@@ -104,7 +105,7 @@ export const GroupHeader = ({
           </Animated.View>
           {/* </RectButton> */}
         </TapGestureHandler>
-        <RectButton
+        <NewRectButtonWithChildren
           style={{
             //backgroundColor: "red",
             height: "100%",
@@ -124,7 +125,7 @@ export const GroupHeader = ({
           >
             {groupName}
           </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
     </View>
   );

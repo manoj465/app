@@ -10,6 +10,7 @@ import { appNegativeColor, appPositiveColor } from "../../../theme/colors/highli
 import { appOperator } from "../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
 import { logger } from "../../../util/logger";
+import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
 import { NewTimerDialog } from "./NewTimerDialog";
 
 const days = [
@@ -178,7 +179,7 @@ export const Timer = ({ device, log }: Props) => {
                   borderTopWidth: 0.5,
                   marginHorizontal: 10,
                 }}>
-                <RectButton /* Sec5: EDIT BUTTON */
+                <NewRectButtonWithChildren /* Sec5: EDIT BUTTON */
                   style={{
                     flex: 1,
                     justifyContent: "center",
@@ -198,7 +199,7 @@ export const Timer = ({ device, log }: Props) => {
                   >
                     EDIT
                     </Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
                 <View /* Sec5: Divider */
                   style={{
                     width: 1,
@@ -207,7 +208,7 @@ export const Timer = ({ device, log }: Props) => {
                     marginVertical: 5,
                   }}
                 ></View>
-                <RectButton /* Sec5: DELETE BUTTON */
+                <NewRectButtonWithChildren /* Sec5: DELETE BUTTON */
                   style={{
                     flex: 1,
                     justifyContent: "center",
@@ -240,13 +241,13 @@ export const Timer = ({ device, log }: Props) => {
                   >
                     DELETE
                     </Text>
-                </RectButton>
+                </NewRectButtonWithChildren>
               </View>
             </View>
           </View>
         );
       })}
-      {(deviceFromStore && deviceFromStore.timers?.length < 5) && <RectButton /* Sec2: AddNew Event Button */
+      {(deviceFromStore && deviceFromStore.timers?.length < 5) && <NewRectButtonWithChildren /* Sec2: AddNew Event Button */
         style={[
           {
             justifyContent: "center",
@@ -269,7 +270,7 @@ export const Timer = ({ device, log }: Props) => {
         <Text style={{ position: "absolute", bottom: 10, fontWeight: "bold" }}>
           ADD NEW EVENT
         </Text>
-      </RectButton>}
+      </NewRectButtonWithChildren>}
       <NewTimerDialog /* Sec2: timer dialog */
         device={deviceFromStore} // IMP send device from redux state so that receiving component can have latest state of device always
         timerInEditor={timerInEditor}

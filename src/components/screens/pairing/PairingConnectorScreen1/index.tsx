@@ -12,6 +12,7 @@ import api from "../../../../services/api";
 import { logFun, logger } from "../../../../util/logger";
 import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
 import Alert from "../../../common/Alert";
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 
 
@@ -74,7 +75,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             }}
             source={require("../../../../../assets/images/testIMG.jpg")}
           />
-          <RectButton
+          <NewRectButtonWithChildren
             style={{
               height: 40,
               minWidth: 160,
@@ -116,7 +117,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             >
               Go to Wi-Fi Settings
             </Text>
-          </RectButton>
+          </NewRectButtonWithChildren>
         </View>
         <View
           style={{
@@ -178,7 +179,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             alignItems: "center",
           }}
         >
-          {navigation.canGoBack() && <RectButton
+          {navigation.canGoBack() && <NewRectButtonWithChildren
             style={{
               overflow: "hidden",
               alignSelf: "flex-start",
@@ -209,7 +210,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             >
               Go Back
             </Text>
-          </RectButton>}
+          </NewRectButtonWithChildren>}
         </View>
       </View>
     </SafeAreaView>

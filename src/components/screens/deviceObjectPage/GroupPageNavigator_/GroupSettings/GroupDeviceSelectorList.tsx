@@ -13,6 +13,7 @@ import {
   appNegativeColor,
   appPositiveColor,
 } from "../../../../../theme/colors/highlightColors";
+import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 
 interface Props {
   group: deviceContainerType;
@@ -40,7 +41,7 @@ export const GroupDeviceSelectorList = ({ group }: Props) => {
         >
           Devices in {group.groupName} group
         </Text>
-        <RectButton
+        <NewRectButtonWithChildren
           onPress={() => {
             if (currView == 0) {
               setCurrView(1);
@@ -64,7 +65,7 @@ export const GroupDeviceSelectorList = ({ group }: Props) => {
           >
             {currView == 0 ? "Edit Group" : currView == 1 ? "Save" : ""}
           </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
       <View style={styles.deviceListContainer}>
         {currView == 0 && <ShowDevicesList group={group} />}
@@ -96,7 +97,7 @@ const EditorList = ({ group }: EditorListProps) => {
         <View>
           {item.devices.map((deviceItem, index) => {
             return (
-              <RectButton
+              <NewRectButtonWithChildren
                 style={{
                   height: 50,
                   borderRadius: 5,
@@ -173,7 +174,7 @@ const EditorList = ({ group }: EditorListProps) => {
                     />
                   )}
                 </View>
-              </RectButton>
+              </NewRectButtonWithChildren>
             );
           })}
         </View>

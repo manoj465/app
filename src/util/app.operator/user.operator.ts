@@ -78,9 +78,15 @@ const loginFunction: loginFunction_t = async ({
     onLoginSuccess,
     log
 }) => {
-    if (!email || !password || password.length < 8 || email.length < 6) {
+    if (!email || !UNIVERSALS.util.ValidateEmail({ email })) {
         log?.print("validation : email: " + email + ", pass: " + password)
-        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_EMAIL_REQUIRED }
+        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_EMAIL_REQUIRED, errMsg: "Kindly, provide a valid email address" }
+        onValidateDataFailed ? onValidateDataFailed(tempError) : {}
+        onLoginFailed ? onLoginFailed({ ERR: tempError }) : {}
+        return {}
+    } if (password && password.length < 8) {
+        log?.print("validation => username: " + email + ", pass: " + password)
+        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_PASSWORD_REQUIRED, errMsg: "Kindly, provide a valid password" }
         onValidateDataFailed ? onValidateDataFailed(tempError) : {}
         onLoginFailed ? onLoginFailed({ ERR: tempError }) : {}
         return {}
@@ -135,7 +141,6 @@ interface signupFunction_props {
     cmd: "SIGNUP"
     email: string
     password: string
-    re_password: string
     userName: string
     onSignupSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
     onValidateDataFailed?: (props: API.baseError<any, signupValidationError_e>) => void
@@ -153,7 +158,6 @@ type signupFunction_t = (props: signupFunction_props) => Promise<API.cloudAPI.us
 const signupFunction: signupFunction_t = async ({
     email,
     password,
-    re_password,
     userName,
     onSignupFailed,
     onValidateDataFailed,
@@ -182,13 +186,6 @@ const signupFunction: signupFunction_t = async ({
     else if (!password || password.length < 8) {
         log?.print("validation : email: " + email + ", pass: " + password)
         const tempError = { errCode: signupValidationError_e.SIGNUP_VALIDATION_PASSWORD_INVALID }
-        onValidateDataFailed ? onValidateDataFailed(tempError) : {}
-        onSignupFailed ? onSignupFailed({ ERR: tempError }) : {}
-        return {}
-    }
-    else if (re_password != password) {
-        log?.print("validation : email: " + email + ", pass: " + password)
-        const tempError = { errCode: signupValidationError_e.SIGNUP_VALIDATION_PASSWORD_MISMATCH }
         onValidateDataFailed ? onValidateDataFailed(tempError) : {}
         onSignupFailed ? onSignupFailed({ ERR: tempError }) : {}
         return {}
@@ -265,7 +262,6 @@ const fbLoginFunction: fbLoginFunction_t = async ({ log, ...props }) => {
                                 cmd: "SIGNUP",
                                 email: "fb-" + fbEmail,
                                 password: "tempFbLoginPass@1",
-                                re_password: "tempFbLoginPass@1",
                                 userName: fbName,
                                 onSignupSuccess: (res) => {
                                     log?.print("signUp success at fbLogin")._printPretty(res)
@@ -364,7 +360,6 @@ interface updateFunction_props {
     cmd: "UPDATE"
     id: string
     password: string
-    re_password: string
     userName: string
     onUpdateSuccess?: (user: UNIVERSALS.GLOBALS.USER_t) => void
     onValidateDataFailed?: (props: API.baseError<any, updateValidationError_e>) => void
@@ -375,7 +370,6 @@ type updateFunction_t = (props: updateFunction_props) => Promise<API.cloudAPI.us
 const updateFunction: updateFunction_t = async ({
     id,
     password,
-    re_password,
     userName,
     onUpdateFailed,
     onValidateDataFailed,
@@ -397,13 +391,6 @@ const updateFunction: updateFunction_t = async ({
     } else if (password && password.length < 8) {
         log?.print("validation => username: " + userName + ", pass: " + password)
         const tempError = { errCode: updateValidationError_e.UPDATE_VALIDATION_NEW_PASSWORD_TOO_SHORT }
-        onValidateDataFailed ? onValidateDataFailed(tempError) : {}
-        onUpdateFailed ? onUpdateFailed({ ERR: tempError }) : {}
-        return {}
-    }
-    else if (re_password != password) {
-        log?.print("validation => username: " + userName + ", pass: " + password)
-        const tempError = { errCode: updateValidationError_e.UPDATE_VALIDATION_PASSWORD_MISMATCH }
         onValidateDataFailed ? onValidateDataFailed(tempError) : {}
         onUpdateFailed ? onUpdateFailed({ ERR: tempError }) : {}
         return {}

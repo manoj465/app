@@ -1,15 +1,13 @@
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, Text, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
-import { Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import { RectButton } from "react-native-gesture-handler";
-import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
-import { reduxStore } from "../../../redux";
 import { appOperator } from "../../../util/app.operator";
 import { logger } from "../../../util/logger";
+import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
+import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
 
 type navigationProp = StackNavigationProp<
     MainRouterStackParamList,
@@ -29,12 +27,12 @@ const AppConfigScreen = ({ navigation }: props) => {
     return (
         <Container style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
             <View>
-                <RectButton onPress={() => {
+                <NewRectButtonWithChildren onPress={() => {
                     if (navigation.canGoBack())
                         navigation.pop()
                 }}>
                     <Ionicons style={{ paddingRight: 15, paddingBottom: 10, paddingTop: 15, marginTop: 10 }} name="ios-arrow-back" size={30} color="#222" />
-                </RectButton>
+                </NewRectButtonWithChildren>
             </View>
             <View style={{}}>
                 <Text style={{ color: "#222", fontSize: 35, fontWeight: "bold" }}>Settings</Text>

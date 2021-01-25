@@ -13,6 +13,7 @@ import { onColorValueChange_Props } from "../../devicePage";
 import { useDispatch } from "react-redux";
 import { colorUpdateSagaAction } from "../../../../redux/deviceListReducer/actions/DeviceListAction";
 import { createConfigItem } from "@babel/core";
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 type groupColorPickerNavigationProp = StackNavigationProp<
   GroupPageStackParamList,
@@ -86,7 +87,7 @@ export const GroupColorPicker = ({ navigation, route: { params } }: Props) => {
           alignItems: "center",
         }}
       >
-        <RectButton
+        <NewRectButtonWithChildren
           style={{}}
           activeOpacity={0.1}
           onPress={() => {
@@ -120,7 +121,7 @@ export const GroupColorPicker = ({ navigation, route: { params } }: Props) => {
           >
             <MaterialIcons name="navigate-next" size={20} color="black" />
           </Animated.View>
-        </RectButton>
+        </NewRectButtonWithChildren>
         <Text style={{ fontSize: 15, fontWeight: "bold", marginLeft: 20 }}>
           Select Devices
         </Text>
@@ -141,7 +142,7 @@ export const GroupColorPicker = ({ navigation, route: { params } }: Props) => {
           keyExtractor={(item, index) => "" + index}
           renderItem={({ item, index }) => {
             return (
-              <RectButton
+              <NewRectButtonWithChildren
                 onPress={() => {
                   if (list.includes(item.Mac)) {
                     setList(
@@ -184,7 +185,7 @@ export const GroupColorPicker = ({ navigation, route: { params } }: Props) => {
                     {item.deviceName ? item.deviceName : "unnamed"}
                   </Text>
                 </View>
-              </RectButton>
+              </NewRectButtonWithChildren>
             );
           }}
         />

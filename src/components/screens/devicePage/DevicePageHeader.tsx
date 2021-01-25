@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import UNIVERSALS from "../../../@universals";
 import { logger } from "../../../util/logger";
-import BrightnessSlider from "../../common/BrightnessSlider";
+import BrightnessSlider from "../../common/BrightnessSlider_optmizedForWeb";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
 
 interface Props {

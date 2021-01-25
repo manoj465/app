@@ -15,7 +15,7 @@ import { logger } from "../../../util/logger";
 import { DeviceCard } from "./deviceCard";
 import Header from './Header';
 import STYLES from "../../common/styles"
-import { NewRectButton } from "../../common/buttons/RectButtonCustom";
+import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import { LinearGradient } from "expo-linear-gradient";
 import { appOperator } from "../../../util/app.operator";
 //@ts-ignore
@@ -185,7 +185,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
       </Modal>
       {/* Sec:  */}
       {false && <View style={styles.navigatorMenu}>
-        <RectButton
+        <NewRectButtonWithChildren
           onPress={() => {
             //navigation.navigate("pairing");
             /* dispatch(
@@ -225,8 +225,8 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           <View style={{ paddingVertical: 2 }}>
             <Text style={{ color: "white", fontSize: 12 }}>New Group</Text>
           </View>
-        </RectButton>
-        <RectButton
+        </NewRectButtonWithChildren>
+        <NewRectButtonWithChildren
           onPress={() => {
             navigation.navigate("pairing");
           }}
@@ -253,7 +253,7 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
           <View style={{ paddingVertical: 2 }}>
             <Text style={{ color: "white", fontSize: 12 }}>Add Device</Text>
           </View>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>}
     </SafeAreaView>
   );

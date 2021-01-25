@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { useSelector } from 'react-redux';
 import UNIVERSALS from '../../../../@universals';
 import { _appState } from '../../../../redux/rootReducer';
@@ -25,7 +24,6 @@ interface SignUpHeader_t {
 export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpHeader_t) => {
     const [oldPassword, setOldPassword] = useState("");
     const [password, setPassword] = useState("");
-    const [re_password, setRePassword] = useState("");
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
 
@@ -119,27 +117,6 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                     value={password}
                     secureTextEntry={true}
                 />
-                <TextInput /* Sec3: retype password */
-                    style={{
-                        minHeight: 50,
-                        width: "80%",
-                        maxWidth: 400,
-                        borderColor: "#5555ff7f",
-                        color: "#5555ff",
-                        borderWidth: 1,
-                        borderRadius: 25,
-                        textAlign: "center",
-                        alignSelf: "center",
-                        marginTop: "10%",
-                    }}
-                    onChangeText={(text) => {
-                        setRePassword(text);
-                    }}
-                    placeholder="re-type password"
-                    value={re_password}
-                    secureTextEntry={true}
-                />
-
                 <NewRectButtonWithChildren /* Sec3: SignUp button */
                     style={{
                         backgroundColor: "#5555ff",
@@ -160,7 +137,6 @@ export const UserUpdateForm = ({ navigation, setHeaderView, user, log }: SignUpH
                                 id: user?.id ? user.id : "",
                                 userName,
                                 password,
-                                re_password,
                                 onUpdateFailed: ({ ERR }) => {
                                     Alert.alert(ERR?.errCode ? ERR?.errCode : "UNKNOWN ERROR", ERR?.errMsg ? ERR.errMsg : "This could be due to technical error at backend, you can report the issue our forum. We regret for the inconveniences")
                                 },

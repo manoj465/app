@@ -100,8 +100,7 @@ export const DeviceColorPickerScreen = ({
             showsVerticalScrollIndicator={false}
           >
             <View style={{ minHeight: "10%" }}>{/* Sec2: Navigator */}
-              <RectButton /* Sec3: modes button */
-                activeOpacity={0}
+              <NewRectButtonWithChildren /* Sec3: modes button */
                 style={{
                   position: "absolute",
                   top: "4%",
@@ -116,9 +115,8 @@ export const DeviceColorPickerScreen = ({
                     height: 50,
                     width: 50
                   }} />
-              </RectButton>
-              <RectButton /* Sec3: setting button */
-                activeOpacity={0}
+              </NewRectButtonWithChildren>
+              <NewRectButtonWithChildren /* Sec3: setting button */
                 style={{
                   position: "absolute",
                   top: "4%",
@@ -133,7 +131,7 @@ export const DeviceColorPickerScreen = ({
                     height: 50,
                     width: 50
                   }} />
-              </RectButton>
+              </NewRectButtonWithChildren>
               {/* Sec: colorPicker */}
 
             </View>

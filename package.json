@@ -1,5 +1,5 @@
 {
-  "homepage": "https://abhimanyu6676.github.io/HUElite_App_Expo",
+  "homepage": "https://app.huelite.in",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",

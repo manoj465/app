@@ -20,33 +20,33 @@ export default ({ navigation, user }: Props) => {
         <View style={{ paddingHorizontal: 10 }}>
             <View style={{ backgroundColor: "#fff", marginTop: 25, marginBottom: 15 }}>
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#fff", paddingRight: 10, marginBottom: 15 }}>
-                    <RectButton onPress={() => {
+                    <NewRectButtonWithChildren onPress={() => {
                         navigation.navigate("config")
                     }}>
                         <AntDesign style={{ paddingRight: 10 }} name="menu-fold" size={24} color="black" />
-                    </RectButton>
+                    </NewRectButtonWithChildren>
                     <View style={{ flexDirection: "row" }}>
-                        <RectButton onPress={() => {
+                        <NewRectButtonWithChildren onPress={() => {
                             navigation.navigate("pairing")
                         }}>
                             <MaterialIcons style={{ marginHorizontal: 10 }} name="add-circle-outline" size={26} color="black" />
-                        </RectButton>
-                        <RectButton onPress={() => {
+                        </NewRectButtonWithChildren>
+                        <NewRectButtonWithChildren onPress={() => {
                             //navigation.navigate("user")
                             navigation.navigate("user")
                         }}>
                             <FontAwesome style={{ marginHorizontal: 10 }} name="user-o" size={24} color="black" />
-                        </RectButton>
+                        </NewRectButtonWithChildren>
                     </View>
                 </View>
                 <View style={{}}>
                     <Text style={{ fontSize: 25, fontWeight: "bold", }}>{"Hi, " + (user?.userName ? user?.userName : "")}</Text>
                 </View>
             </View>
-            <Animated.ScrollView horizontal style={{ flexDirection: "row", backgroundColor: "#fff", width: "100%", paddingBottom: 10 }}>
+            {/* <Animated.ScrollView horizontal style={{ flexDirection: "row", backgroundColor: "#fff", width: "100%", paddingBottom: 10 }}>
                 <View style={{ borderWidth: 0.2, borderRadius: 5, marginRight: 15 }}><Text style={{ paddingHorizontal: 5, paddingVertical: 3 }}>Alexa Support</Text></View>
                 <View style={{ borderWidth: 0.2, borderRadius: 5, marginRight: 15 }}><Text style={{ paddingHorizontal: 5, paddingVertical: 3 }}>Connect with Google Assistant</Text></View>
-            </Animated.ScrollView>
+            </Animated.ScrollView> */}
             <Animated.ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ backgroundColor: "#fff", width: "100%", display: "flex", flexDirection: "row", marginBottom: 15, }}>
                 <QuickActionBlock Heading="Snooze all events" subHeading="ALL OFF" primaryColor="#5DADE2" Child={() => { return (<MaterialIcons name="snooze" size={30} color="#5DADE2" />) }} />
                 <QuickActionBlock Heading="Power saving mode" subHeading="TURN ON" primaryColor="#48C9B0" Child={() => { return (<SimpleLineIcons name="energy" size={30} color="#48C9B0" />) }} />

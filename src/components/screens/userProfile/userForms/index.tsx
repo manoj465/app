@@ -37,8 +37,19 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
 
 
   return (
-    <View style={styles.container}>
-      <View style={styles.contentView} /* Sec2: Body Section for login/signup/update form*/ >
+    <View
+      style={{
+        display: "flex",
+        flex: 1,
+        backgroundColor: "#5555ff",
+      }}>
+      <View
+        style={{
+          flex: 1,
+          borderBottomLeftRadius: width * 0.08,
+          borderBottomRightRadius: width * 0.08,
+          backgroundColor: "white",
+        }} /* Sec2: Body Section for login/signup/update form*/ >
         {userPageView == "SIGNUP"
           ? <SignUpHeader
             setHeaderView={setUserPageView}
@@ -56,7 +67,12 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
                 log={log ? new logger("login header", log) : undefined} />
               : (<View></View>)}
       </View>
-      <View style={styles.footer} /* Sec2: Footer */ >
+      <View style={{
+        zIndex: 10,
+        backgroundColor: "#5555ff",
+        alignItems: "center",
+        justifyContent: "center",
+      }} /* Sec2: Footer */ >
         {false && <View /* Sec3: Login buttons */
           style={{ display: "flex", flexDirection: "row", width: 120, alignItems: "center", justifyContent: "center" }}>
           {false && <NewRectButtonWithChildren
@@ -84,9 +100,7 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
         </View>}
         <NewRectButtonWithChildren /* Sec3: Skip Login */
           style={{
-            position: "absolute",
-            bottom: 10,
-            paddingVertical: 10,
+            //paddingVertical: 10,
             backgroundColor: "transparent"
           }}
           onPress={() => {
@@ -99,12 +113,7 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
             navigation.navigate("dashboard")
           }}
         >
-          <Text
-            style={{
-              textAlign: "center",
-              color: "white",
-            }}
-          >
+          <Text style={{ textAlign: "center", color: "white", }} >
             Skip for now!{" "}
             <Text style={{ fontSize: 15, fontWeight: "bold" }}>
               Will do Later
@@ -118,23 +127,7 @@ export default ({ navigation, userPageView, setUserPageView, log }: Props) => {
 
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flex: 1,
-    backgroundColor: "#5555ff",
-  },
-  contentView: {
-    flex: 0.7,
-    flexGrow: 1,
-    borderBottomLeftRadius: width * 0.08,
-    borderBottomRightRadius: width * 0.08,
-    backgroundColor: "white",
-  },
-  footer: {
-    flex: 0.3,
-    zIndex: 10,
-    backgroundColor: "#5555ff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+  container: {},
+  contentView: {},
+  footer: {},
 });

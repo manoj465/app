@@ -55,22 +55,22 @@ const ColorPicker = ({
   const ref = useRef<any>(null);
 
 
-  /*   useEffect(() => {
-      if (ref.current) {
-        console.log('width', ref?.current ? ref.current?.offsetWidth : 0);
-        setCanvasWidth(ref.current.offsetWidth)
-      }
-    }, [ref.current]) */
+  useEffect(() => {
+    if (ref.current) {
+      console.log('width', ref?.current ? ref.current?.offsetWidth : 0);
+      setCanvasWidth(ref.current.offsetWidth)
+    }
+  }, [ref.current])
 
   return (
     <View style={styles.container}>
-      <View style={styles.hue}
-        //ref={ref}
-        onLayout={(event) => {
+      <div style={{ alignSelf: "center" }}
+        ref={ref}
+        /* onLayout={(event) => {
           var { width } = event.nativeEvent.layout;
           console.log("**width :: " + width)
           setCanvasWidth(width);
-        }}>
+        }} */>
         <Image source={require("../../../assets/images/colorPicker.png")} style={[
           styles.surface,
           {
@@ -86,7 +86,7 @@ const ColorPicker = ({
           device={device}
           log={log}
         />}
-      </View>
+      </div>
     </View>
   );
 };

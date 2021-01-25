@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { NewRectButtonWithChildren } from "./buttons/RectButtonCustom";
 
 interface Props {
   _height?: number;
@@ -23,7 +23,7 @@ export const ToggleSwitch = ({
 }: Props) => {
   const [state, setState] = useState<boolean>(initialState);
   return (
-    <RectButton
+    <NewRectButtonWithChildren
       onPress={() => {
         setState(!state);
         if (onPress) onPress(state);
@@ -64,6 +64,6 @@ export const ToggleSwitch = ({
           elevation: 2,
         }}
       />
-    </RectButton>
+    </NewRectButtonWithChildren>
   );
 };

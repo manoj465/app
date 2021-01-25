@@ -11,6 +11,7 @@ import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { RouteParam } from "@react-navigation/native";
 import { hsv2color, useValue } from "react-native-redash";
 import { max } from "react-native-reanimated";
+import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 
 type groupNavigationProp = StackNavigationProp<
   MainRouterStackParamList,
@@ -83,7 +84,7 @@ export const DeviceObjectPage = ({ navigation, route: { params } }: Props) => {
           elevation: 1, */
         }}
       >
-        <RectButton
+        <NewRectButtonWithChildren
           onPress={() => {
             navigation.replace("GPN_s3", {
               groupName: params.group.groupName,
@@ -100,8 +101,8 @@ export const DeviceObjectPage = ({ navigation, route: { params } }: Props) => {
         >
           <Ionicons name="ios-settings" size={25} color="white" />
           <Text style={{ color: "white", fontSize: 12 }}>Setting</Text>
-        </RectButton>
-        <RectButton
+        </NewRectButtonWithChildren>
+        <NewRectButtonWithChildren
           onPress={() => {
             navigation.replace("GPN_s1");
           }}
@@ -116,8 +117,8 @@ export const DeviceObjectPage = ({ navigation, route: { params } }: Props) => {
         >
           <MaterialIcons name="color-lens" size={25} color="white" />
           <Text style={{ color: "white", fontSize: 12 }}>Color</Text>
-        </RectButton>
-        <RectButton
+        </NewRectButtonWithChildren>
+        <NewRectButtonWithChildren
           onPress={() => {
             navigation.replace("GPN_s2");
           }}
@@ -131,7 +132,7 @@ export const DeviceObjectPage = ({ navigation, route: { params } }: Props) => {
         >
           <MaterialIcons name="dashboard" size={25} color="white" />
           <Text style={{ color: "white", fontSize: 12 }}>More...</Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
     </SafeAreaView>
   );

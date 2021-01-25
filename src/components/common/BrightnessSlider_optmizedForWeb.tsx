@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, concat, cond, divide, eq, event, multiply, set, useCode } from "react-native-reanimated";
@@ -34,6 +34,8 @@ export default ({
   //console.log("initBr : " + initBrValue);
   const pinState = useValue(State.UNDETERMINED);
   const [sliderWidth, setSliderWidth] = useState(0);
+  const [test, setTest] = useState(0);
+  const ref = useRef<any>(null)
   const offset = useValue((initBrValue / 100) * (width * 0.9));
   const offsetX = clamp(offset, 0, sliderWidth - sliderHeight);
   //@ts-ignore
@@ -80,6 +82,14 @@ export default ({
     [BR, pinState]
   );
 
+  useEffect(() => {
+    if (ref.current?.offsetWidth) {
+      setSliderWidth(ref?.current.offsetWidth)
+    }
+    return () => {
+    }
+  }, [ref.current])
+
   return (
     <View style={{ overflow: "visible" }}>
       <View style={{
@@ -103,11 +113,26 @@ export default ({
             fontWeight: "bold",
           }}>%</Text>
       </View>
+      <div
+        ref={ref}
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          zIndex: -1,
+          //backgroundColor: "red",
+          justifyContent: "center",
+          opacity: 1,
+          height: sliderHeight,
+          width: "100%",
+          borderRadius: 15,
+        }}>
+      </div>
       <LinearGradient
-        onLayout={(event) => {
-          var { width } = event.nativeEvent.layout;
-          setSliderWidth(width);
-        }}
+        /* onLayout={(event) => {
+           var { width } = event.nativeEvent.layout;
+           setSliderWidth(width);
+         }} */
         style={{
           justifyContent: "center",
           opacity: 1,

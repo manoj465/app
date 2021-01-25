@@ -4,6 +4,7 @@ import { RectButton } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import UNIVERSALS from "../../../@universals";
 import { _appState } from "../../../redux/rootReducer";
+import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
 
 const modes = [
   {
@@ -70,7 +71,7 @@ export const Modes = ({ device }: Props) => {
                 overflow: "hidden",
               }}
             >
-              <RectButton
+              <NewRectButtonWithChildren
                 /*  onPress={() => {
                    dispatch(
                      groupModes_saga_action({
@@ -143,7 +144,7 @@ export const Modes = ({ device }: Props) => {
                 >
                   {item.name}
                 </Text>
-              </RectButton>
+              </NewRectButtonWithChildren>
             </View>
           );
         }}

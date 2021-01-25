@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { StyleSheet, Text, View, TextInput } from 'react-native';
 import UNIVERSALS from '../../../../@universals';
 import { appOperator } from '../../../../util/app.operator';
 import { logger } from '../../../../util/logger';
@@ -21,7 +20,6 @@ interface SignUpHeader_t {
 }
 export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t) => {
     const [password, setPassword] = useState("");
-    const [re_password, setRePassword] = useState("");
     const [email, setEmail] = useState("");
     const [userName, setUserName] = useState("");
 
@@ -68,7 +66,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                     onChangeText={(text) => {
                         setEmail(text);
                     }}
-                    placeholder="email/userID"
+                    placeholder="Email"
                     value={email}
                     autoCompleteType="email"
                 />
@@ -115,27 +113,6 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                     value={password}
                     secureTextEntry={true}
                 />
-                <TextInput
-                    style={{
-                        minHeight: 50,
-                        width: "80%",
-                        maxWidth: 400,
-                        borderColor: "#5555ff7f",
-                        color: "#5555ff",
-                        borderWidth: 1,
-                        borderRadius: 25,
-                        textAlign: "center",
-                        alignSelf: "center",
-                        marginTop: "10%",
-                    }}
-                    onChangeText={(text) => {
-                        setRePassword(text);
-                    }}
-                    placeholder="re-type password"
-                    value={re_password}
-                    secureTextEntry={true}
-                />
-
                 <NewRectButtonWithChildren /* Sec3: SignUp button */
                     style={{
                         backgroundColor: "#5555ff",
@@ -154,7 +131,6 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                             cmd: "SIGNUP",
                             userName,
                             password,
-                            re_password,
                             email,
                             onSignupFailed: ({ ERR }) => {
                                 Alert.alert(ERR?.errCode ? ERR?.errCode : "UNKNOWN ERROR", ERR?.errMsg ? ERR.errMsg : "This could be due to technical error at backend, you can report the issue our forum. We regret for the inconveniences")
@@ -179,8 +155,8 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                 }}
             >
                 <Text style={{ textAlign: "center" }}>
-                    Already have an account
-                    <Text style={{ color: "#5555ff", fontWeight: "bold" }}>Login</Text>
+                    Already have an account?
+                    <Text style={{ color: "#5555ff", fontWeight: "bold" }}>{" "}Login</Text>
                 </Text>
             </NewRectButtonWithChildren>
         </View>

@@ -12,6 +12,7 @@ import usePairApiHook, { pairing_state_e } from "../../../../services/webApi/pai
 import { appOperator } from "../../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
 import { logger } from "../../../../util/logger";
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 const groupNames = ["Bedroom", "Kitchen", "Garden", "Drawing Lamps", "Stairs"];
 
@@ -200,7 +201,7 @@ export const PairingConnectorScreen3 = ({
               data={groupNames}
               //numColumns={6}
               renderItem={({ item }) => (
-                <RectButton
+                <NewRectButtonWithChildren
                   onPress={() => {
                     setGroupName(item);
                     Vibration.vibrate(50);
@@ -218,7 +219,7 @@ export const PairingConnectorScreen3 = ({
                   >
                     <Text style={{ fontSize: 12, color: "#fff" }}>{item}</Text>
                   </View>
-                </RectButton>
+                </NewRectButtonWithChildren>
               )}
               keyExtractor={(item, index) => index.toString()}
             />
@@ -265,7 +266,7 @@ export const PairingConnectorScreen3 = ({
         ]}
       >
         {/* Sec: BUTTON => Pair || Next || Cancel || Finish */}
-        <RectButton
+        <NewRectButtonWithChildren
           activeOpacity={0.3}
           style={styles.Button1}
           onPress={() => {
@@ -293,17 +294,17 @@ export const PairingConnectorScreen3 = ({
                         : pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD ? "wrong, pass, Try Again"
                           : ""}
           </Animated.Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
 
         {/* Sec: goBack() */}
-        <RectButton
+        <NewRectButtonWithChildren
           style={styles.goBackButton}
           onPress={() => onInteraction({ opID: "BACK" })}
         >
           <Text style={{ fontSize: 12, fontWeight: "bold", color: "#555" }}>
             Change WiFi or goBack()
           </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
     </SafeAreaView>
   );

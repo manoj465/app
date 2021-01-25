@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { groupPropsModification_saga_action } from "../../../../../redux/actions/groupActions/groupPropsModification";
 import { dummyGroup } from "../../../../../util/dummyData/DummyData";
 import { _appState } from "../../../../../redux/rootReducer";
+import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 
 type groupSettingNavigationProp = StackNavigationProp<
   GroupPageStackParamList,
@@ -66,7 +67,7 @@ export const GroupSettings = ({ navigation, route }: Props) => {
             }}
           >
             {name.length > 0 && groupFromSelector?.groupName != name ? (
-              <RectButton
+              <NewRectButtonWithChildren
                 style={{}}
                 onPress={() => {
                   console.log("Rename Group");
@@ -81,7 +82,7 @@ export const GroupSettings = ({ navigation, route }: Props) => {
                 }}
               >
                 <Feather name="save" size={24} color="#58D68D" />
-              </RectButton>
+              </NewRectButtonWithChildren>
             ) : (
                 <Feather name="edit" size={25} color="#555" />
               )}

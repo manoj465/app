@@ -3,13 +3,18 @@ import { Entypo } from '@expo/vector-icons'
 import { LinearGradient } from "expo-linear-gradient"
 import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { State } from "react-native-gesture-handler"
 import { navigationProp } from ".."
 import UNIVERSALS from "../../../../@universals"
+import { appOperator } from "../../../../util/app.operator"
 import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color"
 import { logger } from "../../../../util/logger"
 import BrightnessSlider from "../../../common/BrightnessSlider"
 import BrightnessSliderNew from "../../../common/BrightnessSlider_optmizedForWeb"
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom"
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 /* import ColorBlending from "gl-react-color-blending" */
+
 
 
 export const deviceCardHeight = 150;
@@ -65,7 +70,7 @@ export const DeviceCard = ({
           width: "100%",
         }}
       >
-        <Image
+        <Image /**background image */
           style={{
             opacity: 0.3,
             position: "absolute",
@@ -126,18 +131,32 @@ export const DeviceCard = ({
             <Entypo name="dots-three-vertical" size={20} color="white" />
           </ TouchableOpacity >
 
-          <View
+          <NewRectButtonWithChildren
             style={{
-              margin: 10,
+              //backgroundColor: "red",
               height: 60,
               width: 60,
-              backgroundColor: "#fff",
+              overflow: "hidden",
               borderRadius: 30,
+              justifyContent: "center",
+              alignItems: "center",
+              margin: 10
             }}
-          ></View>
+            onPress={() => {
+              appOperator.device({
+                cmd: "COLOR_UPDATE",
+                deviceMac: [device.Mac],
+                hsv: { v: device.hsv.v ? 0 : 80 },
+                gestureState: State.END,
+                log
+              })
+            }}>
+            <MaterialCommunityIcons name={device.hsv.v ? "lightbulb-on-outline" : "lightbulb-off"} size={24} color="black" />
+          </NewRectButtonWithChildren>
           <Text style={[styles.deviceName, { color: "#fff" }]}>
             {device.deviceName ? device.deviceName : "unknown_device"}
           </Text>
+
         </View>
         {/* ///brightness container <percentageText &  brightnessBar> */}
         <View style={styles.brightnessSliderContainer}>

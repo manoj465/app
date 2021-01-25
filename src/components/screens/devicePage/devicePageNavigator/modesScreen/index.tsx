@@ -13,6 +13,7 @@ import {
 } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
 import { logger } from "../../../../../util/logger";
+import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 
 type DevicePageColorPickerNavigationProp = StackNavigationProp<
   devicePageStackParamList,
@@ -39,7 +40,7 @@ export const DeviceModesScreen = ({
     <SafeAreaView style={{ display: "flex", flex: 1, backgroundColor: "#ffffff" }}>
       <View /* Sec1: header - back arrow */
         style={{ height: 60, justifyContent: "center", width: 200 }}>
-        <RectButton
+        <NewRectButtonWithChildren
           style={{
             //backgroundColor: "red",
             flexDirection: "row",
@@ -62,7 +63,7 @@ export const DeviceModesScreen = ({
           >
             Color Picker
             </Text>
-        </RectButton>
+        </NewRectButtonWithChildren>
       </View>
       <View /* Sec1: Modes container */
         style={{}}>

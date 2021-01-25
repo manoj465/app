@@ -70,7 +70,7 @@ const Header = ({ slideIndex }: { slideIndex: number }) => {
   return (
     <View style={{
       backgroundColor: "white",
-      flex: 0.85,
+      flex: 1,
       borderBottomLeftRadius: 25,
       borderBottomRightRadius: 25,
       overflow: "hidden"
@@ -152,7 +152,6 @@ const Footer = ({ onNext, onSkip }: { onNext: () => void, onSkip: () => void }) 
       //backgroundColor: 'red',
       backgroundColor: styles.themeColors.primary,
       justifyContent: "flex-end",
-      flex: 0.15,
     }}>
       <View
         style={{
