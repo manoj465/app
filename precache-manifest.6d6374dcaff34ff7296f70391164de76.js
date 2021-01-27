@@ -4,8 +4,8 @@ self.__precacheManifest = [
     "url": "/static/media/sunrise.a239aa8e.png"
   },
   {
-    "revision": "d90a3201eaa85f0ba999",
-    "url": "/static/js/app.fbb26110.chunk.js"
+    "revision": "04e90bf6d37c753c6e33",
+    "url": "/static/js/app.490b6a09.chunk.js"
   },
   {
     "revision": "6e008895cc75c89d54f0460c9502233e",
@@ -97,7 +97,7 @@ self.__precacheManifest = [
   },
   {
     "revision": "4383575f587bdc07224770f7813ef928",
-    "url": "/static/js/2.a08388b3.chunk.js.LICENSE.txt"
+    "url": "/static/js/2.d5b7b198.chunk.js.LICENSE.txt"
   },
   {
     "revision": "e802d2644326fd9fa701f1d969a8a94a",
@@ -108,8 +108,8 @@ self.__precacheManifest = [
     "url": "/serve.json"
   },
   {
-    "revision": "c81121476712f2f96fef",
-    "url": "/static/js/2.a08388b3.chunk.js"
+    "revision": "46baba10a6c1bc1584f1",
+    "url": "/static/js/2.d5b7b198.chunk.js"
   },
   {
     "revision": "744ce60078c17d86006dd0edabcd59a7",
@@ -132,16 +132,16 @@ self.__precacheManifest = [
     "url": "/./fonts/FontAwesome5_Solid.ttf"
   },
   {
-    "revision": "6a2ddad1092a0a1c326b6d0e738e682b",
-    "url": "/./fonts/MaterialCommunityIcons.ttf"
+    "revision": "d2285965fe34b05465047401b8595dd0",
+    "url": "/./fonts/SimpleLineIcons.ttf"
   },
   {
     "revision": "e20945d7c929279ef7a6f1db184a4470",
     "url": "/./fonts/Foundation.ttf"
   },
   {
-    "revision": "5b382c705bfd4c6a69b6ace348348161",
-    "url": "/index.html"
+    "revision": "aff46a35b238a90b3a06e35b317d94df",
+    "url": "/CNAME"
   },
   {
     "revision": "b3263095df30cb7db78c613e73f9499a",
@@ -152,12 +152,12 @@ self.__precacheManifest = [
     "url": "/expo-service-worker.js"
   },
   {
-    "revision": "0c947decef421bb316dce6218ca8e992",
-    "url": "/favicon.ico"
+    "revision": "6a2ddad1092a0a1c326b6d0e738e682b",
+    "url": "/./fonts/MaterialCommunityIcons.ttf"
   },
   {
-    "revision": "d2285965fe34b05465047401b8595dd0",
-    "url": "/./fonts/SimpleLineIcons.ttf"
+    "revision": "f637c040a31bda9f647d79697e7410cc",
+    "url": "/index.html"
   },
   {
     "revision": "fa11ce5e24fefeb3d0a67fce4770544f",
@@ -166,6 +166,10 @@ self.__precacheManifest = [
   {
     "revision": "28fdcc74d32adc5dfedbbb1ace963b50",
     "url": "/favicon-32.png"
+  },
+  {
+    "revision": "0c947decef421bb316dce6218ca8e992",
+    "url": "/favicon.ico"
   },
   {
     "revision": "e766963327e0a89f9ec2ba88646b6177",

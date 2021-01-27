@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/static/js/app.fbb26110.chunk.js",
-    "app.js.map": "/static/js/app.fbb26110.chunk.js.map",
+    "app.js": "/static/js/app.490b6a09.chunk.js",
+    "app.js.map": "/static/js/app.490b6a09.chunk.js.map",
     "runtime~app.js": "/static/js/runtime~app.2e9f1821.js",
     "runtime~app.js.map": "/static/js/runtime~app.2e9f1821.js.map",
-    "static/js/2.a08388b3.chunk.js": "/static/js/2.a08388b3.chunk.js",
-    "static/js/2.a08388b3.chunk.js.map": "/static/js/2.a08388b3.chunk.js.map",
+    "static/js/2.d5b7b198.chunk.js": "/static/js/2.d5b7b198.chunk.js",
+    "static/js/2.d5b7b198.chunk.js.map": "/static/js/2.d5b7b198.chunk.js.map",
     "fonts/AntDesign.ttf": "/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/./fonts/Feather.ttf",
@@ -18,13 +18,14 @@
     "fonts/MaterialCommunityIcons.ttf": "/./fonts/MaterialCommunityIcons.ttf",
     "fonts/MaterialIcons.ttf": "/./fonts/MaterialIcons.ttf",
     "fonts/SimpleLineIcons.ttf": "/./fonts/SimpleLineIcons.ttf",
+    "CNAME": "/CNAME",
     "favicon-16.png": "/favicon-16.png",
     "favicon-32.png": "/favicon-32.png",
     "favicon.ico": "/favicon.ico",
     "index.html": "/index.html",
     "manifest.json": "/manifest.json",
     "serve.json": "/serve.json",
-    "static/js/2.a08388b3.chunk.js.LICENSE.txt": "/static/js/2.a08388b3.chunk.js.LICENSE.txt",
+    "static/js/2.d5b7b198.chunk.js.LICENSE.txt": "/static/js/2.d5b7b198.chunk.js.LICENSE.txt",
     "static/media/1.png": "/static/media/1.0b297109.png",
     "static/media/OB_1.png": "/static/media/OB_1.f30516fd.png",
     "static/media/OB_2.png": "/static/media/OB_2.7d402914.png",
@@ -48,7 +49,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.2e9f1821.js",
-    "static/js/2.a08388b3.chunk.js",
-    "static/js/app.fbb26110.chunk.js"
+    "static/js/2.d5b7b198.chunk.js",
+    "static/js/app.490b6a09.chunk.js"
   ]
 }
