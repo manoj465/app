@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { RectButton, ScrollView } from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import UNIVERSALS from "../../../@universals";
 import { appState } from "../../../redux";
+import STYLES from "../../../styles";
 import { appNegativeColor, appPositiveColor } from "../../../theme/colors/highlightColors";
 import { appOperator } from "../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
@@ -43,12 +44,16 @@ export const Timer = ({ device, log }: Props) => {
       showsVerticalScrollIndicator={false}
       style={{
         width: "100%",
+        //backgroundColor: "red"
       }} >
+
+
       {deviceFromStore && deviceFromStore.timers.map((timerFromProp, index) => { /* Sec2: timer block container */
         return (
           <View
             style={styles.timerBlockConatiner}
             key={index}>
+
             <View /* Sec3: Left Side Section */
               style={{
                 backgroundColor: "#fff",
@@ -68,22 +73,26 @@ export const Timer = ({ device, log }: Props) => {
                   borderLeftWidth: 2,
                 }}
               ></View>
-              <Text
-                style={{
-                  color: "#777",
-                  fontSize: 14,
-                  marginLeft: 10,
-                  marginBottom: 10,
-                }}
-              >
-                {timerFromProp.H < 10 ? "0" : ""}
-                {timerFromProp.H}
-                {":"}
-                {timerFromProp.M < 10 ? "0" : ""}
-                {timerFromProp.M + " "}
-                {timerFromProp.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM ? "AM" : "PM"}
+              <View>
+                <Text
+                  style={{
+                    color: "#777",
+                    fontSize: 14,
+                    marginLeft: 10,
+                    marginBottom: 10,
+                  }}
+                >
+                  ({timerFromProp.H < 10 ? "0" : ""}
+                  {timerFromProp.H}
+                  {":"}
+                  {timerFromProp.M < 10 ? "0" : ""}
+                  {timerFromProp.M + " "}
+                  {timerFromProp.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM ? "AM" : "PM"})
               </Text>
+                <Text style={{ marginLeft: 10 }}>{timerFromProp.STATUS == UNIVERSALS.GLOBALS.TIMER_STATUS_e.INACTIVE ? "snoozed" : "Active"}</Text>
+              </View>
             </View>
+
             <View /* Sec3: Timer Card */
               style={{
                 flex: 1,
@@ -100,10 +109,10 @@ export const Timer = ({ device, log }: Props) => {
                 shadowOpacity: 0.22,
                 shadowRadius: 2.22,
                 elevation: 3,
-              }}
-            >
-              <LinearGradient /* Sec4: */
-                colors={["#ae39fe", "#cf63ff"]}
+              }}>
+
+              <LinearGradient /* /// absolute gradient background + Alarm Icon */
+                colors={["#5555ff", "#5555ff"]}
                 start={{ x: 0, y: 0.5 }}
                 end={{ x: 1, y: 0 }}
                 style={{
@@ -113,13 +122,16 @@ export const Timer = ({ device, log }: Props) => {
                   height: "100%",
                   width: "100%",
                 }}
-              />
+              >
+                <Ionicons name="alarm-outline" color="white" size={80} style={{ position: "absolute", right: "10%", top: "5%", opacity: 0.3 }} />
+              </LinearGradient>
+
               <View /* Sec4: Middle Sec for TIME & EVENT TYPE */
                 style={{
                   flex: 1,
                   //backgroundColor: "#ff0",
-                }}
-              >
+                }}>
+
                 <View /* Sec5: Event Type */
                   style={{ marginLeft: 20, marginTop: 10 }}>
                   <Text style={{ color: "white", fontSize: 12 }}>
@@ -128,6 +140,7 @@ export const Timer = ({ device, log }: Props) => {
                       : "TURN OFF"}
                   </Text>
                 </View>
+
                 <View /* Sec5: Alarm Time */
                   style={{
                     //backgroundColor: "#f00",
@@ -144,14 +157,14 @@ export const Timer = ({ device, log }: Props) => {
                     }}
                   >
                     {timerFromProp?.H + " : "}
-                    {timerFromProp?.M && timerFromProp.M < 10 ? "0" : ""}
+                    {timerFromProp.M < 10 ? "0" : ""}
                     {timerFromProp?.M + " "}
-                    {timerFromProp?.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM
-                      ? "AM"
-                      : "PM"}
+                    {timerFromProp?.DT == UNIVERSALS.GLOBALS.TIMER_DAYTIME_e.AM ? "AM" : "PM"}
                   </Text>
                 </View>
+
               </View>
+
               <View /* Sec4: Days Conatiner */
                 style={styles.weekDaysConatiner}>
                 {timerFromProp?.DAYS.map((item, index) => {
@@ -171,6 +184,7 @@ export const Timer = ({ device, log }: Props) => {
                   );
                 })}
               </View>
+
               <View /* Sec4: BUTTON CONTAINER ==> EDIT / DELETE */
                 style={{
                   display: "flex",
@@ -182,9 +196,10 @@ export const Timer = ({ device, log }: Props) => {
                 <NewRectButtonWithChildren /* Sec5: EDIT BUTTON */
                   style={{
                     flex: 1,
+                    backgroundColor: "transparent",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: 30,
+                    height: 30
                   }}
                   onPress={() => {
                     setTimerInEditor(timerFromProp)
@@ -193,66 +208,74 @@ export const Timer = ({ device, log }: Props) => {
                   <Text
                     style={{
                       fontWeight: "bold",
-                      fontSize: 12,
+                      fontSize: 14,
                       color: "#fff",
                     }}
-                  >
-                    EDIT
-                    </Text>
+                  >EDIT</Text>
                 </NewRectButtonWithChildren>
+
                 <View /* Sec5: Divider */
                   style={{
                     width: 1,
                     borderRightColor: "#fff",
                     borderRightWidth: 0.5,
                     marginVertical: 5,
-                  }}
-                ></View>
+                  }} />
+
                 <NewRectButtonWithChildren /* Sec5: DELETE BUTTON */
                   style={{
                     flex: 1,
+                    backgroundColor: "transparent",
                     justifyContent: "center",
                     alignItems: "center",
+                    height: 30
                     //backgroundColor: "#EC7063",
                   }}
                   onPress={() => {
-                    log?.print("currentTimersList is " + JSON.stringify(deviceFromStore.timers))
+                    const _log = new logger("timer test")
+                    _log?.print("currentTimersList is " + JSON.stringify(deviceFromStore.timers))
                     let newTimers: UNIVERSALS.GLOBALS.TIMER_t[] = []
                     deviceFromStore.timers.forEach((deleteTimerObj, deleteTimerObjIndex) => {
                       if (deleteTimerObj.id == timerFromProp.id) {
-                        log?.print("timer to be deleted at index " + deleteTimerObjIndex + ", timerId is " + deleteTimerObj.id)
+                        _log?.print("timer to be deleted at index " + deleteTimerObjIndex + ", timerId is " + deleteTimerObj.id)
                       }
-                      newTimers.push(deleteTimerObj)
+                      else
+                        newTimers.push(deleteTimerObj)
                     })
-                    log?.print("timersList after deletion " + JSON.stringify({ ...device, timers: newTimers }))
+                    _log?.print("timersList after deletion " + JSON.stringify(newTimers))
                     appOperator.device({
                       cmd: "ADD_UPDATE_DEVICES",
                       newDevices: [{ ...device, timers: newTimers, localTimeStamp: getCurrentTimeStampInSeconds() }],
-                      log
+                      log: _log
                     })
-                  }}
-                >
+                  }}>
                   <Text
                     style={{
                       color: appNegativeColor,
                       fontWeight: "bold",
-                      fontSize: 12,
-                    }}
-                  >
-                    DELETE
-                    </Text>
+                      fontSize: 14,
+                    }}>DELETE</Text>
                 </NewRectButtonWithChildren>
               </View>
+
             </View>
+
           </View>
-        );
+        )
       })}
+      {deviceFromStore?.timers.length == 0 &&
+        <View style={[STYLES.center, { marginTop: 25 }]}>
+          <Image
+            style={{}}
+            source={require('../../../../assets/images/devicePagesAssetes/noTimer.png')} />
+        </View>}
+
       {(deviceFromStore && deviceFromStore.timers?.length < 5) && <NewRectButtonWithChildren /* Sec2: AddNew Event Button */
         style={[
           {
             justifyContent: "center",
             alignItems: "center",
-            minHeight: 120
+            height: 120
           },
         ]}
         onPress={() => {
@@ -271,11 +294,13 @@ export const Timer = ({ device, log }: Props) => {
           ADD NEW EVENT
         </Text>
       </NewRectButtonWithChildren>}
+
       <NewTimerDialog /* Sec2: timer dialog */
         device={deviceFromStore} // IMP send device from redux state so that receiving component can have latest state of device always
         timerInEditor={timerInEditor}
         setTimerInEditor={setTimerInEditor}
         log={log ? new logger("timer editor dialog", log) : undefined} />
+
     </ScrollView>
   );
 };

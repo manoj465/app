@@ -1,5 +1,5 @@
 import { select } from "redux-saga/effects";
-import { reduxStore } from "../..";
+import reduxStore from "../..";
 import UNIVERSALS from "../../../@universals";
 import api from "../../../services/api";
 import { deviceSocketHBResponse, getWebSocket } from "../../../services/backGroundServices/webSocket";

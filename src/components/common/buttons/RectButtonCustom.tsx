@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleProp, StyleSheet, Text, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { RectButton } from 'react-native-gesture-handler'
-import STYLES from "../styles"
+import STYLES from "../../../styles"
 
 interface Props {
     buttonStyle?: StyleProp<ViewStyle>
@@ -16,9 +16,9 @@ interface Props {
 /** 
  * //TODO add support for dynamic JSX.elsment as children
  */
-export const NewRectButton = ({ buttonStyle, textStyle, text, onPress = () => { }, useReanimated = false }: Props) => {
+export const NewRectButton = ({ shadow, buttonStyle, textStyle, text, onPress = () => { }, useReanimated = false }: Props) => {
     return (
-        <View style={[STYLES.shadow, _styles.buttonContainer, buttonStyle]}>
+        <View style={[shadow ? STYLES.shadow : {}, _styles.buttonContainer, buttonStyle]}>
             {useReanimated ? <NewRectButtonWithChildren style={[_styles.innerbutton]}
                 onPress={onPress}>
                 <Text style={[{ textAlign: "center", fontSize: 18 }, textStyle]}>{text ? text : "BUTTON"}</Text>

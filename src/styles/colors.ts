@@ -4,7 +4,8 @@ export const textColors = {
     primary: "#333",
     secondary: "#555",
     tertiary: "#777",
-    warning: "#cd6155",
+    warning: "#E74C3C",
+    success: "#2ECC71",
     feather: "#aaa"
 }
 

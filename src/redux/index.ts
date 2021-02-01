@@ -7,5 +7,5 @@ export { _reduxConstant as reduxConstant } from "./ReduxConstant"
 
 
 const reduxStore = { actions: { ...deviceListAction, ...helperSideEffectActions }, store: _configureReduxStore() }
-export { reduxStore }
+export default reduxStore
 export { _appState as appState } from "./rootReducer"

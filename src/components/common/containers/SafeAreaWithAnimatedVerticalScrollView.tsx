@@ -12,7 +12,7 @@ interface Props {
 export default ({ style, children }: Props) => {
     return (
         <SafeAreaView style={[{ width: "100%" }, style]}>
-            <Animated.ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+            <Animated.ScrollView showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} style={{}}>
                 {children}
             </Animated.ScrollView>
         </SafeAreaView>

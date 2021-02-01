@@ -50,8 +50,10 @@ const getWebSocket: webSocketProps = async ({
     ws.onclose = (e) => {
       onClose ? onClose(e) : {}
     }
-
-    return ws;
+    if (ws)
+      return ws
+    else
+      return null
   } catch (error) {
     return null;
   }

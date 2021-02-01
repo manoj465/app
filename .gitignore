@@ -1,4 +1,6 @@
 node_modules/**/*
+node_modules/
+node_modules
 .expo/*
 npm-debug.*
 *.jks
@@ -8,6 +10,14 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+dist
 
 # macOS
 .DS_Store
+
+
+# bit components
+
+# react compiler
+components/compilers/
+components/compilers

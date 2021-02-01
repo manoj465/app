@@ -10,7 +10,7 @@ import { appOperator } from "../../../util/app.operator";
 import { logger } from "../../../util/logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
-import styles from "../../common/styles";
+import styles from "../../../styles";
 import LoginPage from "./userForms";
 
 export type navigationProp = StackNavigationProp<

@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { Component, useEffect, useRef, useState } from "react";
+import React, { Component, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, concat, cond, divide, eq, event, multiply, set, useCode } from "react-native-reanimated";
@@ -34,14 +34,13 @@ export default ({
   //console.log("initBr : " + initBrValue);
   const pinState = useValue(State.UNDETERMINED);
   const [sliderWidth, setSliderWidth] = useState(0);
-  const [test, setTest] = useState(0);
-  const ref = useRef<any>(null)
-  const offset = useValue((initBrValue / 100) * (width * 0.9));
+  //const ref = useRef<any>(null)
+  //const offset = useMemo(() => new Animated.Value((initBrValue / 100) * (width * 0.9)), [initBrValue])
+  const offset = useValue((initBrValue / 100) * (width * 0.9))
   const offsetX = clamp(offset, 0, sliderWidth - sliderHeight);
   //@ts-ignore
-  const BR = round(multiply(divide(offsetX, (sliderWidth - sliderHeight)), 100))
+  const BR = round(multiply(divide(offsetX, (sliderWidth)), 100))
   let timeStamp = Date.now();
-
   const updateColor = (v: number, gestureState: State, log?: logger) => {
     if (v < 5)
       v = 0
@@ -65,30 +64,17 @@ export default ({
         else {
           //console.log("<<<< cannot send Bightness- >>>>")
         }
-        /* if (pinState == State.ACTIVE) {
-          if (getTimeDiffNowInMs(timeStamp) > 200) {
-            timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round(BR)), pinState, log)
-          }
-        } else if (pinState == State.END) {
-          console.log("<<<< --Sending Bightness- >>>>")
-          setTimeout(() => {
-            timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round(BR)), pinState, log)
-          }, 200);
-        } */
       }),
     ],
     [BR, pinState]
   );
 
-  useEffect(() => {
-    if (ref.current?.offsetWidth) {
-      setSliderWidth(ref?.current.offsetWidth)
-    }
+  /* useEffect(() => {
+    console.log("setting v is >>>>>>>> " + initBrValue)
+    //set(offset, ((initBrValue / 100) * (width * 0.9)))
     return () => {
     }
-  }, [ref.current])
+  }, [initBrValue]) */
 
   return (
     <View style={{ overflow: "visible" }}>
@@ -97,11 +83,12 @@ export default ({
         flexDirection: "row",
         alignSelf: "flex-end",
         marginBottom: 6,
+        borderRadius: 15
       }}>
         <ReText
           style={{
             color: "#fff",
-            fontSize: 25,
+            fontSize: 18,
             fontWeight: "bold",
             textAlign: "right"
           }}
@@ -109,41 +96,36 @@ export default ({
         <Text
           style={{
             color: "#fff",
-            fontSize: 25,
+            fontSize: 18,
             fontWeight: "bold",
           }}>%</Text>
       </View>
-      <div
-        ref={ref}
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: -1,
-          //backgroundColor: "red",
-          justifyContent: "center",
-          opacity: 1,
-          height: sliderHeight,
-          width: "100%",
-          borderRadius: 15,
-        }}>
-      </div>
-      <LinearGradient
-        /* onLayout={(event) => {
-           var { width } = event.nativeEvent.layout;
-           setSliderWidth(width);
-         }} */
+      <View
+        onLayout={(event) => {
+          var { width } = event.nativeEvent.layout;
+          setSliderWidth(width);
+        }}
         style={{
           justifyContent: "center",
           opacity: 1,
           height: sliderHeight,
           width: "100%",
+          overflow: "visible",
           borderRadius: 15,
         }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={[bgColor[0], bgColor[1]]}
       >
+        <LinearGradient
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            borderRadius: 15,
+            height: "100%",
+            width: "100%"
+          }}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={[bgColor[0], bgColor[1]]} />
         <BrightnessSlider
           pinState={pinState}
           offset={offset}
@@ -151,7 +133,7 @@ export default ({
           sliderWidth={sliderWidth}
         >
         </BrightnessSlider>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -212,7 +194,7 @@ class BrightnessSlider extends Component<{
                 height: "80%",
                 width: "80%",
                 borderRadius: 50,
-                backgroundColor: "red",
+                backgroundColor: "#fff",
                 borderWidth: 10,
                 borderColor: "#fff",
                 alignItems: "center",

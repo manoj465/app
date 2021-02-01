@@ -1,5 +1,5 @@
 import React from "react";
-import { reduxStore } from "./redux";
+import reduxStore from "./redux";
 import MainRouter from "./routers/MainRouter";
 
 

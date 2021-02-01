@@ -1,14 +1,13 @@
 import { State } from "react-native-gesture-handler";
-import { put, select } from "redux-saga/effects";
+import { select } from "redux-saga/effects";
+import UNIVERSALS from "../../../@universals";
 import { convertHSVToRgbShortRange, convertRGBToHex } from "../../../util/Color";
 import { logger } from "../../../util/logger";
-import { _appState } from "../../rootReducer";
 import { HBSocketList_t } from "../../helperSideEffect/reducers/HBReducer";
 import { _reduxConstant } from "../../ReduxConstant";
+import { _appState } from "../../rootReducer";
 import { _delay } from "../../sagas/helper";
 import { _getWorker } from '../../sagas/sagaBaseWorkers';
-import { _deviceListSaga_action } from "./deviceList";
-import UNIVERSALS from "../../../@universals";
 
 interface beforeUpdateProps {
     /** previous state of the device */
@@ -42,22 +41,22 @@ const [_colorSaga_watcher, _colorSaga_action] = _getWorker<_colorAction_Props>({
         const list: { Mac: string, socket: WebSocket | null }[] = []
         let _deviceList: HBSocketList_t[] = yield select((state: _appState) => state.HBReducer.HBSocketList)
         let devicelist: UNIVERSALS.GLOBALS.DEVICE_t[] = yield select((state: _appState) => state.deviceReducer.deviceList)
-        const newDeviceList = yield Promise.all(devicelist.map(async device => {
+        const newDeviceList = yield Promise.all(devicelist.map(async (device) => {
             if (deviceMac.includes(device.Mac)) {/* check weather this device is present in requested deviceMac array */
-                h = h != undefined ? h : device.hsv.h
-                s = s != undefined ? s : device.hsv.s
-                v = v != undefined ? v : device.hsv.v
+                let _h = h != undefined ? h : device.hsv.h
+                let _s = s != undefined ? s : device.hsv.s
+                let _v = v != undefined ? v : device.hsv.v
                 let tempdevice = _deviceList.find(item => item.Mac == device.Mac)
                 if (tempdevice?.socket) {/* if device has socket than send the color live */
-                    log?.print("sending color to device " + h + " " + s + " " + v)
+                    log?.print("sending color to device " + _h + " " + _s + " " + _v)
                     //@ts-ignore
-                    let tempCol = convertRGBToHex(convertHSVToRgbShortRange(h, s, v))
+                    let tempCol = convertRGBToHex(convertHSVToRgbShortRange(_h, _s, _v))
                     tempdevice.socket.send(tempCol)
                 } else if (gestureState == State.END && !tempdevice?.socket) {/* if device has no socket than send the color over mqtt only upon gestureState end */
                     log?.print("device has no socket ")
                     // - [ ] send code via mqtt
                 }
-                return beforeUpdate({ preDeviceState: device, newDeviceState: { ...device, hsv: { h, s, v }, localTimeStamp: Math.floor(Date.now() / 1000) } })
+                return beforeUpdate({ preDeviceState: device, newDeviceState: { ...device, hsv: { h: _h, s: _s, v: _v }, localTimeStamp: Math.floor(Date.now() / 1000) } })
             }
             return device
         }))

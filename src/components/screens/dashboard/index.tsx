@@ -1,25 +1,22 @@
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useRef, useState } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import React, { useEffect, useRef, useState } from "react";
+import { Text, View, TextInput, StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
-import { red, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 //native imports
 import { _appState } from "../../../redux/rootReducer";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import STYLES from "../../../styles";
+import { appOperator } from "../../../util/app.operator";
 import { logger } from "../../../util/logger";
+import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
+import useDeleteDeviceModal from "../../common/useDeleteDeviceModal";
 import { DeviceCard } from "./deviceCard";
 import Header from './Header';
-import STYLES from "../../common/styles"
-import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
-import { LinearGradient } from "expo-linear-gradient";
-import { appOperator } from "../../../util/app.operator";
-//@ts-ignore
-import Modal from "../../common/modal";
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 const navigationIconSize = 25;
 
@@ -45,6 +42,10 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
   //const state = useValue(State.UNDETERMINED)
   //const onScroll = onScrollEvent({ y })
   //const scroll = useRef(null);
+  const { DeleteModal, onDeleteAsk } = useDeleteDeviceModal({
+    visible: (state_deleteDeviceModal.length > 0) ? true : false,
+    onDeleteComplete: () => { set_state_deleteDeviceModal("") }
+  })
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,116 +74,79 @@ export const Dashboard = ({ navigation, route: { params } }: Props) => {
 
         </View>
       </Animated.ScrollView>
-      {/*  <FlatList
-        //ref={scroll}
-        //onScroll={onScroll}
-        showsVerticalScrollIndicator={false}
-        data={containerList}
-        keyExtractor={(item, index) =>
-          "0" + index
-        }
-        extraData={containerList}
-        renderItem={({ item, index }) => {
-          return (
-            <View />
-          );
-        }}
-      /> */}
-      <Modal /*///Modal */
-        animationType="slide"
-        transparent
-        visible={state_deleteDeviceModal.length > 0}
-      >
-        <View /* Sec1: Modal outer container */
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-          <View /* Sec2: Modal inner container */
-            style={[STYLES.shadow, {
-              width: "85%",
-              borderRadius: 20,
-            }]}>
-            <Text style={[STYLES.H6, STYLES.warningText, { marginVertical: 8 }]}>IMPORTANT NOTE</Text>
-            <View style={{ paddingHorizontal: 20, width: "100%" }}>{/* Sec3: hint text container */}
-              <Text style={[STYLES.H7, {
-                marginVertical: 8,
-                textAlign: "center",
-              }]}>This will delete this device from this phone, to pair it with new phone, you have to reset the device manually. follow the following step to reset</Text>
-              <Text style={[STYLES.H7, {}]}>1. Turn off the device </Text>
-              <Text style={[STYLES.H7, {}]}>2. Now switch your HUElite device ON/OFF with a gap of 2 seconds between each toggle</Text>
-              <Text style={[STYLES.H7, {}]}>3. Repeat the above step 5 times</Text>
-              <Text style={[STYLES.H7, {}]}>4. Leave the device ON at last and wait for few seconds</Text>
-              <Text style={[{ textAlign: "center", fontSize: 12, marginVertical: 15, paddingHorizontal: 20 }]}>your device should start blinking after 5 seconds and than restart after few more seconds. once completed you can initiate the pairing process</Text>
-            </View>
-            <View style={{/* Sec3: Buttons */
-              display: "flex",
-              flexDirection: "row",
-              marginTop: 25,
-            }}>
-              <NewRectButton /* Sec3: delete button */
-                useReanimated={false}
-                buttonStyle={{
-                  flex: 1,
-                  marginHorizontal: 8
-                }}
-                text="delete"
-                onPress={() => {
-                  console.log("REMOVE DEVICE >> " + state_deleteDeviceModal)
-                  appOperator.device({
-                    cmd: "REMOVE_DEVICE",
-                    Mac: state_deleteDeviceModal,
-                    log: new logger("test function delete device")
-                  })
-                  set_state_deleteDeviceModal("")
-                }} />
-              <NewRectButton /* Sec3: cancel button */
-                useReanimated={false}
-                buttonStyle={{
-                  flex: 1,
-                  marginHorizontal: 8
-                }}
-                text="cancel"
-                onPress={() => {
-                  console.log("DEVICE REMOVE cancel : ")
-                  set_state_deleteDeviceModal("")
-                }} />
-            </View>
-            <View /* Sec3: modal footer */
-              style={[STYLES.shadow, {
-                width: "97%",
-                height: 80,
-                borderRadius: 15,
-                backgroundColor: "red",
-                marginHorizontal: "3%",
-                marginTop: 15,
-                marginBottom: 8,
 
-              }]}
-            >
-              <LinearGradient
-                style={[{
-                  height: "100%",
-                  width: "100%",
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  borderRadius: 14,
-                  overflow: "hidden",
-                  backgroundColor: "transparent",
-                }]}
-                start={{ x: 0.3, y: 0 }}
-                end={{ x: 1, y: 2 }}
-                colors={["#00aaff", "#aa00aa"]} >
-                <View style={[STYLES.absoluteFill, {
-                  backgroundColor: "white",
-                  opacity: 0.4
-                }]} >
-                  <Image source={require("../../../../assets/icons/icon-no-bg.png")} style={[STYLES.absoluteFill, { width: 200, height: "100%" }]} />
-                  <Image source={require("../../../../assets/icons/icon-no-bg.png")} style={[STYLES.absoluteFill, { width: 50, height: "100%", left: "80%" }]} />
-                </View>
-              </LinearGradient>
+      <DeleteModal
+        outerContainerStyle={{
+          backgroundColor: "#0000007f",
+        }}
+        style={{
+          width: "85%",
+          borderRadius: 15,
+          backgroundColor: "#ffffff"
+        }}
+        Node={() => {
+          const [unpairText, setUnpairText] = useState("")
+          useEffect(() => {
+            if (unpairText.toLowerCase() == "unpair") {
+              onDeleteAsk({ Mac: state_deleteDeviceModal })
+            }
+            return () => { }
+          }, [unpairText])
+
+
+          return (
+            <View /* Sec2: Modal inner container */ style={[STYLES.shadow, { borderRadius: 20, width: '80%' }]}>
+
+              <View /* Sec3: textField container */
+                style={{
+                  paddingHorizontal: 20,
+                  marginTop: 20,
+                  //backgroundColor: "red"
+                }}>
+                <Text style={[STYLES.H5, { textAlign: "center" }]}>DELETE DEVICE</Text>
+                <MaterialCommunityIcons name="delete-forever" size={200} color={STYLES.textColors.warning} style={{ alignSelf: "center", opacity: 0.5 }} />
+                <TextInput
+                  style={{
+                    minWidth: 200,
+                    borderBottomColor: "#555",
+                    borderBottomWidth: 0.25,
+                    textAlign: "center",
+                    fontWeight: "bold",
+                    marginTop: 20,
+                    color: STYLES.warningText.color
+                  }}
+                  placeholder="type UNPAIR to delete"
+                  value={unpairText}
+                  onChangeText={(text) => {
+                    setUnpairText(text)
+                  }} />
+              </View>
+
+              <View style={{/* Sec3: Buttons */
+                display: "flex",
+                flexDirection: "row",
+                marginTop: 25,
+              }}>
+                <NewRectButton /* Sec3: delete button */
+                  useReanimated={false}
+                  text="cancel"
+                  shadow={false}
+                  buttonStyle={{
+                    width: "100%",
+                    backgroundColor: "transparent"
+                  }}
+                  textStyle={{ fontSize: 16, fontWeight: "bold" }}
+                  onPress={() => {
+                    console.log("DEVICE REMOVE cancel : ")
+                    set_state_deleteDeviceModal("")
+                  }} />
+              </View>
+
+
             </View>
-          </View>
-        </View>
-      </Modal>
+          )
+        }}
+      />
       {/* Sec:  */}
       {false && <View style={styles.navigatorMenu}>
         <NewRectButtonWithChildren
@@ -276,7 +240,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     //backgroundColor: "#0aa",
-    paddingHorizontal: "2%"
+    paddingHorizontal: "2%",
+    marginTop: 20
   },
   navigatorMenu: {
     backgroundColor: "#33f",

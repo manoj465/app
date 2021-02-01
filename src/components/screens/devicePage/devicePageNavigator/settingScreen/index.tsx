@@ -6,7 +6,7 @@ import { devicePageStackParamList } from "../..";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
-import STYLES from "../../../../common/styles"
+import STYLES from "../../../../../styles"
 import { useSelector } from "react-redux";
 import { _appState } from "../../../../../redux/rootReducer";
 import UNIVERSALS from "../../../../../@universals";

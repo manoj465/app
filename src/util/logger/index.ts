@@ -22,10 +22,12 @@ export class logger {
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
         //"DASHBOARD",/* DAHSBOARD SCREEN */
         //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
-        "TEST FUNCTION", /* testfunction prints */
+        //"TEST FUNCTION", /* testfunction prints */
         //"USER PROFILE",
         //"APP SETTING",
         //"PAIRING_SCREEN",
+        //"SOCKET TEST",
+        "SERVER",
     ]
     /**
      * 

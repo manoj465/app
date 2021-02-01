@@ -15,11 +15,11 @@ export interface ScanApiErrors_i {
 }
 interface network_i {
     rssi: any,
-    "ssid": string,
-    "bssid": string,
-    "channel": any,
-    "secure": any,
-    "hidden": boolean
+    ssid: string,
+    bssid: string,
+    channel: any,
+    secure: any,
+    hidden: boolean
 }
 interface ScanApiRes_i {
     status: number // - [ ] make an enum for scanAPi status codes

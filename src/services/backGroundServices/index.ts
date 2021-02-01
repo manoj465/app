@@ -1,5 +1,5 @@
 
-import { reduxStore } from "../../redux";
+import reduxStore from "../../redux";
 import { logger } from "../../util/logger";
 import { bgServiceSagaAction } from "../../redux/helperSideEffect/saga/bgServiceSaga"
 

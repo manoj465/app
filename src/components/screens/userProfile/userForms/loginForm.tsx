@@ -41,7 +41,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                         paddingHorizontal: 30,
                     }}
                 >
-                    Your HUElite Account is required to setup your devices with Alexa and
+                    Your Account is required to setup your devices with Alexa and
                     Google Assistant
                 </Text>
                 <TextInput /* Sec3: Email Input  */
@@ -101,7 +101,8 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                                 log?.print("login successful>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
                                 navigation.replace("dashboard")
                             },
-                            log: log ? new logger("user login operator", log) : undefined
+                            //log: log ? new logger("user login operator", log) : undefined
+                            log: new logger("server")
                         })
                     }}
                     style={{

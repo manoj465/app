@@ -74,4 +74,4 @@ export default class Modal extends Component<Props, any> {
         }
         return null;
     }
-}
+} 

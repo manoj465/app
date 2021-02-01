@@ -8,7 +8,7 @@ import { onScrollEvent, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
-import { reduxStore } from "../../../../redux";
+import reduxStore from "../../../../redux";
 import useScanApiHook from "../../../../services/webApi/webHooks";
 import { appOperator } from "../../../../util/app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";

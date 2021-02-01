@@ -9,14 +9,14 @@ export default StyleSheet.create({
     shadow: {
         backgroundColor: "#fff",
         alignItems: 'center',
-        shadowColor: '#000',
+        shadowColor: '#777',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 0,
         },
         shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        shadowRadius: 2,
+        elevation: 2,
     },
     absoluteFill: {
         width: "100%",
@@ -24,5 +24,11 @@ export default StyleSheet.create({
         position: "absolute",
         top: 0,
         left: 0
+    },
+    center: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
     }
 })

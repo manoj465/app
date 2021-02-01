@@ -1,13 +1,17 @@
-import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, Feather, AntDesign, } from '@expo/vector-icons';
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, StyleProp, Text, TextStyle, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import styles from '../../../styles';
 import { appOperator } from "../../../util/app.operator";
 import { logger } from "../../../util/logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
+import { useSelector } from 'react-redux';
+import { appState } from '../../../redux';
+import { LinearGradient } from 'expo-linear-gradient';
 
 type navigationProp = StackNavigationProp<
     MainRouterStackParamList,
@@ -22,44 +26,118 @@ interface props {
 }
 const AppConfigScreen = ({ navigation }: props) => {
     const log = new logger("APP SETTING")
+    const User = useSelector((state: appState) => state.appCTXReducer.user)
 
 
     return (
-        <Container style={{ backgroundColor: "#fff", paddingHorizontal: 15 }}>
-            <View>
+        <Container style={{ backgroundColor: "#fff", flex: 1, paddingHorizontal: 10 }}>
+
+            <View /** header container */ >
                 <NewRectButtonWithChildren onPress={() => {
                     if (navigation.canGoBack())
                         navigation.pop()
-                }}>
-                    <Ionicons style={{ paddingRight: 15, paddingBottom: 10, paddingTop: 15, marginTop: 10 }} name="ios-arrow-back" size={30} color="#222" />
+                }}
+                    innerCompStyle={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        //backgroundColor: "blue"
+                    }}>
+                    <Ionicons style={{}} name="ios-arrow-back" size={30} color="#555" />
+                    <Text style={{ color: "#555", fontSize: 22, fontWeight: "bold", marginLeft: 10 }}>Settings</Text>
                 </NewRectButtonWithChildren>
             </View>
-            <View style={{}}>
-                <Text style={{ color: "#222", fontSize: 35, fontWeight: "bold" }}>Settings</Text>
+
+            <View /** content container */ style={{}}>
+
+
+                <LinearGradient /** user headerCard container */
+                    colors={["#79b6f7", "#a872fe"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={[styles.shadow, {
+                        overflow: "visible",
+                        backgroundColor: "#eee",
+                        width: "100%",
+                        height: 200,
+                        borderRadius: 10,
+                    }]}>
+                    <FontAwesome name="user" size={200} color="white" style={{ position: "absolute", right: "10%", top: 10, opacity: 0.3 }} />
+
+                    <NewRectButtonWithChildren /** logout button */
+                        style={
+                            {
+                                width: 40,
+                                height: 40,
+                                margin: 15,
+                                position: "absolute",
+                                right: 0,
+                                top: 0,
+                                backgroundColor: "transparent"
+                            }}
+                        innerCompStyle={[styles.center, {}]}
+                        onPress={() => {
+                            appOperator.user({
+                                cmd: "LOGOUT", onLogout: () => {
+                                    log?.print("logging out now")
+                                    navigation.replace("user")
+                                }
+                            })
+                        }}>
+                        <AntDesign name="logout" size={24} color="#eee" />
+                    </NewRectButtonWithChildren>
+
+
+                    <View /** header user icon */
+                        style={[styles.shadow, {
+                            height: 100,
+                            width: 100,
+                            borderRadius: 50,
+                            backgroundColor: "#fff",
+                            position: "absolute",
+                            bottom: -30,
+                            left: 20,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }]}>
+                        <Feather name="user" size={45} color="#555" />
+                    </View>
+
+                    <Text style={[styles.H3, { position: "absolute", bottom: 10, left: 130, color: "white" }]}>{"Hi, " + User?.userName}</Text>
+
+                </LinearGradient>
+
+                <View /** settings and other support */ style={{ width: "100%", marginTop: 50, padding: 5 }}>
+                    <Text style={[styles.H7, { color: "#555", opacity: 0.6 }]}>GENERAL</Text>
+                    <View style={[styles.shadow, { backgroundColor: "#fff", borderRadius: 10, marginTop: 10, paddingVertical: 10 }]}>
+                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Change Password" Icon={() => <></>} />
+                    </View>
+                </View>
+
+                <View style={{ width: "100%", marginTop: 50, padding: 5 }}>
+                    <Text style={[styles.H7, { color: "#555", opacity: 0.6 }]}>HELP</Text>
+                    <View style={[styles.shadow, { backgroundColor: "#fff", borderRadius: 10, marginTop: 10, paddingVertical: 10 }]}>
+                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Terms & Conditions" Icon={() => <></>} />
+                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Privacy Policy" Icon={() => <></>} />
+                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Support" Icon={() => <></>} />
+                    </View>
+                    <View style={{
+                        width: "100%",
+                        marginVertical: 25
+                    }}>
+                        <Text style={[styles.H7, {
+                            fontWeight: "normal",
+                            color: "#555",
+                            textAlign: "center"
+                        }]}>Powered by <Text style={{ fontWeight: "bold" }}>STERNET INDUSTRIES</Text></Text>
+                    </View>
+                </View>
+
             </View>
-            {/* Sec: user profile settings */}
-            <View style={{}}>
-                <MenuHeading heading="User Profile" Icon={() => <FontAwesome style={{ paddingRight: 10 }} name="user-o" size={25} color="#555" />} />
-                <MenuItem heading="User Profile" />
-                <MenuItem heading="Change Password" />
-                <MenuItem heading="Logout" onPress={() => {
-                    appOperator.user({
-                        cmd: "LOGOUT", onLogout: () => {
-                            log?.print("logging out now")
-                            navigation.replace("user")
-                        }
-                    })
-                }} />
-                <MenuHeading heading="Notification" Icon={() => <MaterialIcons style={{ paddingRight: 10 }} name="notifications-none" size={25} color="#555" />} />
-                <MenuItem heading="App Notifications" Icon={() => <FontAwesome name="toggle-off" size={25} color="#555" />} />
-                <MenuItem heading="Device Notifications" Icon={() => <FontAwesome name="toggle-off" size={25} color="#555" />} />
-                <MenuHeading heading="More" Icon={() => <MaterialIcons style={{ paddingRight: 10 }} name="unfold-more" size={25} color="#555" />} />
-                <MenuItem heading="Support" />
-                <MenuItem heading="Contact Us" />
-            </View>
-            <View style={{ alignItems: "center", paddingVertical: 20 }}>
-                <Image style={{ height: 150, width: 150, opacity: 0.3 }} source={require("../../../../assets/icons/splash-icon.png")} />
-            </View>
+
+
         </Container>
     );
 };
@@ -69,32 +147,31 @@ export default AppConfigScreen
 interface MenuHeadingProps {
     Icon: any
     heading: string
-}
-const MenuHeading = ({ Icon, heading }: MenuHeadingProps) => {
-    return (
-        <View style={{ flexDirection: "row", alignItems: "flex-end", marginTop: 30, borderBottomColor: "#555", borderBottomWidth: 0.5, paddingBottom: 10 }}>
-            <Icon />
-            <Text style={{ fontSize: 20, fontWeight: "bold", color: "#555" }}>{heading}</Text>
-        </View>
-    )
-}
-
-interface MenuItemProps {
-    Icon?: any
-    heading: string
+    textStyles?: StyleProp<TextStyle>
     onPress?: () => void
 }
-const MenuItem = ({
-    Icon = () => <Ionicons name="ios-arrow-forward" size={25} color="#777" />,
-    heading,
-    onPress = () => { }
-}: MenuItemProps) => {
+const MenuHeading = ({ Icon, heading, textStyles, onPress = () => { } }: MenuHeadingProps) => {
     return (
-        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", height: 50 }}>
-            <Text style={{ fontSize: 15, color: "#777", fontWeight: "bold" }}>{heading}</Text>
-            <NewRectButtonWithChildren onPress={onPress} style={{ shadowOpacity: 0, elevation: 0 }}>
-                <Icon />
-            </NewRectButtonWithChildren>
-        </View>
+        <NewRectButtonWithChildren
+            style={{
+                borderBottomColor: "#555",
+                borderBottomWidth: 0,
+                width: "100%",
+                paddingHorizontal: 10,
+                marginVertical: 10,
+                backgroundColor: "transparent"
+            }}
+            innerCompStyle={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                //backgroundColor: "red",
+                width: "100%"
+            }}
+            onPress={onPress}>
+            <Text style={[{ fontSize: 25, fontWeight: "bold", color: "#555" }, textStyles]}>{heading}</Text>
+            <Icon />
+        </NewRectButtonWithChildren>
     )
 }

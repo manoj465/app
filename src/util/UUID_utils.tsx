@@ -1,5 +1,5 @@
 import UNI from "../@universals"
-import { reduxStore } from "../redux";
+import reduxStore from "../redux";
 
 export function uuidv4() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {

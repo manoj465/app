@@ -26,7 +26,7 @@ export const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersStr
     if (timersString) {
         try {
             let timersObject: (Omit<TIMER_t, "DAYS"> & { DAYS: number })[] = JSON.parse(timersString)
-            if (timersObject && timersObject.length) {
+            if (timersObject) {
                 log?.print("timer array size is " + timersObject.length)
                 log?.print(JSON.stringify(timersObject, null, 2))
                 const newTimersObject = timersObject.map((timer, index) => {
@@ -48,6 +48,7 @@ export const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersStr
             //console.log(error)
         }
     }
+    log?.print("returning undefined")
     return undefined
 }
 

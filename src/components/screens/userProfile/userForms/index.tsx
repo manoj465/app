@@ -2,7 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import React, { useState } from "react";
 import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
-import { reduxStore } from '../../../../redux';
+import reduxStore from '../../../../redux';
 import { appOperator } from '../../../../util/app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../../util/DateTimeUtil';
 import { logger } from "../../../../util/logger";

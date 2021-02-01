@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TextInput, View } from "react-native";
 import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
-import STYLES from "../styles";
+import STYLES from "../../../styles";
 
 interface props {
     placeholder?: string

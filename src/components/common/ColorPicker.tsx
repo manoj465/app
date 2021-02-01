@@ -52,25 +52,25 @@ const ColorPicker = ({
   //const AnimatedCircle = Animated.createAnimatedComponent(Circle);
   const [canvasWidth, setCanvasWidth] = useState(0)
   console.log("--width of color picker width is :: " + canvasWidth)
-  const ref = useRef<any>(null);
+  //const ref = useRef<any>(null);
 
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (ref.current) {
       console.log('width', ref?.current ? ref.current?.offsetWidth : 0);
       setCanvasWidth(ref.current.offsetWidth)
     }
-  }, [ref.current])
+  }, [ref.current]) */
 
   return (
     <View style={styles.container}>
-      <div style={{ alignSelf: "center" }}
-        ref={ref}
-        /* onLayout={(event) => {
+      <View style={{ alignSelf: "center" }}
+        //ref={ref}
+        onLayout={(event) => {
           var { width } = event.nativeEvent.layout;
           console.log("**width :: " + width)
           setCanvasWidth(width);
-        }} */>
+        }} >
         <Image source={require("../../../assets/images/colorPicker.png")} style={[
           styles.surface,
           {
@@ -86,7 +86,7 @@ const ColorPicker = ({
           device={device}
           log={log}
         />}
-      </div>
+      </View>
     </View>
   );
 };

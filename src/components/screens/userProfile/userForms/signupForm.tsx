@@ -35,7 +35,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                         paddingHorizontal: 20,
                     }}
                 >
-                    Welcome to HUElite Community
+                    We are happy to have you
                 </Text>
                 <Text
                     style={{
@@ -46,7 +46,7 @@ export const SignUpHeader = ({ navigation, setHeaderView, log }: SignUpHeader_t)
                         paddingHorizontal: 30,
                     }}
                 >
-                    Your HUElite Account will be used to link and setup your devices with Alexa and
+                    Your Account will be used to link and setup your devices with Alexa and
                     Google Assistant
         </Text>
                 <TextInput

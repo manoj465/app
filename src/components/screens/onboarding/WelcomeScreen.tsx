@@ -1,11 +1,12 @@
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useState } from "react";
-import { Image, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Image, Text, View, Modal } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { getWebSocket } from "../../../services/backGroundServices/webSocket";
+import { logger } from "../../../util/logger";
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
-import Modal from "../../common/modal";
-import styles from "../../common/styles";
+import styles from "../../../styles";
 
 
 const slides = [
@@ -66,6 +67,40 @@ export const WelcomeScreen = ({ navigation }: props_t) => {
 
 
 const Header = ({ slideIndex }: { slideIndex: number }) => {
+  const [ws, setWs] = useState<WebSocket | undefined | null>(undefined)
+
+  useEffect(() => {
+    if (!ws) {
+      try {
+        (async () => {
+          let _log = new logger("SOCKET TEST")
+          _log?.print("socket test loop")
+          const ws = await getWebSocket({
+            ipAddr: "192.168.4.1",
+            onMsg: (msg) => {
+              _log?.print("msg>>>> " + msg)
+            },
+            onErr: (err) => {
+              _log?.print("err>>>>" + JSON.stringify(err))
+            },
+            onOpen: () => {
+              _log?.print("Open>>>  new socket opened")
+            },
+            onClose: () => {
+              _log?.print(">>>>>>>>>>>> socket closed")
+            }
+          })
+          if (ws)
+            _log?.print("we have socket")
+          else
+            _log?.print("socket cannot be opened")
+        })()
+      } catch (error) {
+        console.log("error on try catch block >>> " + JSON.stringify(error))
+      }
+    }
+    return () => { }
+  }, [ws])
 
   return (
     <View style={{

@@ -12,7 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 //import "react-native-gesture-handler"; // TODO this was recommended to be imported in app.js for proper functioning og gesture handler acroose the application
 import Application from "./src/Application";
-import { reduxStore } from "./src/redux";
+import reduxStore from "./src/redux";
 import BGService from "./src/services/backGroundServices";
 import { getData, storeData } from "./src/services/db/storage";
 import { logger } from "./src/util/logger";
@@ -107,6 +107,7 @@ export default function App() {
         <NavigationContainer /* linking={linking}  */ fallback={<Text>Loading...</Text>}>
           {/*  <BackgroundService /> */}
           <SafeAreaProvider>
+            <StatusBar backgroundColor="transparent" />
             <ActionSheetProvider>
               <Application />
             </ActionSheetProvider>

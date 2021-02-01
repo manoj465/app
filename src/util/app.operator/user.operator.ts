@@ -1,5 +1,5 @@
 import UNIVERSALS from "../../@universals";
-import { reduxStore } from "../../redux";
+import reduxStore from "../../redux";
 import API from "../../services/api";
 import { logger } from "../logger";
 import deviceOperator from "./device.operator"

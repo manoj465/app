@@ -1,5 +1,5 @@
 import UNIVERSALS from "../@universals";
-import { reduxStore } from "../redux";
+import reduxStore from "../redux";
 
 export const getSafeDeviceList = (deviceList?: UNIVERSALS.GLOBALS.DEVICE_t[]) => {
     if (!deviceList)

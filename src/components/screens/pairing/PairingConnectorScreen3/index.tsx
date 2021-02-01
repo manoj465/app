@@ -38,7 +38,8 @@ export const PairingConnectorScreen3 = ({
   },
 }: Props) => {
   const log = new logger("PAIRING_SCREEN_3")
-  const [pass, setPass] = useState("Ioplmkjnb@1");
+  //const [pass, setPass] = useState("Ioplmkjnb@1");
+  const [pass, setPass] = useState("");
   const [groupName, setGroupName] = useState("");
   let _animation = null;
   const [data, socket, pair, pairStatus, hitSaveAPI] = usePairApiHook({

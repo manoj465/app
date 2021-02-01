@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import STYLES from "../styles"
-import { View, Text, Modal, StyleSheet } from "react-native"
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from "react-native";
+import STYLES from "../../../styles";
 import UNIVERSALS from '../../../@universals';
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons"
-import { NewSelector } from '../NewSelector';
-import { NewRectButtonWithChildren } from '../buttons/RectButtonCustom';
-import { gql, useQuery } from '@apollo/client';
 import API from '../../../services/api';
-import { logger } from '../../../util/logger';
-import { generate_UUID_10_withVenderPrefix } from '../../../util/UUID_utils';
 import { appOperator } from '../../../util/app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../util/DateTimeUtil';
+import { logger } from '../../../util/logger';
+import { generate_UUID_10_withVenderPrefix } from '../../../util/UUID_utils';
+import Modal from "../../common/modal";
+import { NewRectButtonWithChildren } from '../buttons/RectButtonCustom';
+import { NewSelector } from '../NewSelector';
 
 const daysSelectorArray = [
     { day: "M" },
@@ -165,11 +165,28 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
         setDays([true, true, true, true, true, true, true])
     }
 
+    const isOnce = () => {
+        let once = days.find(item => item)
+        if (once)
+            return false
+        return true
+    }
+
+    const isDaily = () => {
+        let daily = true
+        days.forEach(element => {
+            if (!element)
+                daily = false
+        })
+        return daily
+    }
+
 
     return (
         <Modal /* Sec2: timer editor dialog */
-            animationType="slide"
-            transparent
+            outerContainerStyle={{
+                backgroundColor: "#00000033",
+            }}
             visible={timerInEditor != undefined}
             onShow={async () => {
                 log?.print("onShow")
@@ -183,17 +200,28 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                      */
                     if (res.RES) {
                         try {
+                            log?.print("timers->>>>>>>" + JSON.stringify(res))
                             if (res.RES.ts && device.ts && res.RES.ts >= device.ts)// => if we have both local and cloud timestamp then compare and  update the latest timerStates in timers object 
                             {
-                                let timersObj = UNIVERSALS.GLOBALS.convertTimersStringToObj({ timersString: res.RES.timers })
-                                if (timersObj)
+                                log?.print("timers----------" + JSON.stringify(res))
+                                let timersObj = UNIVERSALS.GLOBALS.convertTimersStringToObj({ timersString: res.RES.timers, log: log ? new logger("convert_timerString_toObject", log) : undefined })
+                                log?.print("timersObj -- " + JSON.stringify(timersObj))
+                                if (timersObj) {
+                                    log?.print("setting timer 1")
                                     setTimers(timersObj)
-                                else
+                                }
+                                else {
+                                    log?.print("setting error 1")
                                     setTimers("error")
+                                }
                             }
-                            else setTimers(device.timers)
+                            else {
+                                log?.print("setting timers 2S")
+                                setTimers(device.timers)
+                            }
+                            log?.print("--------------------")
                         } catch (error) {
-                            log?.print(error)
+                            log?.print("timers->>>>>>><<<<<<<" + JSON.stringify(error))
                             setTimers("error")
                         }
                     }
@@ -206,108 +234,68 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                     }
                 }
             }} >
-            <View /* Sec3: modal container */
-                style={{
-                    flex: 1,
-                    //backgroundColor: "red",
-                    justifyContent: "center",
-                    alignItems: "center"
-                }}>
-                <View /* Sec3: modal inner container */
-                    style={[{
-                        width: "85%",
-                        backgroundColor: "white",
-                        borderRadius: 20
-                    }, STYLES.shadow]}>
-                    <View /* Sec4:  header */
-                        style={{
-                            backgroundColor: "#F39C12",
-                            //borderRadius: 20,
-                            //margin: 5,
-                            //height: 100,
-                            width: "100%",
-                            justifyContent: "flex-end",
-                            paddingLeft: 10
-                        }}>
-                        <MaterialCommunityIcons
-                            style={{
-                                marginTop: 15
-                            }}
-                            name="toggle-switch-off"
-                            size={20} color="white" />
-                        <Text style={[STYLES.H7, {
-                            margin: 0,
-                            padding: 0,
-                            color: "white"
-                        }]}>TURN OFF</Text>
-                        <View style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center"
-                        }}>
-                            <Text style={[
-                                STYLES.H1
-                                , {
-                                    color: "white",
-                                    marginBottom: 0,
-                                    marginLeft: 0
-                                }]}>{hrs[hrIndex]._data + " : " + mins[minIndex]._data + " " + daytimeSelectorData[dtIndex]._data}</Text>
-                            <Feather name="sun" size={15} color="white" />
-                        </View>
-                    </View>
-                    {/* Sec4: middle container */
-                        (timers == "error") ? <View style={_styles.middleContainerCommonView}><Text>error loading</Text></View>
-                            : (timers == undefined) ? (<View
-                                style={_styles.middleContainerCommonView}>
-                                <Text>LOADING... please wait</Text>
-                            </View>)
-                                : ((timers && timers?.length < 5) || (timers && timerInEditor?.id)) ? (<View /* Sec5: middle container */
-                                    style={{
-                                        width: "100%"
-                                    }}>
-                                    <View /* Sec5: Event repeatition selector */>
-                                        <Text style={[STYLES.H7, { color: "#F39C12", marginTop: 10 }]}>EVENT TYPE</Text>
-                                        <View
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row"
-                                            }}>
-                                            <NewRectButtonWithChildren
-                                                useReanimated={false}
-                                                onPress={() => {
-                                                    setEtIndex(UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON)
-                                                }}
-                                                style={{
-                                                    height: 50,
-                                                    flex: 1,
-                                                    backgroundColor: etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON ? "#aaa" : "#eee",
-                                                    marginHorizontal: 10,
-                                                    marginVertical: 5,
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
-                                                }}>
-                                                <Text>TURN ON</Text>
-                                            </NewRectButtonWithChildren>
-                                            <NewRectButtonWithChildren
-                                                useReanimated={false}
-                                                onPress={() => {
+            <View /* Sec3: Dialog container */
+                style={[{
+                    width: "85%",
+                    backgroundColor: "white",
+                    padding: 10
+                    //borderRadius: 20
+                }, STYLES.shadow]}>
+
+
+                {/* Sec4: middle container */
+                    (timers == "error")
+                        ? <View style={_styles.middleContainerCommonView}><Text>error loading</Text></View>
+                        : (timers == undefined) ? (<View
+                            style={_styles.middleContainerCommonView}>
+                            <Text>LOADING... please wait</Text>
+                        </View>)
+                            : ((timers && timers?.length < 5) || (timers && timerInEditor?.id))
+                                ? (<View /* Sec5: middle container */>
+
+                                    <View /* Sec6: Event type selector */
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            justifyContent: "space-between",
+                                            alignItems: "center"
+                                        }}>
+
+                                        <Text style={[STYLES.H3, { color: STYLES.textColors.secondary }]}>{"Lights " + (etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON ? "On" : "Off")}</Text>
+                                        <NewRectButtonWithChildren
+                                            onPress={() => {
+                                                if (etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON)
                                                     setEtIndex(UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.OFF)
-                                                }}
+                                                else
+                                                    setEtIndex(UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON)
+                                            }}
+                                            innerCompStyle={{
+                                                alignItems: etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON ? "flex-start" : "flex-end",
+                                                display: "flex",
+                                            }}
+                                            style={[STYLES.shadow, {
+                                                height: 30,
+                                                width: 60,
+                                                backgroundColor: "#eee",
+                                                borderRadius: 50,
+                                                overflow: "hidden",
+                                                margin: 2,
+                                            }]} /**toggle container */>
+                                            <View /* toggle inner DOT*/
                                                 style={{
-                                                    height: 50,
-                                                    flex: 1,
-                                                    backgroundColor: etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.OFF ? "#aaa" : "#eee",
-                                                    marginHorizontal: 10,
-                                                    marginVertical: 5,
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
-                                                }}>
-                                                <Text>TURN OFF</Text>
-                                            </NewRectButtonWithChildren>
-                                        </View>
+                                                    width: 30,
+                                                    height: 30,
+                                                    borderRadius: 50,
+                                                    backgroundColor: etIndex == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON ? STYLES.textColors.success : STYLES.textColors.warning
+                                                }} />
+                                        </NewRectButtonWithChildren>
+
+
                                     </View>
-                                    <View /* Sec5: Event repeatition selector */>
-                                        <Text style={[STYLES.H7, { color: "#F39C12", marginTop: 10 }]}>REPEAT EVENT</Text>
+
+
+                                    <View /* Sec6: Event repeatition selector */>
+                                        <Text style={[STYLES.H7, { color: STYLES.textColors.secondary, marginVertical: 10 }]}>REPEAT EVENT</Text>
                                         <View /* Sec6: Days selectors buttons */
                                             style={{
                                                 display: "flex",
@@ -330,21 +318,16 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderWidth: 0.5,
-                                                    borderColor: "#F39C12"
+                                                    borderColor: isOnce() ? "#F39C12" : "grey"
                                                 }, STYLES.shadow]} >
                                                 <Text style={{
-                                                    color: "#F39C12",
+                                                    color: isOnce() ? "#F39C12" : "grey",
                                                     fontSize: 10,
-                                                    fontWeight: (() => {
-                                                        let once = true
-                                                        days.forEach(item => {
-                                                            if (item)
-                                                                once = false
-                                                        });
-                                                        return once
-                                                    })() ? "bold" : "400"
+                                                    fontWeight: "bold"
                                                 }}>ONCE</Text>
                                             </NewRectButtonWithChildren>
+
+
                                             <NewRectButtonWithChildren /* Sec7: Daily button for days selector */
                                                 useReanimated={false}
                                                 onPress={() => {
@@ -361,21 +344,16 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderWidth: 0.5,
-                                                    borderColor: "#F39C12"
+                                                    borderColor: isDaily() ? "#F39C12" : "grey"
                                                 }, STYLES.shadow]} >
                                                 <Text style={{
-                                                    color: "#F39C12",
+                                                    color: isDaily() ? "#F39C12" : "grey",
                                                     fontSize: 10,
-                                                    fontWeight: (() => {/* check if its set for daily */
-                                                        let daily = true
-                                                        days.forEach(element => {
-                                                            if (!element)
-                                                                daily = false
-                                                        })
-                                                        return daily
-                                                    })() ? "bold" : "400"
+                                                    fontWeight: "bold"
                                                 }}>DAILY</Text>
                                             </NewRectButtonWithChildren>
+
+
                                             <NewRectButtonWithChildren /* Sec7: Weekly button for days selector  */
                                                 useReanimated={false}
                                                 onPress={() => {
@@ -392,29 +370,12 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderWidth: 0.5,
-                                                    borderColor: "#F39C12"
+                                                    borderColor: !isDaily() && !isOnce() ? "#F39C12" : "grey"
                                                 }, STYLES.shadow]} >
                                                 <Text style={{
-                                                    color: "#F39C12",
+                                                    color: !isDaily() && !isOnce() ? "#F39C12" : "grey",
                                                     fontSize: 10,
-                                                    fontWeight: (
-                                                        !(() => {/* check if its set for daily */
-                                                            let daily = true
-                                                            days.forEach(element => {
-                                                                if (!element)
-                                                                    daily = false
-                                                            })
-                                                            return daily
-                                                        })()
-                                                        &&
-                                                        !(() => {
-                                                            let once = true
-                                                            days.forEach(item => {
-                                                                if (item)
-                                                                    once = false
-                                                            });
-                                                            return once
-                                                        })()) ? "bold" : "400"
+                                                    fontWeight: "bold"
                                                 }}>WEEKLY</Text>
                                             </NewRectButtonWithChildren>
                                         </View>
@@ -469,8 +430,10 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                                                 })}
                                             </View>}
                                     </View>
-                                    <Text style={[STYLES.H4, { color: "#F39C12", marginTop: 10 }]}>PICK TIME</Text>
-                                    <View /* Sec5: time selector */
+
+
+                                    <Text style={[STYLES.H6, { color: STYLES.textColors.secondary, marginVertical: 10 }]}>PICK TIME</Text>
+                                    <View /* Sec6: time selector */
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -503,86 +466,90 @@ export const NewTimerDialog = ({ device, timerInEditor, setTimerInEditor, log }:
                                         />
                                     </View>
                                 </View>)
-                                    : (timers && timers.length >= 5) ? (<View /* Sec5: max timer limit */
+                                : (timers && timers.length >= 5)
+                                    ? (<View /* Sec5: max timer limit */
                                         style={_styles.middleContainerCommonView}>
                                         <Text>max number of timer, either delete any or edit one</Text>
                                     </View>)
-                                        : (<View><Text>unknown error occured</Text></View>)
-                    }
+                                    : (<View><Text>unknown error occured</Text></View>)
+                }
 
-                    <View /* Sec4: modal button container */
-                        style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            marginBottom: 10
-                        }}>
-                        <View /* Sec5: save/update button */
-                            style={{ flex: 1, paddingHorizontal: 5 }}>
-                            <NewRectButtonWithChildren /* Sec5: add/update dialog button */
-                                onPress={() => {
-                                    if (timers && timers != "error") {
-                                        let newTimer: UNIVERSALS.GLOBALS.TIMER_t = {
-                                            id: timerInEditor?.id ? timerInEditor.id : generate_UUID_10_withVenderPrefix(),
-                                            DAYS: days,
-                                            H: hrs[hrIndex].val,
-                                            M: mins[minIndex].val,
-                                            ET: etIndex,
-                                            DT: dtIndex,
-                                            STATUS: (() => {
-                                                let once = true
-                                                days.forEach(element => {
-                                                    if (element)
-                                                        once = false
-                                                });
-                                                return once
-                                            })() ? UNIVERSALS.GLOBALS.TIMER_STATUS_e.ONCE : UNIVERSALS.GLOBALS.TIMER_STATUS_e.REPEAT
-                                        }
-                                        log?.print("new timer is " + JSON.stringify(newTimer))
-                                        log?.print("previous timer string is " + JSON.stringify(timers, null, 2))
-                                        let timerFound = false
-                                        let newTimersObj = timers.map((timer, index) => {
-                                            if (timer?.id && timer.id == timerInEditor?.id) {
-                                                timerFound = true
-                                                return newTimer
-                                            }
-                                            return { ...timer, DAYS: days }
-                                        })
-                                        if (!timerFound && newTimersObj.length < 5)
-                                            newTimersObj.push(newTimer)
-                                        log?.print("new timer string is " + UNIVERSALS.GLOBALS.converLocalTimerObjectToBackendString({ timers: newTimersObj }))
-                                        if (device) {
-                                            appOperator.device({
-                                                cmd: "ADD_UPDATE_DEVICES",
-                                                newDevices: [{ ...device, timers: newTimersObj, localTimeStamp: getCurrentTimeStampInSeconds() }],
-                                                log
-                                            })
-                                            setTimerInEditor(undefined)
-                                        }
+                <View /* Sec4: modal button container */
+                    style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 10
+                    }}>
+
+                    <View /* Sec5: save/update button */
+                        style={{ flex: 1, paddingHorizontal: 5 }}>
+                        <NewRectButtonWithChildren /* Sec5: add/update dialog button */
+                            onPress={() => {
+                                if (timers && timers != "error") {
+                                    let newTimer: UNIVERSALS.GLOBALS.TIMER_t = {
+                                        id: timerInEditor?.id ? timerInEditor.id : generate_UUID_10_withVenderPrefix(),
+                                        DAYS: days,
+                                        H: hrs[hrIndex].val,
+                                        M: mins[minIndex].val,
+                                        ET: etIndex,
+                                        DT: dtIndex,
+                                        STATUS: (() => {
+                                            let once = true
+                                            days.forEach(element => {
+                                                if (element)
+                                                    once = false
+                                            });
+                                            return once
+                                        })() ? UNIVERSALS.GLOBALS.TIMER_STATUS_e.ONCE : UNIVERSALS.GLOBALS.TIMER_STATUS_e.REPEAT
                                     }
-                                    // - [x] print incoming timer
-                                    // - [ ] process the timer addition/update here
-                                    // - [ ] update local state with local timetamp of device
-                                    // - [ ] update the new device tate to cloud
-                                    // - [ ] disable update button unless we have timers and not as 'error'
-                                }}
-                                useReanimated={false}
-                                style={{ backgroundColor: "green" }}>
-                                <Text>{timerInEditor?.id ? "UPDATE" : "ADD"}</Text>
-                            </NewRectButtonWithChildren>
-                        </View>
-                        <View /* Sec5: close dialog button */
-                            style={{ flex: 1, paddingHorizontal: 5 }}>
-                            <NewRectButtonWithChildren
-                                onPress={() => {
-                                    resetDialog()
-                                }}
-                                useReanimated={false}
-                                style={{ backgroundColor: "red" }}>
-                                <Text>MAYBE LATER</Text>
-                            </NewRectButtonWithChildren>
-                        </View>
+                                    log?.print("new timer is " + JSON.stringify(newTimer))
+                                    log?.print("previous timer string is " + JSON.stringify(timers, null, 2))
+                                    let timerFound = false
+                                    let newTimersObj = timers.map((timer, index) => {
+                                        if (timer?.id && timer.id == timerInEditor?.id) {
+                                            timerFound = true
+                                            return newTimer
+                                        }
+                                        return { ...timer, DAYS: days }
+                                    })
+                                    if (!timerFound && newTimersObj.length < 5)
+                                        newTimersObj.push(newTimer)
+                                    log?.print("new timer string is " + UNIVERSALS.GLOBALS.converLocalTimerObjectToBackendString({ timers: newTimersObj }))
+                                    if (device) {
+                                        appOperator.device({
+                                            cmd: "ADD_UPDATE_DEVICES",
+                                            newDevices: [{ ...device, timers: newTimersObj, localTimeStamp: getCurrentTimeStampInSeconds() }],
+                                            log
+                                        })
+                                        setTimerInEditor(undefined)
+                                    }
+                                }
+                                // - [x] print incoming timer
+                                // - [ ] process the timer addition/update here
+                                // - [ ] update local state with local timetamp of device
+                                // - [ ] update the new device tate to cloud
+                                // - [ ] disable update button unless we have timers and not as 'error'
+                            }}
+                            useReanimated={false}
+                            style={{ backgroundColor: STYLES.textColors.success }}>
+                            <Text style={[STYLES.H7, { color: "white" }]}>{timerInEditor?.id ? "UPDATE" : "ADD"}</Text>
+                        </NewRectButtonWithChildren>
                     </View>
+
+                    <View /* Sec5: close dialog button */
+                        style={{ flex: 1, paddingHorizontal: 5 }}>
+                        <NewRectButtonWithChildren
+                            onPress={() => {
+                                resetDialog()
+                            }}
+                            useReanimated={false}
+                            style={{ backgroundColor: STYLES.textColors.warning }}>
+                            <Text style={[STYLES.H7, { color: "white" }]}>CANCEL</Text>
+                        </NewRectButtonWithChildren>
+                    </View>
+
                 </View>
+
             </View>
         </Modal>
 

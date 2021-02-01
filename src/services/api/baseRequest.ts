@@ -56,8 +56,8 @@ export const defaultRequest = <res, err, resolveReturn_t>({
         headers: props.headers,
         params: props.params,
         timeout: props?.config?.timeout ? props.config.timeout : 5000,
-    }).then(({ data }) => {
-        if (data) {
+    }).then(({ data, status }) => {
+        if (data || status == 200) {
             log?.print("[][] response data : " + JSON.stringify(data, null, 2))
             return resolve(resolveData({ RES: data }))
         }

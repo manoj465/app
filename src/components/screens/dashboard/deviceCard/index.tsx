@@ -50,7 +50,7 @@ export const DeviceCard = ({
 
   return (
     <TouchableOpacity
-      style={[styles.container, { height: deviceCardHeight }]}
+      style={[styles.container, { /* height: deviceCardHeight */ }]}
       activeOpacity={0.9}
       onPress={() => {
         if (device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_OW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_CW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_WW")) {
@@ -66,13 +66,12 @@ export const DeviceCard = ({
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{
-          height: "100%",
           width: "100%",
-        }}
-      >
+        }} >
+
         <Image /**background image */
           style={{
-            opacity: 0.3,
+            opacity: 0.35,
             position: "absolute",
             top: 0,
             left: 0,
@@ -80,18 +79,17 @@ export const DeviceCard = ({
             width: "100%",
             height: "100%",
           }}
-          source={require("../../../../../assets/images/background.jpg")}
-        />
-        {/* /// deviceCard Top section <deviceIcon | deviceName | menuIcon > */}
-        <View
+          source={require("../../../../../assets/images/dashboard/dashboardCardBg/vector_1.jpg")} />
+
+
+        <View /* /// deviceCard Top section <deviceIcon | deviceName | menuIcon > */
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
           }}
         >
-          {/* /// menuDots */}
-          < TouchableOpacity
+          < TouchableOpacity /* /// menuDots */
             style={{
               zIndex: 10,
               position: "absolute",
@@ -131,7 +129,7 @@ export const DeviceCard = ({
             <Entypo name="dots-three-vertical" size={20} color="white" />
           </ TouchableOpacity >
 
-          <NewRectButtonWithChildren
+          <NewRectButtonWithChildren /** device icon - turn on/off button */
             style={{
               //backgroundColor: "red",
               height: 60,
@@ -153,20 +151,23 @@ export const DeviceCard = ({
             }}>
             <MaterialCommunityIcons name={device.hsv.v ? "lightbulb-on-outline" : "lightbulb-off"} size={24} color="black" />
           </NewRectButtonWithChildren>
-          <Text style={[styles.deviceName, { color: "#fff" }]}>
+
+          <Text  /**device name */
+            style={[styles.deviceName, { color: "#fff" }]}>
             {device.deviceName ? device.deviceName : "unknown_device"}
           </Text>
 
         </View>
-        {/* ///brightness container <percentageText &  brightnessBar> */}
-        <View style={styles.brightnessSliderContainer}>
-          {/*  <ReText style={styles.brightnessNumber} text={concat( BR )}/> */}
+
+
+        <View style={styles.brightnessSliderContainer} /* ///brightness container  */>
           <BrightnessSliderNew
             initBrValue={device.hsv ? device.hsv.v : 50}
             deviceMac={[device.Mac]}
             log={log}
           />
         </View>
+
       </LinearGradient>
     </TouchableOpacity>
   );
@@ -196,8 +197,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingHorizontal: "5%",
-    position: "relative",
-    top: -20,
+    marginBottom: 10
     //backgroundColor: "green",
   },
   deviceName: {

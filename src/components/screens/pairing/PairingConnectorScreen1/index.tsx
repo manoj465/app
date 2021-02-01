@@ -13,6 +13,7 @@ import { logFun, logger } from "../../../../util/logger";
 import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
 import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
+import STYLES from "../../../../styles"
 
 
 
@@ -154,7 +155,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
               paddingHorizontal: 30,
             }}
           >
-            Conect to HUElite Device to proceed
+            Conect to your Device to proceed
           </Text>
           <Text
             style={{
@@ -165,13 +166,13 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
               fontSize: 12,
             }}
           >
-            To proceed with pairing you must connect your phone to HUElite
-            Device WiFi network. Go-to your
+            To proceed with pairing go-to your
             phone Wi-Fi Settings and connect to Wi-Fi naming{" "}
-            <Text style={{ fontWeight: "bold" }}>HUE_XXXX_XX:XX</Text>
+            <Text style={{ fontWeight: "bold" }}>BDE_XXXX_XX:XX</Text>
             {" "}with password{" "}
             <Text style={{ fontWeight: "bold" }}>12345678</Text>
           </Text>
+          <Text style={{ textAlign: "center", fontSize: 12 }}><Text style={{ color: STYLES.textColors.warning, fontWeight: "bold" }}>TIP:</Text>{" "}turn off your mobile data</Text>
         </View>
         {/* ///goBACK button */}
         <View

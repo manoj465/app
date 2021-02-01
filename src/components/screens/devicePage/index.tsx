@@ -4,7 +4,7 @@ import React from "react";
 import UNIVERSALS from "../../../@universals";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { DeviceColorPickerScreen } from "./devicePageNavigator/colorPickerScreen";
-import { DeviceModesScreen } from "./devicePageNavigator/modesScreen";
+import { DeviceModesScreen } from "./devicePageNavigator/timerScreen";
 import { DeviceSettingScreen } from "./devicePageNavigator/settingScreen";
 
 export type devicePageStackParamList = {

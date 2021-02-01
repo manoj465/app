@@ -3,19 +3,32 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import UNIVERSALS from "../../../@universals";
 import { logger } from "../../../util/logger";
 import BrightnessSlider from "../../common/BrightnessSlider_optmizedForWeb";
+import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { appOperator } from "../../../util/app.operator";
+import { State } from "react-native-gesture-handler";
+import { useSelector } from "react-redux";
+import { appState } from "../../../redux";
+import STYLES from "../../../styles"
+import Animated from "react-native-reanimated";
 
 interface Props {
   navigation: navigation_t;
   device: UNIVERSALS.GLOBALS.DEVICE_t;
   log?: logger
+  headBackgroundColor: Animated.Node<number>
 }
 
-export const DevicePageHeader = ({ navigation, device, log }: Props) => {
-  const [brVal, setBrVal] = useState(device.hsv.v);
+export const DevicePageHeader = ({ navigation, device: _device, headBackgroundColor, log }: Props) => {
+  let device: UNIVERSALS.GLOBALS.DEVICE_t | undefined = useSelector((state: appState) => state.deviceReducer.deviceList.find(item => item.Mac == _device.Mac))
+  if (!device)
+    device = _device
 
   return (
-    <View style={styles.container}>
+    <Animated.View
+      //@ts-ignore
+      style={[styles.container, { backgroundColor: headBackgroundColor, elevation: 3 }]}>
       <Image
         style={{
           height: "100%",
@@ -32,27 +45,34 @@ export const DevicePageHeader = ({ navigation, device, log }: Props) => {
           style={{
             display: "flex",
             flexDirection: "row",
-          }}
-        >
-          <View
+            justifyContent: "flex-start",
+            alignItems: "center"
+          }}>
+          <NewRectButtonWithChildren
+            onPress={() => {
+              appOperator.device({
+                cmd: "COLOR_UPDATE",
+                deviceMac: [device.Mac],
+                hsv: { v: device.hsv.v ? 0 : 80 },
+                gestureState: State.END,
+                log
+              })
+            }}
             style={{
-              width: 70,
-              height: 70,
+              width: 60,
+              height: 60,
               backgroundColor: "#fff",
               borderRadius: 50,
-            }}
-          ></View>
-          <View
-            style={{
-              flex: 1,
-              //backgroundColor: "green",
-              justifyContent: "flex-end",
-            }}
-          >
-            <Text style={styles.deviceName}>
-              {device.deviceName ? device.deviceName : "unnamed"}
-            </Text>
-          </View>
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+            <MaterialCommunityIcons name={device.hsv.v ? "lightbulb-on-outline" : "lightbulb-off"} size={24} color="black" />
+          </NewRectButtonWithChildren>
+
+          <Text style={styles.deviceName}>
+            {device.deviceName ? device.deviceName : "unnamed"}
+          </Text>
         </View>
       </View>
 
@@ -63,16 +83,18 @@ export const DevicePageHeader = ({ navigation, device, log }: Props) => {
           deviceMac={[device.Mac]}
           log={log}
         />
-        {/*   </View> */}
       </View>
-    </View>
+    </Animated.View>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
+    width: "95%",
+    marginVertical: 10,
+    borderRadius: 25
   },
   nameContainer: {
     flex: 1,
@@ -98,8 +120,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 25,
     fontWeight: "bold",
-    marginLeft: 20,
-    marginBottom: 15,
+    marginLeft: 15,
   },
   backButton: {
     width: 60,
