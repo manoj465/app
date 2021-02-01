@@ -1,6 +1,6 @@
 import { _reduxConstant } from "../../ReduxConstant";
 import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
-import { logger } from "../../../util/logger";
+import { logger } from "../../../@logger";
 import UNIVERSALS from "../../../@universals";
 import { getData, storeData } from "../../../services/db/storage";
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FlatList, Image, Text, View } from "react-native";
 import UNIVERSALS from "../../../@universals";
-import API from "../../../services/api";
+import API from "../../../@api";
 import styles from "../../../styles";
 import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";
 

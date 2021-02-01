@@ -1,10 +1,10 @@
-import UNIVERSALS from "../../@universals";
-import reduxStore from "../../redux";
-import API from "../../services/api";
-import { logger } from "../logger";
+import UNIVERSALS from "../@universals";
+import reduxStore from "../redux";
+import API from "../@api";
+import { logger } from "../@logger";
 import deviceOperator from "./device.operator"
 import * as Facebook from 'expo-facebook';
-import Alert from "../../components/common/Alert"
+import Alert from "../components/common/Alert"
 
 
 /*

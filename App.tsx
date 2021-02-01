@@ -15,7 +15,7 @@ import Application from "./src/Application";
 import reduxStore from "./src/redux";
 import BGService from "./src/services/backGroundServices";
 import { getData, storeData } from "./src/services/db/storage";
-import { logger } from "./src/util/logger";
+import { logger } from "./src/@logger";
 
 //LogBox.ignoreAllLogs(true)
 

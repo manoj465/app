@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import UNIVERSALS from "../../@universals";
-import { logger } from "../../util/logger";
-import api from "../api";
+import { logger } from "../../@logger";
+import api from "../../@api";
 import { deviceSocketHBResponse, getWebSocket } from "../backGroundServices/webSocket";
 
 export enum pairing_state_e {

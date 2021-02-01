@@ -6,8 +6,8 @@ import { Image, StyleProp, Text, TextInput, View, ViewStyle } from "react-native
 import { useSelector } from "react-redux";
 import { appState } from "../../../redux";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import { appOperator } from "../../../util/app.operator";
-import { logger } from "../../../util/logger";
+import { appOperator } from "../../../@operator";
+import { logger } from "../../../@logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
 import styles from "../../../styles";

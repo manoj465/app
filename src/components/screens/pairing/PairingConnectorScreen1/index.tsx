@@ -8,8 +8,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch } from "react-redux";
 import LottieView from "lottie-react-native";
 //native imports
-import api from "../../../../services/api";
-import { logFun, logger } from "../../../../util/logger";
+import api from "../../../../@api";
+import { logFun, logger } from "../../../../@logger";
 import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
 import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";

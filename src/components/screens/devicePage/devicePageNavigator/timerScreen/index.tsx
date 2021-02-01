@@ -5,7 +5,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
-import { logger } from "../../../../../util/logger";
+import { logger } from "../../../../../@logger";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import { Modes } from "../../../../common/Modes";
 import { Timer } from "../../../../common/Timer";

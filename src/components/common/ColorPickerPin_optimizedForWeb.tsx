@@ -4,10 +4,10 @@ import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, cond, divide, eq, event, modulo, pow, set, useCode } from "react-native-reanimated";
 import { canvas2Polar, clamp, polar2Canvas, translate, useValue, vec } from "react-native-redash";
 import UNIVERSALS from "../../@universals";
-import { appOperator } from "../../util/app.operator";
+import { appOperator } from "../../@operator";
 //import { Path } from "react-native-svg";
 import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
-import { logger } from "../../util/logger";
+import { logger } from "../../@logger";
 
 //const AnimatedPath = Animated.createAnimatedComponent(Path); 
 const quadraticIn = (t: any) => pow(t, 2);

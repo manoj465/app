@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { logger } from "../../util/logger";
-import api from "../api";
+import { logger } from "../../@logger";
+import api from "../../@api";
 
 interface userScanApiHelper_props {
   timeout?: number

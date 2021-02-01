@@ -1,5 +1,5 @@
 import { DEVICE_t, Device_t } from "../globalTypes"
-import { logger } from "../../../util/logger"
+import { logger } from "../../../@logger"
 import { convertTimersStringToObj, converLocalTimerObjectToBackendString } from "../timer"
 import { getHsvFromString } from "../../helper/color"
 

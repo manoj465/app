@@ -1,5 +1,5 @@
-import UNIVERSALS from "../../@universals";
-import { getSafeDeviceList } from "../deviceListUtil";
+import UNIVERSALS from "../@universals";
+import { getSafeDeviceList } from "../util/deviceListUtil";
 
 /** @deprecated */
 export type logFun_t = (s: string) => void;

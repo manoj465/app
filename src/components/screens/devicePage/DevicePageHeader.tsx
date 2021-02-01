@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import UNIVERSALS from "../../../@universals";
-import { logger } from "../../../util/logger";
+import { logger } from "../../../@logger";
 import BrightnessSlider from "../../common/BrightnessSlider_optmizedForWeb";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { appOperator } from "../../../util/app.operator";
+import { appOperator } from "../../../@operator";
 import { State } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { appState } from "../../../redux";
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export const DevicePageHeader = ({ navigation, device: _device, headBackgroundColor, log }: Props) => {
-  let device: UNIVERSALS.GLOBALS.DEVICE_t | undefined = useSelector((state: appState) => state.deviceReducer.deviceList.find(item => item.Mac == _device.Mac))
+  let device = useSelector<appState, UNIVERSALS.GLOBALS.DEVICE_t | undefined>(state => state.deviceReducer.deviceList.find(item => item.Mac == _device.Mac))
   if (!device)
     device = _device
 
@@ -52,8 +52,8 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
             onPress={() => {
               appOperator.device({
                 cmd: "COLOR_UPDATE",
-                deviceMac: [device.Mac],
-                hsv: { v: device.hsv.v ? 0 : 80 },
+                //@ts-ignore
+                deviceMac: [device.Mac], hsv: { v: device.hsv.v ? 0 : 80 },
                 gestureState: State.END,
                 log
               })

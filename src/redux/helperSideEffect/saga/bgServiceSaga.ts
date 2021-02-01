@@ -1,11 +1,11 @@
 import { select } from "redux-saga/effects";
 import reduxStore from "../..";
 import UNIVERSALS from "../../../@universals";
-import api from "../../../services/api";
+import api from "../../../@api";
 import { deviceSocketHBResponse, getWebSocket } from "../../../services/backGroundServices/webSocket";
-import { appOperator } from "../../../util/app.operator";
+import { appOperator } from "../../../@operator";
 import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
-import { logger } from "../../../util/logger";
+import { logger } from "../../../@logger";
 import { _deviceSaga_action } from "../../deviceListReducer/saga/deviceList";
 import { _reduxConstant } from "../../ReduxConstant";
 import { _appState } from "../../rootReducer";

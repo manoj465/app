@@ -14,7 +14,7 @@ import Animated from "react-native-reanimated";
 import ColorPickerPin from "./ColorPickerPin_optimizedForWeb";
 //import Svg, { Circle } from "react-native-svg";
 import { deviceType } from "../../util/dummyData/DummyData.jsx";
-import { logger } from "../../util/logger";
+import { logger } from "../../@logger";
 import UNIVERSALS from "../../@universals";
 
 const styles = StyleSheet.create({

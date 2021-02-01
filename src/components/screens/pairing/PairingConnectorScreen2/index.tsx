@@ -10,9 +10,9 @@ import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
 import reduxStore from "../../../../redux";
 import useScanApiHook from "../../../../services/webApi/webHooks";
-import { appOperator } from "../../../../util/app.operator";
+import { appOperator } from "../../../../@operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
-import { logger } from "../../../../util/logger";
+import { logger } from "../../../../@logger";
 import Alert from "../../../common/Alert"
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 

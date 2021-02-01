@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Image, Text, View, Modal } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { getWebSocket } from "../../../services/backGroundServices/webSocket";
-import { logger } from "../../../util/logger";
+import { logger } from "../../../@logger";
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
 import styles from "../../../styles";
 

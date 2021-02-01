@@ -7,12 +7,12 @@ import Animated, { add, max, min } from "react-native-reanimated";
 import { hsv2color, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { devicePageStackParamList } from "../..";
-import { logger } from "../../../../../util/logger";
+import { logger } from "../../../../../@logger";
 import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../../styles";
 import { DevicePageHeader } from "../../DevicePageHeader";
 import { ColorPickerSection } from "./colorPickerSection";
-import { appOperator } from "../../../../../util/app.operator";
+import { appOperator } from "../../../../../@operator";
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Modes } from "../../../../common/Modes";
 

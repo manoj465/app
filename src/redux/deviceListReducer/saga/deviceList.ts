@@ -5,7 +5,7 @@ import { _getWorker } from '../../sagas/sagaBaseWorkers'
 import { _reduxConstant } from "../../ReduxConstant";
 import { _actions as _deviceListReduxAction } from "../reducer"
 import { _appState } from "../../rootReducer";
-import { logger } from "../../../util/logger";
+import { logger } from "../../../@logger";
 import UNIVERSALS from "../../../@universals";
 
 

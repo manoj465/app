@@ -5,7 +5,7 @@ import Animated from "react-native-reanimated";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import ColorPicker from "../../../../common/ColorPicker";
 import { navigation_t, viewTypeEnum } from ".";
-import { logger } from "../../../../../util/logger";
+import { logger } from "../../../../../@logger";
 import UNIVERSALS from "../../../../../@universals";
 
 interface Props {
