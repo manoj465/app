@@ -1,3 +1,3 @@
-import * as types from "./globalTypes"
+import * as UNIVERSALS from "./combineExport"
 
-export default types
+export default UNIVERSALS
