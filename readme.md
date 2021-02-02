@@ -17,6 +17,7 @@ API class provides convineant and easy way to call API and than check for baseEr
 #### @dependencies
 
 - [x] axios
+- [ ] logger
 - [ ] appolo client
 
 #### Working
@@ -33,15 +34,15 @@ provides a wrapper around axios and base error filtering machanism
   - [x] scanAPI
   - [x] statusAPI
   - [x] pairAPI
-  - [ ] saveConfigAPI - optional restart param
-  - [ ] modesAPI
+  - [x] saveConfigAPI - optional restart param
+  - [x] modesAPI
   - [ ] setTimerAPI
   - [ ] modifyTimerAPI
 - #### `cloudAPI` - for interacting with HUElite backend
 
   - [x] loginAPI
   - [ ] fbLoginAPI
-  - [ ] signupAPI
+  - [x] signupAPI
   - ###### `user`
     - [x] create
     - [ ] modify
