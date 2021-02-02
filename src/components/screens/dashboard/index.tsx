@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { _appState } from "../../../redux/rootReducer";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import STYLES from "../../../styles";
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { logger } from "../../../@logger";
 import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import useDeleteDeviceModal from "../../common/useDeleteDeviceModal";

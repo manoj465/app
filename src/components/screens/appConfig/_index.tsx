@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, Text, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { logger } from "../../../@logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";

@@ -6,7 +6,7 @@ import BrightnessSlider from "../../common/BrightnessSlider_optmizedForWeb";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { State } from "react-native-gesture-handler";
 import { useSelector } from "react-redux";
 import { appState } from "../../../redux";

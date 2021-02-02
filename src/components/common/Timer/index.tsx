@@ -8,7 +8,7 @@ import UNIVERSALS from "../../../@universals";
 import { appState } from "../../../redux";
 import STYLES from "../../../styles";
 import { appNegativeColor, appPositiveColor } from "../../../theme/colors/highlightColors";
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
 import { logger } from "../../../@logger";
 import { NewRectButtonWithChildren } from "../buttons/RectButtonCustom";

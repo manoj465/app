@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import UNIVERSALS from '../../../../@universals';
-import { appOperator } from '../../../../@operator';
+import { appOperator } from '../../../../app.operator';
 import { logger } from '../../../../@logger';
 import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
 import { navigationProp } from "../index";

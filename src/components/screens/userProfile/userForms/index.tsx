@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Dimensions, Platform, StyleSheet, Text, View } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import reduxStore from '../../../../redux';
-import { appOperator } from '../../../../@operator';
+import { appOperator } from '../../../../app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../../util/DateTimeUtil';
 import { logger } from "../../../../@logger";
 import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';

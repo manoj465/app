@@ -3,7 +3,7 @@ import reduxStore from "../..";
 import UNIVERSALS from "../../../@universals";
 import api from "../../../@api";
 import { deviceSocketHBResponse, getWebSocket } from "../../../services/backGroundServices/webSocket";
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../util/DateTimeUtil";
 import { logger } from "../../../@logger";
 import { _deviceSaga_action } from "../../deviceListReducer/saga/deviceList";

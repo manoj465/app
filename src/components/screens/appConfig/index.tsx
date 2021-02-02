@@ -5,7 +5,7 @@ import React from "react";
 import { Image, StyleProp, Text, TextStyle, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import styles from '../../../styles';
-import { appOperator } from "../../../@operator";
+import { appOperator } from "../../../app.operator";
 import { logger } from "../../../@logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";

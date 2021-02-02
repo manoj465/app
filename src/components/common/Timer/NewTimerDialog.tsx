@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import STYLES from "../../../styles";
 import UNIVERSALS from '../../../@universals';
 import API from '../../../@api';
-import { appOperator } from '../../../@operator';
+import { appOperator } from '../../../app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../util/DateTimeUtil';
 import { logger } from '../../../@logger';
 import { generate_UUID_10_withVenderPrefix } from '../../../util/UUID_utils';

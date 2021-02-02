@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 //native imports
 import { PairingStackParamList } from "..";
 import usePairApiHook, { pairing_state_e } from "../../../../services/webApi/pairAPI_Hook";
-import { appOperator } from "../../../../@operator";
+import { appOperator } from "../../../../app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
 import { logger } from "../../../../@logger";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";

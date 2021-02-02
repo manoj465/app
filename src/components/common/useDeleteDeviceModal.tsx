@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
-import { appOperator } from '../../@operator'
+import { appOperator } from '../../app.operator'
 import { logger } from '../../@logger'
 import Modal from './modal/index'
 

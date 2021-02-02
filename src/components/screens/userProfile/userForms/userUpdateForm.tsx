@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { useSelector } from 'react-redux';
 import UNIVERSALS from '../../../../@universals';
 import { _appState } from '../../../../redux/rootReducer';
-import { appOperator } from '../../../../@operator';
+import { appOperator } from '../../../../app.operator';
 import { logger } from '../../../../@logger';
 import { navigationProp } from "../index"
 import Alert from "../../../common/Alert"

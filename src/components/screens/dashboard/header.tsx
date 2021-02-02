@@ -8,7 +8,7 @@ import Animated from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
 import UNIVERSALS from '../../../@universals';
 import reduxStore, { appState } from '../../../redux';
-import { appOperator } from '../../../@operator';
+import { appOperator } from '../../../app.operator';
 import { getCurrentTimeStampInSeconds } from '../../../util/DateTimeUtil';
 import { logger } from '../../../@logger';
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";

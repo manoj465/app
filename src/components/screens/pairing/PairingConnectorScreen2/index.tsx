@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
 import reduxStore from "../../../../redux";
 import useScanApiHook from "../../../../services/webApi/webHooks";
-import { appOperator } from "../../../../@operator";
+import { appOperator } from "../../../../app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
 import { logger } from "../../../../@logger";
 import Alert from "../../../common/Alert"

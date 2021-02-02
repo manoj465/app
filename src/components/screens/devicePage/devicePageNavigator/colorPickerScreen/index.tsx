@@ -12,7 +12,7 @@ import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButton
 import STYLES from "../../../../../styles";
 import { DevicePageHeader } from "../../DevicePageHeader";
 import { ColorPickerSection } from "./colorPickerSection";
-import { appOperator } from "../../../../../@operator";
+import { appOperator } from "../../../../../app.operator";
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { Modes } from "../../../../common/Modes";
 

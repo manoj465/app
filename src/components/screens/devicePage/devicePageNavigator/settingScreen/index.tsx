@@ -10,7 +10,7 @@ import STYLES from "../../../../../styles"
 import { useSelector } from "react-redux";
 import { _appState } from "../../../../../redux/rootReducer";
 import UNIVERSALS from "../../../../../@universals";
-import { appOperator } from "../../../../../@operator";
+import { appOperator } from "../../../../../app.operator";
 import Alert from "../../../../common/Alert";
 
 type navigation_t = StackNavigationProp<
