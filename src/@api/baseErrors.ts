@@ -1,4 +1,5 @@
 import { logger } from "../@logger"
+import { baseError } from "./v1"
 
 export const errMsgSuffix = "We are constantly working on improvements and bugfixes in our products. You can report the issue on HUElite website for faster moving of things"
 
@@ -14,13 +15,15 @@ export enum axiosBaseErrors_e {
     SAVE_WIFI_CONFIG_API_RESPONSE_COULD_NOT_SAVE = "SAVE_WIFI_CONFIG_API_RESPONSE_COULD_NOT_SAVE",
 }
 
-export interface baseError<ERR_TYPE, ERR_CODE> {
+interface baseError<ERR_TYPE, ERR_CODE> {
     errCode: ERR_CODE
     error?: ERR_TYPE
     errMsg?: string
     status?: number
     data?: any
 }
+
+export { baseError }
 
 const timeoutError: baseError<any, axiosBaseErrors_e> = {
     errCode: axiosBaseErrors_e.TIMEOUT
