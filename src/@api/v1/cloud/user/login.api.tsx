@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import UNIVERSALS from "../../../../@universals"
 import { logger } from "../../../../@logger"
 import { axiosBaseErrors_e, baseError } from "../../../baseErrors"
@@ -106,65 +106,70 @@ enum loginValidationError_e {
     LOGIN_VALIDATION_PASSWORD_REQUIRED = "LOGIN_VALIDATION : PASSWORD REQUIRED",
     LOGIN_VALIDATION_PASSWORD_TOO_SHORT = "LOGIN_VALIDATION : PASSWORD TOO SHORT",
 }
-type Comp_t = (props: { children?: any, style?: StyleProp<ViewStyle> }) => JSX.Element
-type login_t = (props: { email: string, password: string }) => void
-type useLoginHook_t = (
+type useLogin_t = (
     props: {
-        withElement?: boolean,
+        email: string,
+        password: string,
+        onData?: (props: {
+            /** #### request response response */
+            data: any
+        }) => void
         onLoginSuccess?: (props: { user: UNIVERSALS.GLOBALS.USER_t, devices: UNIVERSALS.GLOBALS.DEVICE_t[] }) => void
         onValidateDataFailed?: (props: baseError<any, loginValidationError_e>) => void
         onLoginFailed?: (props: Pick<_loginAPi_returnType, "ERR"> | { ERR?: baseError<any, loginValidationError_e> }) => void
         log?: logger
-    }) => [Comp_t, login_t]
-export const useLoginHook: useLoginHook_t = (props) => {
+    }) => void
 
+/**
+ * 
+ * # useLogin
+ * ```
+ * type useLogin_t = (
+ *  props: {
+ *      email: string,
+ *      password: string,
+ *      onLoginSuccess?: (props: { user: UNIVERSALS.GLOBALS.USER_t, devices: UNIVERSALS.GLOBALS.DEVICE_t[] }) => void
+ *      onValidateDataFailed?: (props: baseError<any, loginValidationError_e>) => void
+ *      onLoginFailed?: (props: Pick<_loginAPi_returnType, "ERR"> | { ERR?: baseError<any, loginValidationError_e> }) => void
+ *      log?: logger
+ *  }) => void
+ * ```
+ * 
+ */
+export const useLogin: useLogin_t = async ({ email, password, ...props }) => {
 
-    return [
-        /* Comp_t*/({ children, style }) => {
-            useEffect(() => {
-                console.log(" use effect useLoginHook")
-                return () => { }
-            }, [])
-
-            return (
-                <View style={style}>{children}</View>
-            )
-        },
-        /* login_t */async ({ email, password }) => {
-            if (!email || !UNIVERSALS.util.ValidateEmail({ email })) {
-                props.log?.print("validation : email: " + email + ", pass: " + password)
-                const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_EMAIL_REQUIRED, errMsg: "Kindly, provide a valid email address" }
-                props.onValidateDataFailed ? props.onValidateDataFailed(tempError) : {}
-                props.onLoginFailed ? props.onLoginFailed({ ERR: tempError }) : {}
-                return
-            } if (password && password.length < 8) {
-                props.log?.print("validation => username: " + email + ", pass: " + password)
-                const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_PASSWORD_REQUIRED, errMsg: "Kindly, provide a valid password" }
-                props.onValidateDataFailed ? props.onValidateDataFailed(tempError) : {}
-                props.onLoginFailed ? props.onLoginFailed({ ERR: tempError }) : {}
-                return
-            }
-
-            const res = await v1({
-                email,
-                password,
-                //log: log ? new logger("login API", log) : undefined
-            })
-            if (res.RES?.id) {
-                props.log?.print("user found >>>> " + JSON.stringify(res.RES, null, 2))
-                props.log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
-                props.log?.print("device converted to local" + JSON.stringify(UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices ? res.RES.devices : [] }), null, 2))
-                props.onLoginSuccess ? props.onLoginSuccess({
-                    user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES }),
-                    devices: UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices })
-                }) : {}
-                return
-            }
-            else {
-                props.log?.print("ERR no user found >>>>-- " + JSON.stringify(res, null, 2))
-                props.onLoginFailed ? props.onLoginFailed(res) : {}
-            }
-        }
-    ]
-
+    if (!email || !UNIVERSALS.util.ValidateEmail({ email })) {
+        props.log?.print("validation : email: " + email + ", pass: " + password)
+        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_EMAIL_REQUIRED, errMsg: "Kindly, provide a valid email address" }
+        props.onValidateDataFailed ? props.onValidateDataFailed(tempError) : {}
+        props.onLoginFailed ? props.onLoginFailed({ ERR: tempError }) : {}
+        return
+    } if (password && password.length < 8) {
+        props.log?.print("validation => username: " + email + ", pass: " + password)
+        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_PASSWORD_REQUIRED, errMsg: "Kindly, provide a valid password" }
+        props.onValidateDataFailed ? props.onValidateDataFailed(tempError) : {}
+        props.onLoginFailed ? props.onLoginFailed({ ERR: tempError }) : {}
+        return
+    }
+    const res = await v1({
+        email,
+        password,
+        //log: log ? new logger("login API", log) : undefined
+    })
+    if (res.RES?.id) {
+        props.log?.print("user found >>>> " + JSON.stringify(res.RES, null, 2))
+        props.log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
+        const __t1_user = UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })
+        const __t1_devices = UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices })
+        props.log?.print("device converted to local" + JSON.stringify(__t1_devices, null, 2))
+        props.onLoginSuccess ? props.onLoginSuccess({
+            user: __t1_user,
+            devices: __t1_devices
+        }) : {}
+        return
+    }
+    else {
+        props.log?.print("ERR no user found >>>>-- " + JSON.stringify(res, null, 2))
+        props.onLoginFailed ? props.onLoginFailed(res) : {}
+    }
 }
