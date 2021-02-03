@@ -27,10 +27,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icons/icon-no-bg-otaTest.png",
+        "foregroundImage": "./assets/icons/icon-no-bg.png",
         "backgroundColor": "#FFFFFF"
       },
-      "icon": "./assets/icons/icon-no-bg-otaTest.png",
+      "icon": "./assets/icons/icon-no-bg.png",
       "versionCode": 1,
       "package": "com.sternet.huelite"
     },
@@ -51,7 +51,6 @@
           "type": "image/png"
         }
       ],
-      "splash": ["./assets/icons/icon-no-bg.png"],
       "display": "fullscreen"
     }
   }
