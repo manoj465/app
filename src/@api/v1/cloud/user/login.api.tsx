@@ -160,7 +160,7 @@ export const useLogin: useLogin_t = async ({ email, password, ...props }) => {
         props.log?.print("user found >>>> " + JSON.stringify(res.RES, null, 2))
         props.log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
         const __t1_user = UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })
-        const __t1_devices = UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices })
+        const __t1_devices = UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices ? res.RES.devices : [] })
         props.log?.print("device converted to local" + JSON.stringify(__t1_devices, null, 2))
         props.onLoginSuccess ? props.onLoginSuccess({
             user: __t1_user,
@@ -169,7 +169,7 @@ export const useLogin: useLogin_t = async ({ email, password, ...props }) => {
         return
     }
     else {
-        props.log?.print("ERR no user found >>>>-- " + JSON.stringify(res, null, 2))
+        props.log?.print("no user in response" + JSON.stringify(res, null, 2))
         props.onLoginFailed ? props.onLoginFailed(res) : {}
     }
 }

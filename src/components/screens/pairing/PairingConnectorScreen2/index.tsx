@@ -43,7 +43,7 @@ export const PairingConnectorScreen2 = ({
     params: { newDevice },
   },
 }: Props) => {
-  const log = new logger("PAIRING_SCREEN_2");
+  const log = new logger("server PAIRING_SCREEN_2");
   const [data, status, loading, error, load] = useScanApiHook({
     log: log ? new logger("scan API Hook", log) : undefined,
     autoStart: true

@@ -78,43 +78,32 @@ const loginFunction: loginFunction_t = async ({
     onLoginSuccess,
     log
 }) => {
-    const [_, loginMutation] = API.cloudAPI.user.loginAPI.useLoginHook({})
-    if (!email || !UNIVERSALS.util.ValidateEmail({ email })) {
-        log?.print("validation : email: " + email + ", pass: " + password)
-        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_EMAIL_REQUIRED, errMsg: "Kindly, provide a valid email address" }
-        onValidateDataFailed ? onValidateDataFailed(tempError) : {}
-        onLoginFailed ? onLoginFailed({ ERR: tempError }) : {}
-        return {}
-    } if (password && password.length < 8) {
-        log?.print("validation => username: " + email + ", pass: " + password)
-        const tempError = { errCode: loginValidationError_e.LOGIN_VALIDATION_PASSWORD_REQUIRED, errMsg: "Kindly, provide a valid password" }
-        onValidateDataFailed ? onValidateDataFailed(tempError) : {}
-        onLoginFailed ? onLoginFailed({ ERR: tempError }) : {}
-        return {}
-    }
-    const res = await API.cloudAPI.user.loginAPI.v1({
+    API.cloudAPI.user.loginAPI.useLogin({
         email,
         password,
-        //log: log ? new logger("login API", log) : undefined
+        onValidateDataFailed: (err) => { if (onValidateDataFailed) onValidateDataFailed(err) },
+        onLoginFailed: (err) => { if (onLoginFailed) onLoginFailed(err) },
+        onLoginSuccess: (res) => {
+            if (res.user.id) {
+                log?.print("new ver -- user found >>>> " + JSON.stringify(res.user, null, 2))
+                userStoreUpdateFunction({ user: res.user })
+                log?.print("device from cloud" + JSON.stringify(res.devices, null, 2))
+                log?.print(JSON.stringify(res.devices))
+                deviceOperator({
+                    cmd: "ADD_UPDATE_DEVICES",
+                    newDevices: res.devices,
+                    log: log ? new logger("device-operator add_update_devices", log) : undefined
+                })
+                onLoginSuccess ? onLoginSuccess(res.user) : {}
+            }
+            else {
+                log?.print("ERR no user found >>>>-**- " + JSON.stringify(res, null, 2))
+                onLoginFailed ? onLoginFailed({ ERR: { errCode: API.cloudAPI.user.loginAPI.loginApiErrors_e.LOGIN_API_UNHANDLED, errMsg: "UNKNOWN RESPONSE FROM SERVER" } }) : {}
+            }
+        },
+        log: log ? new logger("useLoginHoook ", log) : undefined
     })
-    if (res.RES?.id) {
-        log?.print("user found >>>> " + JSON.stringify(res.RES, null, 2))
-        userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES }) })
-        log?.print("device from cloud" + JSON.stringify(res.RES.devices, null, 2))
-        log?.print("device converted to local" + JSON.stringify(UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices ? res.RES.devices : [] }), null, 2))
-        deviceOperator({
-            cmd: "ADD_UPDATE_DEVICES",
-            newDevices: res.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: res.RES.devices }) : [],
-            log: log ? new logger("device-operator add_update_devices", log) : undefined
-        })
-        onLoginSuccess ? onLoginSuccess(UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: res.RES })) : {}
-        return res
-    }
-    else {
-        log?.print("ERR no user found >>>>-- " + JSON.stringify(res, null, 2))
-        onLoginFailed ? onLoginFailed(res) : {}
-    }
-    return res
+    return {}
 }
 
 
