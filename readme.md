@@ -10,8 +10,8 @@
 - [x] delete @types folder after removing its dependency from app
 - [x] detach deletedDeviceList device from user cloudState upon background service sideEffect and remove them from redux state upon successfull detach
 - [x] colorPicker Optmization for PWA
-- [ ] optimize pairing screen for PWA
-- [ ] optimize deviceNavigator screens for web
+- [x] optimize pairing screen for PWA
+- [x] optimize deviceNavigator screens for web
 
 ## bugs/fixes
 
