@@ -2,18 +2,17 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
 import { Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
-import { RectButton, TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 import Animated, { add, call, divide, interpolate, round, useCode } from "react-native-reanimated";
 import { onScrollEvent, useValue } from "react-native-redash";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
 import { PairingStackParamList } from "..";
+import { logger } from "../../../../@logger";
+import { appOperator } from "../../../../app.operator";
 import reduxStore from "../../../../redux";
 import useScanApiHook from "../../../../services/webApi/webHooks";
-import { appOperator } from "../../../../app.operator";
 import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
-import { logger } from "../../../../@logger";
-import Alert from "../../../common/Alert"
+import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 const deviceNames = [
@@ -43,7 +42,7 @@ export const PairingConnectorScreen2 = ({
     params: { newDevice },
   },
 }: Props) => {
-  const log = new logger("server PAIRING_SCREEN_2");
+  const log = new logger("PAIRING_SCREEN_2");
   const [data, status, loading, error, load] = useScanApiHook({
     log: log ? new logger("scan API Hook", log) : undefined,
     autoStart: true
@@ -54,7 +53,6 @@ export const PairingConnectorScreen2 = ({
   const y = useValue(0);
   const onScroll = onScrollEvent({ y });
   const selected = round(divide(y, 60));
-  const dispatch = useDispatch();
 
 
   useCode(
@@ -218,27 +216,25 @@ export const PairingConnectorScreen2 = ({
                   setDeviceName(item);
                   //Vibration.vibrate(50); //TODO move this to useCode/call function for better feedback
                 }}
-                style={{ alignSelf: "flex-start", padding: 5 }}
-              >
-                <View
+                style={{
+                  alignSelf: "flex-start",
+                  height: 25,
+                  borderWidth: 0.5,
+                  borderColor: "#fff",
+                  borderRadius: 18,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  backgroundColor: deviceName == item ? "#fff" : "#55f",
+                  marginHorizontal: 5
+                }}>
+                <Text
                   style={{
-                    borderWidth: 0.5,
-                    borderColor: "#fff",
-                    borderRadius: 18,
-                    paddingHorizontal: 10,
-                    paddingVertical: 5,
-                    backgroundColor: deviceName == item ? "#fff" : "#55f",
+                    fontSize: 12,
+                    color: deviceName == item ? "#55f" : "#fff",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: deviceName == item ? "#55f" : "#fff",
-                    }}
-                  >
-                    {item}
-                  </Text>
-                </View>
+                  {item}
+                </Text>
               </NewRectButtonWithChildren>
             )}
             keyExtractor={(item, index) => index.toString()}
@@ -257,10 +253,8 @@ export const PairingConnectorScreen2 = ({
             paddingTop: 10,
             paddingHorizontal: 30,
             textAlign: "center",
-          }}
-        >
-          Make sure the WiFi is on and your device is in range of the network.
-          If you don't find your network in list than refresh from below
+          }}>
+          Make sure the WiFi is on and your device is in range of the network. Turn off your mobile data
           </Text>
         {/* Sec: Wifi refresh button */}
         <NewRectButtonWithChildren
@@ -269,8 +263,7 @@ export const PairingConnectorScreen2 = ({
             log.print("refresh wifi scan api response")
             load()
             Vibration.vibrate(50);
-          }}
-        >
+          }}>
           <View style={styles.refreshButton_textCon} >
             <Text style={{ fontSize: 10, fontWeight: "bold", color: "#55f" }}>
               Refresh WiFi Scan
@@ -386,7 +379,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 20,
   },
   refreshButton: {
     borderRadius: 15,

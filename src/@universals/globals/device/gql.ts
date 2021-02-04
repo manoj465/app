@@ -78,7 +78,6 @@ export const createNewDevice_mutation = `mutation(
     $hsv:String
     $groupName:String
     $lastState:String
-    $timers:String
   ){
     createHueDevice(data:{
       Mac:$Mac,
@@ -89,7 +88,6 @@ export const createNewDevice_mutation = `mutation(
       hsv:$hsv
       groupName:$groupName
       lastState:$lastState
-      timers:$timers
       user:{connect:{id:$userID}}
     }){
     ${Device_fields_noUser}

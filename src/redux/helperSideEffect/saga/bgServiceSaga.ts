@@ -28,7 +28,7 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
             performSideEffects({
                 user: reduxStore.store.getState().appCTXReducer.user,
                 iteration,
-                //log: log ? new logger("performSideEffect", log) : undefined
+                log: log ? new logger("performSideEffect", log) : undefined
             })
             let socketContainer: HBSocketList_t[] = yield select((state: _appState) => state.HBReducer.HBSocketList)
             if (_deviceList.length) {
@@ -37,7 +37,7 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
                         device,
                         iteration,
                         user: reduxStore.store.getState().appCTXReducer.user,
-                        //log: log ? new logger("handle_device_in_loop", log) : undefined
+                        log: log ? new logger("handle_device_in_loop", log) : undefined
                     })
                     const localSocketContainer = socketContainer.find(item => item.Mac == device.Mac)
                     if (localSocketContainer?.socket) {
@@ -193,6 +193,7 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
 
 
 const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVERSALS.GLOBALS.DEVICE_t, user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
+    console.log("device si " + device.Mac + " device ID is " + device.id)
     if (user?.id) {
         if (!device.id) /** create device or sync ID */ {
             (async () => {

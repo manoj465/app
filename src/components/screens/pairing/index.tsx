@@ -27,7 +27,11 @@ export const pairingRouter = ({ }: Props) => {
     >
       <Stack.Screen name="PairScreen_1" component={PairingConnectorScreen1} />
       <Stack.Screen name="PairScreen_2" component={PairingConnectorScreen2} />
-      <Stack.Screen name="PairScreen_3" component={PairingConnectorScreen3} />
+      <Stack.Screen
+        name="PairScreen_3"
+        component={PairingConnectorScreen3}
+      //initialParams={{ newDevice: { Mac: "deviceMac", ssid: "ssid", IP: "192.168sdgg", deviceName: "egv", localTimeStamp: 235, Hostname: "sdhg", hsv: { h: 0, s: 0, v: 0 }, timers: [] } }}
+      />
     </Stack.Navigator>
   );
 };

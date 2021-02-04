@@ -9,7 +9,7 @@
     "eject": "expo eject",
     "deploy_web": "expo build:web && gh-pages -d web-build",
     "deploy_web_noBuild": "gh-pages -d web-build",
-    "buildReleaseIOS": "expo build:ios --release-channel release",
+    "buildReleaseIOS": "expo build:ios --release-channel release --clear-credentials",
     "buildReleaseANDROID": "expo build:android --release-channel release",
     "publish_RELEASE": "expo publish --release-channel release",
     "build_OTATEST_ANDROID": "expo build:android --release-channel otatest",

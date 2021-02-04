@@ -205,21 +205,21 @@ export const PairingConnectorScreen3 = ({
                 <NewRectButtonWithChildren
                   onPress={() => {
                     setGroupName(item);
-                    Vibration.vibrate(50);
+                    Vibration.vibrate(50)
                   }}
-                  style={{ alignSelf: "flex-start", padding: 5 }}
-                >
-                  <View
-                    style={{
-                      borderWidth: 0.5,
-                      borderColor: "#fff",
-                      borderRadius: 18,
-                      paddingHorizontal: 10,
-                      paddingVertical: 5,
-                    }}
-                  >
-                    <Text style={{ fontSize: 12, color: "#fff" }}>{item}</Text>
-                  </View>
+                  style={{
+                    height: 25,
+                    alignSelf: "flex-start",
+                    padding: 5,
+                    borderWidth: 0.5,
+                    borderColor: "#fff",
+                    borderRadius: 18,
+                    paddingHorizontal: 10,
+                    paddingVertical: 5,
+                    marginHorizontal: 5,
+                    backgroundColor: "transparent"
+                  }}>
+                  <Text style={{ fontSize: 12, color: "#fff" }}>{item}</Text>
                 </NewRectButtonWithChildren>
               )}
               keyExtractor={(item, index) => index.toString()}

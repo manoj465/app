@@ -33,6 +33,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
   let _animation = null;
 
   useEffect(() => {
+    //navigation.replace("PairScreen_2", { newDevice: { Mac: "newDevice", Hostname: "hostname", localTimeStamp: getCurrentTimeInSeconds(), IP: "192.168.4.1", hsv: { h: 0, s: 100, v: 100 }, deviceName: "device Name", timers: [] } });
     const interval = setInterval(async () => {
       const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: log ? new logger("auth api", log) : undefined })
       console.log("<><><> " + JSON.stringify(res))
