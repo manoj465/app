@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StackNavigationProp } from "@react-navigation/stack";
+import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import UNIVERSALS from "../../../@universals";
-import { logger } from "../../../@logger";
-import BrightnessSlider from "../../common/BrightnessSlider_optmizedForWeb";
-import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
-import { navigation_t } from "./devicePageNavigator/colorPickerScreen";
-import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { appOperator } from "../../../app.operator";
 import { State } from "react-native-gesture-handler";
-import { useSelector } from "react-redux";
-import { appState } from "../../../redux";
-import STYLES from "../../../styles"
 import Animated from "react-native-reanimated";
+import { useSelector } from "react-redux";
+import { logger } from "../../../../@logger";
+import UNIVERSALS from "../../../../@universals";
+import { appOperator } from "../../../../app.operator";
+import { appState } from "../../../../redux";
+import { MainRouterStackParamList } from "../../../../routers/MainRouter";
+import BrightnessSlider from "../../../common/BrightnessSlider";
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
+
 
 interface Props {
-  navigation: navigation_t;
+  navigation: StackNavigationProp<MainRouterStackParamList, "devicePage">
   device: UNIVERSALS.GLOBALS.DEVICE_t;
   log?: logger
   headBackgroundColor: Animated.Node<number>
@@ -38,7 +39,7 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
           right: 50,
           opacity: 0.3,
         }}
-        source={require("../../../../assets/images/1.png")}
+        source={require("../../../../../assets/images/1.png")}
       />
       <View style={styles.nameContainer}>
         <View

@@ -1,12 +1,11 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { Dimensions, StyleSheet, View, Image } from "react-native";
-import { RectButton } from "react-native-gesture-handler";
+import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import ColorPicker from "../../../../common/ColorPicker";
-import { navigation_t, viewTypeEnum } from ".";
 import { logger } from "../../../../../@logger";
 import UNIVERSALS from "../../../../../@universals";
+import { MainRouterStackParamList } from "../../../../../routers/MainRouter";
+import ColorPicker from "../../../../common/ColorPicker";
 
 interface Props {
   hue: Animated.Value<number>;
@@ -14,7 +13,7 @@ interface Props {
   value: Animated.Value<number>;
   backgroundColor: Animated.Node<number>;
   device: UNIVERSALS.GLOBALS.DEVICE_t;
-  navigation: navigation_t;
+  navigation: StackNavigationProp<MainRouterStackParamList, "devicePage">
   log?: logger
 }
 

@@ -1,35 +1,20 @@
-import { Ionicons } from "@expo/vector-icons";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { devicePageStackParamList } from "../..";
-import { logger } from "../../../../../@logger";
-import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
-import { Modes } from "../../../../common/Modes";
-import { Timer } from "../../../../common/Timer";
+import { Ionicons } from "@expo/vector-icons"
+import React from "react"
+import { Text, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { logger } from "../../../../@logger"
+import UNIVERSALS from "../../../../@universals"
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom"
+import { Timer } from "../../../common/Timer"
 
-type DevicePageColorPickerNavigationProp = StackNavigationProp<
-  devicePageStackParamList,
-  "DeviceModesScreen"
->;
-type devicePageColorPickerRouteProp = RouteProp<
-  devicePageStackParamList,
-  "DeviceModesScreen"
->;
 
 interface Props {
-  navigation: DevicePageColorPickerNavigationProp;
-  route: devicePageColorPickerRouteProp;
+  navigation: any;
+  device: UNIVERSALS.GLOBALS.DEVICE_t,
+  navigateToColorPicker?: () => void
 }
 
-export const DeviceModesScreen = ({
-  navigation,
-  route: {
-    params: { device },
-  },
-}: Props) => {
+export default ({ navigation, device, navigateToColorPicker }: Props) => {
   const log = new logger("device modes screen " + device.Mac)
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ffffff" }}>
@@ -48,9 +33,7 @@ export const DeviceModesScreen = ({
           marginTop: 5
         }}
         onPress={() => {
-          navigation.replace("DeviceColorPicker", {
-            device
-          })
+          navigateToColorPicker && navigateToColorPicker()
         }}>
         <Ionicons name="ios-arrow-back" size={30} color="#555" />
         <Text

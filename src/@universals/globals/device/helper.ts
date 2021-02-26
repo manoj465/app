@@ -2,6 +2,8 @@ import { DEVICE_t, Device_t } from "../globalTypes"
 import { logger } from "../../../@logger"
 import { convertTimersStringToObj, converLocalTimerObjectToBackendString } from "../timer"
 import { getHsvFromString } from "../../helper/color"
+import { deviceType_e, deviceColorChannel_t } from "./types"
+import { channel } from "redux-saga"
 
 type convert_Devices_backendToLocal_t = (props: { devices: Device_t[], socket?: any, log?: logger }) => DEVICE_t[]
 //@ts-ignore
@@ -32,7 +34,8 @@ export const convert_Device_LocalToBackend: convert_Device_LocalToBackend_t = ({
         Hostname: device.Hostname,
         deviceName: device.deviceName,
         Mac: device.Mac,
-        ts: device.localTimeStamp
+        ts: device.localTimeStamp,
+        channel: device.channel
     }
     if (device.timers)
         newDevice.timers = converLocalTimerObjectToBackendString({ timers: device.timers })
@@ -52,3 +55,28 @@ export const convert_Device_LocalToBackend_forUpdateMutation: convert_Device_Loc
         newDevice.timers = converLocalTimerObjectToBackendString({ timers: device.timers })
     return newDevice
 }
+
+
+/**
+ * deviceType Nomenclature
+ * 
+ * | - | enum Identifier(fixed) | deviceType | channel specifier(optinal) |
+ * | :-- |     :----:      |   :----:   |       :----:      |
+ * | description | enum identifier for global naming convention | combination of product colorChannel and category in camelCasing | channel specifier identifies the number of output channels in the perticular product |
+ * | defaults: | deviceType | ------- | **c1** - if none persent than its 1 channel * all colorChannel |
+ * | ex: |  | **rgbwStrip** | **c1**, **c4** |
+ */
+
+
+interface getDeviceType_t { (props: { Hostname: string }): deviceType_e | undefined }
+export const getDeviceType: getDeviceType_t = ({ Hostname }) => {
+    let deviceHostnameSplitArray = Hostname.split('_')
+    if (deviceHostnameSplitArray[1] == "SP" && deviceHostnameSplitArray[2].split(":")[1] == "3")
+        return deviceType_e.deviceType_rgbwDownlight
+
+    if (deviceHostnameSplitArray[1] == "NW4" && deviceHostnameSplitArray[2].split(":")[1] == "3")
+        return deviceType_e.deviceType_wDownlight_C4
+
+    return undefined
+}
+

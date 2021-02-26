@@ -12,6 +12,13 @@
 - [x] colorPicker Optmization for PWA
 - [x] optimize pairing screen for PWA
 - [x] optimize deviceNavigator screens for web
+- [x] covert colorSaga to consume hexCode
+- [ ] colorSaga also handles the hex conversion for perticular devices if sent colorChannel objects
+- [ ] customize device dataType to support multiple channel type output with custom hexconversion methods
+- [ ] customize deviceCard according to deviceType
+- [ ] customize colorPickerScreen according to deviceType
+- [ ] getProductType function
+- [ ] custom color picker screen for each product type
 
 ## bugs/fixes
 

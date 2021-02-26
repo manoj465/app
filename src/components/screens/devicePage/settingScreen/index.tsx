@@ -1,32 +1,23 @@
-import React, { useRef, useState } from "react";
-import { Text, View } from "react-native";
-import TextField from "../../../../common/text/textField"
-import { SafeAreaView } from "react-native-safe-area-context";
-import { devicePageStackParamList } from "../..";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { NewRectButtonWithChildren } from "../../../../common/buttons/RectButtonCustom";
-import STYLES from "../../../../../styles"
-import { useSelector } from "react-redux";
-import { _appState } from "../../../../../redux/rootReducer";
-import UNIVERSALS from "../../../../../@universals";
-import { appOperator } from "../../../../../app.operator";
-import Alert from "../../../../common/Alert";
+import React, { useRef, useState } from "react"
+import { Text, View } from "react-native"
+import TextField from "../../../common/text/textField"
+import { SafeAreaView } from "react-native-safe-area-context"
+import { RouteProp } from "@react-navigation/native"
+import { StackNavigationProp } from "@react-navigation/stack"
+import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom"
+import STYLES from "../../../../styles"
+import { useSelector } from "react-redux"
+import { _appState } from "../../../../redux/rootReducer"
+import UNIVERSALS from "../../../../@universals"
+import { appOperator } from "../../../../app.operator"
+import Alert from "../../../common/Alert"
 
-type navigation_t = StackNavigationProp<
-  devicePageStackParamList,
-  "DeviceColorPicker"
->;
-type routeProp_t = RouteProp<
-  devicePageStackParamList,
-  "DeviceColorPicker"
->;
 
 
 
 interface Props {
-  navigation: navigation_t;
-  route: routeProp_t;
+  navigation: any
+  route: any
 }
 export const DeviceSettingScreen = ({
   navigation,

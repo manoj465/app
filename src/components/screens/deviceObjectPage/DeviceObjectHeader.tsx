@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, Dimensions, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BrightnessSlider from "../../common/BrightnessSlider";
+import BrightnessSlider from "../../common/BrightnessSlider_deprivated";
 import { RectButton } from "react-native-gesture-handler";
 import { ToggleSwitch } from "../../common/ToggleSwitch";
 import Animated from "react-native-reanimated";

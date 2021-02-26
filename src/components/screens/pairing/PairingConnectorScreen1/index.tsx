@@ -14,6 +14,7 @@ import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
 import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 import STYLES from "../../../../styles"
+import UNIVERSALS from "../../../../@universals";
 
 
 
@@ -26,10 +27,19 @@ interface Props {
 }
 
 const { width, height } = Dimensions.get("window");
+/**
+ * 
+ * @param param0 
+ * 
+ * 
+ * @todo
+ * - [ ] add groupName addition feature
+ * - [ ] handle addition of rgb product
+ * - [ ] handle addition of RGBW product
+ */
 export const PairingConnectorScreen1 = ({ navigation }: Props) => {
   const log = new logger("PAIRING_SCREEN_1")
   const [groupName, setGroupName] = useState("BedRoom");
-  const dispatch = useDispatch();
   let _animation = null;
 
   useEffect(() => {
@@ -40,7 +50,51 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
       if (res.RES?.Mac) {
         clearInterval(interval)
         console.log("navigating to next screen - screen-2")
-        navigation.replace("PairScreen_2", { newDevice: { ...res.RES, localTimeStamp: getCurrentTimeInSeconds(), IP: "192.168.4.1", hsv: { h: 0, s: 100, v: 100 }, deviceName: "", timers: [] } });
+        navigation.replace("PairScreen_2", {
+          newDevice: {
+            ...res.RES,
+            localTimeStamp: getCurrentTimeInSeconds(),
+            IP: "192.168.4.1",
+            hsv: { h: 0, s: 100, v: 100 },
+            deviceName: "",
+            timers: [],
+            channel:
+              UNIVERSALS.GLOBALS.getDeviceType({ Hostname: res.RES.Hostname }) == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4
+                ? {
+                  deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4,
+                  outputChannnel: [{
+                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
+                    temprature: 3000,
+                    v: 80
+                  }, {
+                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
+                    temprature: 3000,
+                    v: 80
+                  }, {
+                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
+                    temprature: 3000,
+                    v: 80
+                  }, {
+                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
+                    temprature: 3000,
+                    v: 80
+                  },],
+                }
+                : UNIVERSALS.GLOBALS.getDeviceType({ Hostname: res.RES.Hostname }) == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C1
+                  ? {
+                    deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C1,
+                    outputChannnel: [{
+                      type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
+                      temprature: 3000,
+                      v: 80
+                    }]
+                  }
+                  : {
+                    deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_unknown,
+                    outputChannnel: []
+                  }
+          }
+        });
       }
 
     }, 3000);

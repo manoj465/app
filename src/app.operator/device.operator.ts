@@ -3,6 +3,7 @@ import { log } from "react-native-reanimated"
 import UNIVERSALS from "../@universals"
 import reduxStore from "../redux"
 import { _deviceListSaga_action } from "../redux/deviceListReducer/saga/deviceList"
+import { _colorAction_Props } from "../redux/deviceListReducer/saga/color.saga"
 import { getCurrentTimeStampInSeconds } from "../util/DateTimeUtil"
 import { logger } from "../@logger"
 
@@ -171,28 +172,16 @@ const removeDevice = (props: removeDeviceProps) => {
 */
 
 
-interface colorUpdate_props {
+interface colorUpdate_props extends _colorAction_Props {
     cmd: "COLOR_UPDATE"
-    deviceMac: string[]
-    hsv: { h?: number, s?: number, v?: number }
-    gestureState: State,
-    log?: logger
 }
 /** 
  * ## featureRequest
  * - [ ] send the updated devicelist to devicelistAddUpdater
  */
-const colorUpdate = ({ deviceMac, hsv: { h, s, v }, gestureState, log }: colorUpdate_props) => {
+const colorUpdate = (props: colorUpdate_props) => {
     reduxStore.store.dispatch(
-        reduxStore.actions.deviceList.colorSaga({
-            deviceMac,
-            hsv: { h, s, v },
-            gestureState,
-            onActionComplete: ({ newDeviceList }) => {
-                reduxStore.store.dispatch(_deviceListSaga_action({ deviceList: newDeviceList, log }))
-            },
-            log
-        })
+        reduxStore.actions.deviceList.colorSaga(props)
     );
 }
 

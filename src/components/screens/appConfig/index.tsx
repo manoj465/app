@@ -12,6 +12,7 @@ import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrol
 import { useSelector } from 'react-redux';
 import { appState } from '../../../redux';
 import { LinearGradient } from 'expo-linear-gradient';
+import UNIVERSALS from '../../../@universals';
 
 type navigationProp = StackNavigationProp<
     MainRouterStackParamList,
@@ -132,6 +133,7 @@ const AppConfigScreen = ({ navigation }: props) => {
                             color: "#555",
                             textAlign: "center"
                         }]}>Powered by <Text style={{ fontWeight: "bold" }}>STERNET INDUSTRIES</Text></Text>
+                        <Text style={[UNIVERSALS.STYLES.H7, { fontWeight: "normal", textAlign: "center" }]}>ver - 1.0.0-beta</Text>
                     </View>
                 </View>
 

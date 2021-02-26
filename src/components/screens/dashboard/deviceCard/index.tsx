@@ -1,18 +1,17 @@
 import { useActionSheet } from "@expo/react-native-action-sheet"
-import { Entypo } from '@expo/vector-icons'
+import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons'
 import { LinearGradient } from "expo-linear-gradient"
 import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { State } from "react-native-gesture-handler"
 import { navigationProp } from ".."
+import { device } from "../../../../@api/v1/cloud"
+import { logger } from "../../../../@logger"
 import UNIVERSALS from "../../../../@universals"
 import { appOperator } from "../../../../app.operator"
 import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color"
-import { logger } from "../../../../@logger"
-import BrightnessSlider from "../../../common/BrightnessSlider"
-import BrightnessSliderNew from "../../../common/BrightnessSlider_optmizedForWeb"
+import BrightnessSliderNew from "../../../common/BrightnessSlider"
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom"
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 /* import ColorBlending from "gl-react-color-blending" */
 
 
@@ -45,29 +44,62 @@ export const DeviceCard = ({
     rgb1 = convertHSVToRgb(100, 80, 100)
     rgb2 = convertHSVToRgb(130, 80, 100)
   }
-  hex1 = _convertRGBToHex(rgb1[0], rgb1[1], rgb1[2]);
-  hex2 = _convertRGBToHex(rgb2[0], rgb2[1], rgb2[2]);
+  if (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4 && device.channel.outputChannnel[0].temprature < 4000) {
+    hex1 = _convertRGBToHex(174, 214, 241);
+    hex2 = _convertRGBToHex(169, 204, 227);
+  }
+  else {
+    hex1 = _convertRGBToHex(rgb1[0], rgb1[1], rgb1[2]);
+    hex2 = _convertRGBToHex(rgb2[0], rgb2[1], rgb2[2]);
+  }
+
+
+  /**
+   * - [ ] decument this section
+   */
+
+  const updateColor = (v: number, gestureState: State, log?: logger) => {
+    if (v < 5)
+      v = 0
+    appOperator.device({
+      cmd: "COLOR_UPDATE",
+      deviceMac: [device.Mac],
+      hsv: { v },
+      gestureState,
+      log
+    })
+  }
+
+
+  const getHex: (props: { value: number, channel: UNIVERSALS.GLOBALS.deviceColorChannel_t, activeChannel?: number[], log?: logger }) => string = ({ value, channel, activeChannel, log }) => {
+    if (channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4) {
+      if (!activeChannel) {
+        // - [ ] return value as hex to all channel
+      }
+    }
+    return "#ffffff"
+  }
+
 
   return (
     <TouchableOpacity
       style={[styles.container, { /* height: deviceCardHeight */ }]}
       activeOpacity={0.9}
       onPress={() => {
-        if (device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_OW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_CW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_WW")) {
-        } else {
-          navigation.navigate("devicePage", {
-            device
-          });
-        }
-      }}
-    >
+        //if (device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_OW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_CW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_WW")) {
+        navigation.navigate("devicePage", { device })
+      }} >
       <LinearGradient
+        /**
+         * #todo
+         * - [ ] gradient for natural/warm/cool white 
+         */
         colors={[hex1, hex2]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{
           width: "100%",
-        }} >
+        }}>
 
         <Image /**background image */
           style={{
@@ -164,6 +196,13 @@ export const DeviceCard = ({
           <BrightnessSliderNew
             initBrValue={device.hsv ? device.hsv.v : 50}
             deviceMac={[device.Mac]}
+            onBrightnessChange={({ value, pinState }) => {
+              getHex({ value, channel: device.channel, log })
+              // - [ ] updateColor(BR, pinState, log)
+            }}
+            /**
+             * 
+             */
             log={log}
           />
         </View>
@@ -205,4 +244,4 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 15,
   },
-});
+})

@@ -16,8 +16,8 @@ export class logger {
     prefix: string
     printAll = false
     printable = [
-        //"MAIN ACTIVITY", /* App.ts */
-        "BG SERVICE",
+        "MAIN ACTIVITY", /* App.ts */
+        //"BG SERVICE",
         //"DEVICE MODES SCREEN", /* device modes screen in device page */
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
         //"DASHBOARD",/* DAHSBOARD SCREEN */
@@ -25,7 +25,7 @@ export class logger {
         //"TEST FUNCTION", /* testfunction prints */
         //"USER PROFILE",
         //"APP SETTING",
-        //"PAIRING_SCREEN",
+        "PAIRING_SCREEN",
         //"SOCKET TEST",
         //"SERVER",
     ]

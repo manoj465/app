@@ -28,7 +28,7 @@ type pairingScreen2NavigationProp = StackNavigationProp<
   "PairScreen_2"
 >;
 
-type pairingScreen2RouteProp = RouteProp<PairingStackParamList, "PairScreen_2">;
+type pairingScreen2RouteProp = RouteProp<PairingStackParamList, "PairScreen_2">
 
 interface Props {
   navigation: pairingScreen2NavigationProp;

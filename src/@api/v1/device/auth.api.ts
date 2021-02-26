@@ -16,6 +16,7 @@ export interface authApiErrors_i {
 interface authApiRes_i {
     Mac: string
     Hostname: string
+    state: string
 }
 
 export interface authApiReturnType {
@@ -43,6 +44,7 @@ export const v1: fun_t =
             address: 'http://' + IP,
             path: "/auth",
             resolveData: ({ RES, ERR }) => {
+                log?.print("----- resolve Data" + JSON.stringify(RES, null, 2))
                 if (ERR) {
                     log?.print("ERR - resolve Data" + JSON.stringify(ERR, null, 2))
                 }

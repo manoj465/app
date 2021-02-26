@@ -131,12 +131,12 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
             appOperator.userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: userRes.RES }) })
         }
         if (userRes.RES?.devices) {
-            appOperator.device({
-                cmd: "ADD_UPDATE_DEVICES",
-                cloudState: true,
-                newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices }) : [],
-                //log: log ? new logger("device-operator add_update_devices", log) : undefined
-            })
+            /*  appOperator.device({
+                 cmd: "ADD_UPDATE_DEVICES",
+                 cloudState: true,
+                 newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices }) : [],
+                 //log: log ? new logger("device-operator add_update_devices", log) : undefined
+             }) */
         }
     }
     else if (iteration % 2 == 0 && user?.id) {
@@ -210,12 +210,14 @@ const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVE
                         });
                     }
                     // - [ ] compare both local and api response data and save the latest one to redux store
-                    if (containsDevice)
-                        appOperator.device({
-                            cmd: "ADD_UPDATE_DEVICES",
-                            newDevices: [{ ...UNIVERSALS.GLOBALS.convert_Device_backendToLocal({ device: res.RES }), localTimeStamp: device.localTimeStamp }],
-                            log: log ? new logger("device-operator add/update devices", log) : undefined
-                        })
+                    if (containsDevice) {
+                        // - [ ] update only if timestamp is latest    
+                        /* appOperator.device({
+                                cmd: "ADD_UPDATE_DEVICES",
+                                newDevices: [{ ...UNIVERSALS.GLOBALS.convert_Device_backendToLocal({ device: res.RES }), localTimeStamp: device.localTimeStamp }],
+                                log: log ? new logger("device-operator add/update devices", log) : undefined
+                            }) */
+                    }
                 }
                 else if (res.ERR?.errCode == api.cloudAPI.device.deviceQueryWithMac.deviceQueryWithMacApiErrors_e.DEVICE_QUERY_NO_DEVICES_FOUND) {
                     //@ts-ignore - [error]=> due to user.id(could be undefined) field. [resolution]=> but we have already check for user.id field at the begning of the method
@@ -236,11 +238,12 @@ const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVE
                     let updateApiRes = await api.cloudAPI.device.updateDeviceMutation.v1({ device: { ...device, id: device.id }, log: log ? new logger("update device api", log) : undefined })
                     if (updateApiRes.RES) {
                         log?.print("updated device serverts : " + updateApiRes.RES.ts)
-                        appOperator.device({
+                        // - [ ] only update upon timestamp check
+                        /* appOperator.device({
                             cmd: "ADD_UPDATE_DEVICES",
                             newDevices: [{ ...UNIVERSALS.GLOBALS.convert_Device_backendToLocal({ device: updateApiRes.RES }), localTimeStamp: device.localTimeStamp }],
                             log: log ? new logger("update device saga", log) : undefined
-                        })
+                        }) */
                     }
                 }
             })()
