@@ -1,12 +1,11 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { Component, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { PanGestureHandler, State } from "react-native-gesture-handler";
 import Animated, { add, block, call, concat, cond, divide, eq, event, multiply, set, useCode } from "react-native-reanimated";
 import { clamp, ReText, round, useValue } from "react-native-redash";
-import { appOperator } from "../../app.operator";
-import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 import { logger } from "../../@logger";
+import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
 
 const sliderHeight = 35;
 const sliderHeightExtension = 4;
@@ -20,9 +19,9 @@ interface Props {
   bgColor?: [string, string];
   groupUUID?: string;
   log?: logger
+  onBrightnessChange?: (props: { value: number, pinState: number }) => void
 }
 
-const { width, height } = Dimensions.get("window");
 export default ({
   initBrValue = 0,
   bgColor = ["#ffffff00", "#ffffff77"],
@@ -31,111 +30,121 @@ export default ({
   log,
   ...props
 }: Props) => {
-  //console.log("initBr : " + initBrValue);
-  const pinState = useValue(State.UNDETERMINED);
-  const [sliderWidth, setSliderWidth] = useState(0);
-  const offset = useValue((initBrValue / 100) * (width * 0.9));
-  const offsetX = clamp(offset, 0, sliderWidth - sliderHeight);
+  const [sliderWidth, setSliderWidth] = useState(0)
+
+  return (
+    <View
+      style={{ overflow: "visible" }}
+      onLayout={(event) => {
+        var { width } = event.nativeEvent.layout;
+        setSliderWidth(width);
+      }}>
+      {sliderWidth > 0 &&
+        <BrightnessSlider
+          sliderWidth={sliderWidth}
+          initBrValue={initBrValue}
+          onBrightnessChange={props.onBrightnessChange} />
+      }
+    </View>
+  );
+};
+
+
+
+
+
+const BrightnessSlider = (props: {
+  sliderWidth: number
+  initBrValue: number
+  onBrightnessChange?: (props: { value: number, pinState: number }) => void
+}) => {
+
+  const pinState = useValue(State.UNDETERMINED)
+  const offset = useValue((props.initBrValue / 100) * (props.sliderWidth - sliderHeight))
+  const offsetX = clamp(offset, 0, props.sliderWidth - sliderHeight);
   //@ts-ignore
-  const BR = round(multiply(divide(offsetX, (sliderWidth - sliderHeight)), 100))
+  const BR = round(multiply(divide(offsetX, (props.sliderWidth - sliderHeight)), 100))
   let timeStamp = Date.now();
+
 
   const gestureHandler = event(
     [
       {
-        //@ts-ignore
-        nativeEvent: ({ translationX, state: temp1state }) =>
+        nativeEvent: ({ x: translationX, state: temp1state }: any) =>
           block([
             set(pinState, temp1state),
             cond(eq(temp1state, State.ACTIVE), set(offset, add(offset, translationX))),
           ]),
-      },
-    ],
+      }],
     { useNativeDriver: true }
-  );
-
-  const updateColor = (v: number, gestureState: State, log?: logger) => {
-    if (v < 5)
-      v = 0
-    appOperator.device({
-      cmd: "COLOR_UPDATE",
-      deviceMac,
-      hsv: { v },
-      gestureState,
-      log
-    })
-  }
+  )
 
   useCode(
     () => [
       call([BR, pinState], ([BR, pinState]) => {
         if (getTimeDiffNowInMs(timeStamp) > 200 && pinState == State.ACTIVE) {
-          console.log("<<<< Sending Bightness- >>>>")
+          console.log("<<<< Sending Bightness-*- >>>>")
           timeStamp = Date.now();
-          updateColor(BR, pinState, log)
+          props.onBrightnessChange && props.onBrightnessChange({ value: BR, pinState })
         }
         else {
           //console.log("<<<< cannot send Bightness- >>>>")
         }
-        /* if (pinState == State.ACTIVE) {
-          if (getTimeDiffNowInMs(timeStamp) > 200) {
-            timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round(BR)), pinState, log)
-          }
-        } else if (pinState == State.END) {
-          console.log("<<<< --Sending Bightness- >>>>")
-          setTimeout(() => {
-            timeStamp = getCurrentTimeStamp();
-            updateColor(Math.min(100, Math.round(BR)), pinState, log)
-          }, 200);
-        } */
       }),
     ],
     [BR, pinState]
-  );
+  )
 
   return (
-    <View style={{ overflow: "visible" }}>
-      <View style={{
-        display: "flex",
-        flexDirection: "row",
-        alignSelf: "flex-end",
-        marginBottom: 6,
-      }}>
+    <View style={{
+      width: "100%"
+    }}>
+
+      <View /// brightness percentage view
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignSelf: "flex-end",
+          marginBottom: 6,
+          borderRadius: 15
+        }}>
         <ReText
           style={{
             color: "#fff",
-            fontSize: 25,
+            fontSize: 18,
             fontWeight: "bold",
+            textAlign: "right"
           }}
           text={concat(BR)} />
         <Text
           style={{
             color: "#fff",
-            fontSize: 25,
+            fontSize: 18,
             fontWeight: "bold",
           }}>%</Text>
       </View>
-      <LinearGradient
-        onLayout={(event) => {
-          var { width } = event.nativeEvent.layout;
-          setSliderWidth(width);
-        }}
+
+
+      <View
         style={{
-          justifyContent: "center",
-          opacity: 1,
-          height: sliderHeight,
           width: "100%",
-          borderRadius: 15,
-        }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={[bgColor[0], bgColor[1]]}
-      >
+          height: sliderHeight
+        }}>
+        <LinearGradient
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            borderRadius: 15,
+            height: "100%",
+            width: "100%",
+          }}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={["#ffffff00", "#ffffff77"]} />
         <PanGestureHandler
           onGestureEvent={gestureHandler}
-          onHandlerStateChange={gestureHandler}
-        >
+          onHandlerStateChange={gestureHandler}>
           <Animated.View
             style={[
               {
@@ -144,21 +153,20 @@ export default ({
                 width: sliderHeight + sliderHeightExtension,
                 borderRadius: 25,
                 backgroundColor: "#ddd",
-                top: -sliderHeightExtension / 2,
+                top: -(sliderHeightExtension / 2),
                 alignItems: "center",
                 justifyContent: "center",
               },
               {
                 transform: [{ translateX: offsetX }],
               },
-            ]}
-          >
+            ]}>
             <View
               style={{
                 height: "80%",
                 width: "80%",
                 borderRadius: 50,
-                backgroundColor: color,
+                backgroundColor: "#fff",
                 borderWidth: 10,
                 borderColor: "#fff",
                 alignItems: "center",
@@ -167,7 +175,8 @@ export default ({
             ></View>
           </Animated.View>
         </PanGestureHandler>
-      </LinearGradient>
+      </View>
     </View>
-  );
-};
+  )
+
+}

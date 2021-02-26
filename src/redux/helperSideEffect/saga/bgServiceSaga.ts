@@ -193,7 +193,7 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
 
 
 const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVERSALS.GLOBALS.DEVICE_t, user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
-    console.log("device si " + device.Mac + " device ID is " + device.id)
+    log?.print("device is " + device.Mac + " device ID is " + device.id)
     if (user?.id) {
         if (!device.id) /** create device or sync ID */ {
             (async () => {

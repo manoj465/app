@@ -84,7 +84,7 @@ export const [userSagaWatcher, userSagaAction] = _getWorker<userSaga_props>({
   type: _reduxConstant.USER_SAGA,
   shouldTakeLatest: true,
   callable: function* appCtxSagaWorker(props) {
-    console.log("user Saga : " + JSON.stringify(props.user))
+    props.log?.print("new user : " + JSON.stringify(props.user))
     let appCtx: appCTXReducerState_Prop = yield select((state: _appState) => state.appCTXReducer)
     let newappCtx: appCTXReducerState_Prop = Object.assign({}, appCtx, { user: { ...props.user, devices: [] } })
     yield put(_actions.appCTXRedux({ data: newappCtx }))

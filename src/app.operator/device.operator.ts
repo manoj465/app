@@ -1,11 +1,8 @@
-import { State } from "react-native-gesture-handler"
-import { log } from "react-native-reanimated"
+import { logger } from "../@logger"
 import UNIVERSALS from "../@universals"
 import reduxStore from "../redux"
-import { _deviceListSaga_action } from "../redux/deviceListReducer/saga/deviceList"
 import { _colorAction_Props } from "../redux/deviceListReducer/saga/color.saga"
 import { getCurrentTimeStampInSeconds } from "../util/DateTimeUtil"
-import { logger } from "../@logger"
 
 
 

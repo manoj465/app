@@ -28,17 +28,13 @@ interface Props {
     navigation: StackNavigationProp<MainRouterStackParamList, "devicePage">
     device: UNIVERSALS.GLOBALS.DEVICE_t
     navigateToTimer?: () => void
+    hue: any
+    saturation: any
+    value: any
+    backgroundColor: any
 }
 export default ({ navigation, device, ...props }: Props) => {
-    const hue = useValue(0);
-    const saturation = useValue(0);
-    const value = useValue(1);
-    const backgroundColor = hsv2color(hue, saturation, value);
-    const headBackgroundColor = hsv2color(
-        add(hue, 40),
-        max(0.5, min(0.8, saturation)),
-        value
-    );
+
     const log = new logger("DEVICE COLOR PICKER")
 
 
@@ -58,43 +54,37 @@ export default ({ navigation, device, ...props }: Props) => {
         appOperator.device({
             cmd: "COLOR_UPDATE",
             deviceMac: [device.Mac],
-            hsv: { h, s },
             gestureState: State.END,
             log
         })
     }
 
     return (
-        <SafeAreaView style={[styles.container]}>
-
-            <View style={styles.header_container} /* Sec1: devicePage header */>
-                <DevicePageHeader
-                    navigation={navigation}
-                    device={device}
-                    log={log}
-                    headBackgroundColor={headBackgroundColor} />
-            </View>
-
-
-            <ScrollView style={{/* Sec1: color picker container scrollview */
-                //backgroundColor: "green",
-                height: "100%"
-            }}
+        <View style={{
+            width: "100%",
+            display: "flex",
+            backgroundColor: "#fff",
+        }}>
+            <ScrollView
+                style={{/* Sec1: color picker container scrollview */
+                    //backgroundColor: "green",
+                }}
                 showsVerticalScrollIndicator={false}>
+
                 <View style={{/*  Sec2: Color Picker */
                     //backgroundColor: "blue",
                     marginTop: 20,
                 }}>
                     <ColorPickerSection
-                        hue={hue}
-                        saturation={saturation}
-                        value={value}
-                        backgroundColor={backgroundColor}
+                        hue={props.hue}
+                        saturation={props.saturation}
+                        value={props.value}
+                        backgroundColor={props.backgroundColor}
                         device={device}
                         navigation={navigation}
                         log={log}
                     />
-                    {false &&/** removed section for previos navigation icons */ <View style={{ position: "absolute", bottom: 0, right: 0, display: "flex", height: "100%", zIndex: 10, flexDirection: "column", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10 }}>{/* Sec2: Navigator */}</View>}
+                    {false &&/** removed section for previous navigation icons */ <View style={{ position: "absolute", bottom: 0, right: 0, display: "flex", height: "100%", zIndex: 10, flexDirection: "column", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10 }}>{/* Sec2: Navigator */}</View>}
                 </View>
 
                 <View /* Sec1: Modes container */
@@ -170,7 +160,7 @@ export default ({ navigation, device, ...props }: Props) => {
                     flexDirection: "row",
                     flexWrap: "wrap",
                     //backgroundColor: "blue",
-                    marginBottom: "20%",
+                    marginBottom: 300,
                     alignItems: "center",
                 }}>
                     {colorSnippets.map((color, index) => {
@@ -197,24 +187,6 @@ export default ({ navigation, device, ...props }: Props) => {
                 </View>
 
             </ScrollView>
-        </SafeAreaView >
-    );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        display: "flex",
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    header_container: {
-        minHeight: 200,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        overflow: "hidden",
-        backgroundColor: "#fff",
-    },
-});
+        </View >
+    )
+}

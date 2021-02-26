@@ -1,5 +1,4 @@
 /**
- * @deprecated
  * @param h 
  * @param s 
  * @param v 
@@ -79,7 +78,7 @@ const convertHSVToRgb: (h: number, s: number, v: number) => [number, number, num
   }
 
   return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-};
+}
 
 /**
  * 
@@ -162,7 +161,7 @@ const convertHSVToRgbShortRange: (h: number, s: number, v: number) => [number, n
   }
 
   return [Math.round(r * 100), Math.round(g * 100), Math.round(b * 100)];
-};
+}
 
 /** 
  * @deprecated
@@ -181,18 +180,29 @@ const _convertRGBToHex: (r: number, g: number, b: number) => string = (
   if (_b.length == 1) _b = "0" + b;
 
   return "#" + _r + _g + _b;
-};
+}
 
 const convertRGBToHex: (hsv: [number, number, number]) => string = (hsv) => {
-  var _r = hsv[0].toString(16);
-  var _g = hsv[1].toString(16);
-  var _b = hsv[2].toString(16);
+  var _r = hsv[0].toString(16)
+  var _g = hsv[1].toString(16)
+  var _b = hsv[2].toString(16)
 
   if (_r.length == 1) _r = "0" + _r;
   if (_g.length == 1) _g = "0" + _g;
   if (_b.length == 1) _b = "0" + _b;
 
   return "#" + _r + _g + _b;
-};
+}
 
-export { convertHSVToRgb, _convertRGBToHex, convertHSVToRgbShortRange, convertRGBToHex };
+const hsv2hex: (props: { hsv: [number, number, number] }) => string = ({ hsv }) => {
+  return convertRGBToHex(convertHSVToRgb(hsv[0], hsv[1], hsv[2]))
+}
+
+
+const hsv2hex_shortRange: (props: { hsv: [number, number, number] }) => string = ({ hsv }) => {
+  return convertRGBToHex(convertHSVToRgbShortRange(hsv[0], hsv[1], hsv[2]))
+}
+
+
+
+export { convertHSVToRgb, _convertRGBToHex, convertHSVToRgbShortRange, convertRGBToHex, hsv2hex, hsv2hex_shortRange };

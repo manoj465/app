@@ -34,7 +34,7 @@ const { width, height } = Dimensions.get("window");
  * 
  * @todo
  * - [ ] add groupName addition feature
- * - [ ] handle addition of rgb product
+ * - [x] handle addition of rgb product
  * - [ ] handle addition of RGBW product
  */
 export const PairingConnectorScreen1 = ({ navigation }: Props) => {
@@ -43,7 +43,6 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
   let _animation = null;
 
   useEffect(() => {
-    //navigation.replace("PairScreen_2", { newDevice: { Mac: "newDevice", Hostname: "hostname", localTimeStamp: getCurrentTimeInSeconds(), IP: "192.168.4.1", hsv: { h: 0, s: 100, v: 100 }, deviceName: "device Name", timers: [] } });
     const interval = setInterval(async () => {
       const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: log ? new logger("auth api", log) : undefined })
       console.log("<><><> " + JSON.stringify(res))
@@ -55,53 +54,19 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             ...res.RES,
             localTimeStamp: getCurrentTimeInSeconds(),
             IP: "192.168.4.1",
-            hsv: { h: 0, s: 100, v: 100 },
             deviceName: "",
             timers: [],
-            channel:
-              UNIVERSALS.GLOBALS.getDeviceType({ Hostname: res.RES.Hostname }) == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4
-                ? {
-                  deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4,
-                  outputChannnel: [{
-                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
-                    temprature: 3000,
-                    v: 80
-                  }, {
-                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
-                    temprature: 3000,
-                    v: 80
-                  }, {
-                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
-                    temprature: 3000,
-                    v: 80
-                  }, {
-                    type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
-                    temprature: 3000,
-                    v: 80
-                  },],
-                }
-                : UNIVERSALS.GLOBALS.getDeviceType({ Hostname: res.RES.Hostname }) == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C1
-                  ? {
-                    deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C1,
-                    outputChannnel: [{
-                      type: UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature,
-                      temprature: 3000,
-                      v: 80
-                    }]
-                  }
-                  : {
-                    deviceType: UNIVERSALS.GLOBALS.deviceType_e.deviceType_unknown,
-                    outputChannnel: []
-                  }
+            channel: UNIVERSALS.GLOBALS.getDefaultOutputChannel({ Hostname: res.RES.Hostname })
           }
         });
       }
 
-    }, 3000);
+    }, 3000)
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [])
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

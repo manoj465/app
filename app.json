@@ -18,7 +18,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "icon": "./assets/icons/bde_appIcon.png",
       "supportsTablet": true,
@@ -48,6 +50,7 @@
         }
       ],
       "display": "fullscreen"
-    }
+    },
+    "sdkVersion": "40.0.0"
   }
 }

@@ -5,13 +5,12 @@ import React from "react"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { State } from "react-native-gesture-handler"
 import { navigationProp } from ".."
-import { device } from "../../../../@api/v1/cloud"
 import { logger } from "../../../../@logger"
 import UNIVERSALS from "../../../../@universals"
 import { appOperator } from "../../../../app.operator"
-import { convertHSVToRgb, _convertRGBToHex } from "../../../../util/Color"
-import BrightnessSliderNew from "../../../common/BrightnessSlider"
+import BrightnessSliderNew from "../../../common/BrightnessSlider_deprivated"
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom"
+import { hsv2hex } from "../../../../util/Color"
 /* import ColorBlending from "gl-react-color-blending" */
 
 
@@ -31,54 +30,8 @@ export const DeviceCard = ({
   setToBeDeletedDevice
 }: props) => {
   log = log ? new logger("DEVICE CARD", log) : undefined
-  const { showActionSheetWithOptions } = useActionSheet();
-  let rgb2, rgb1, hex1, hex2
-  if (device.hsv) {
-    rgb1 = convertHSVToRgb(device.hsv.h, device.hsv.s, 100);
-    rgb2 = convertHSVToRgb(
-      device.hsv.h + 40,
-      device.hsv.s > 50 ? device.hsv.s : 50,
-      100
-    );
-  } else {
-    rgb1 = convertHSVToRgb(100, 80, 100)
-    rgb2 = convertHSVToRgb(130, 80, 100)
-  }
-  if (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4 && device.channel.outputChannnel[0].temprature < 4000) {
-    hex1 = _convertRGBToHex(174, 214, 241);
-    hex2 = _convertRGBToHex(169, 204, 227);
-  }
-  else {
-    hex1 = _convertRGBToHex(rgb1[0], rgb1[1], rgb1[2]);
-    hex2 = _convertRGBToHex(rgb2[0], rgb2[1], rgb2[2]);
-  }
+  const { showActionSheetWithOptions } = useActionSheet()
 
-
-  /**
-   * - [ ] decument this section
-   */
-
-  const updateColor = (v: number, gestureState: State, log?: logger) => {
-    if (v < 5)
-      v = 0
-    appOperator.device({
-      cmd: "COLOR_UPDATE",
-      deviceMac: [device.Mac],
-      hsv: { v },
-      gestureState,
-      log
-    })
-  }
-
-
-  const getHex: (props: { value: number, channel: UNIVERSALS.GLOBALS.deviceColorChannel_t, activeChannel?: number[], log?: logger }) => string = ({ value, channel, activeChannel, log }) => {
-    if (channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_wDownlight_C4) {
-      if (!activeChannel) {
-        // - [ ] return value as hex to all channel
-      }
-    }
-    return "#ffffff"
-  }
 
 
   return (
@@ -86,15 +39,38 @@ export const DeviceCard = ({
       style={[styles.container, { /* height: deviceCardHeight */ }]}
       activeOpacity={0.9}
       onPress={() => {
-        //if (device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_OW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_CW") || device.Hostname.includes(UNIVERSALS.venderConf.venderPrefix + "_WW")) {
-        navigation.navigate("devicePage", { device })
+        if (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
+          || device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB
+          || device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGBW) {
+          navigation.navigate("devicePage", { device })
+        }
+        else {
+          console.log("cannot open device page for device type " + device.channel.deviceType)
+        }
       }} >
       <LinearGradient
         /**
          * #todo
          * - [ ] gradient for natural/warm/cool white 
          */
-        colors={[hex1, hex2]}
+        colors={
+          (() => {
+            /** inCase deviceType is deviceType_wDownlight_C4 */
+            if (
+              (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
+                || device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW)
+              && device.channel.outputChannnel[0].temprature < 4000) {
+              return ["#ff0000", "#ff00ff"]
+            }
+            else if (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB) {
+              return [hsv2hex({ hsv: [device.channel.outputChannnel[0].h, device.channel.outputChannnel[0].s > 60 ? device.channel.outputChannnel[0].s : 60, 100] }),
+              hsv2hex({ hsv: [device.channel.outputChannnel[0].h + 60, device.channel.outputChannnel[0].s > 60 ? device.channel.outputChannnel[0].s : 60, 100] })]
+            }
+            else { /** ///default case */
+              return ["#ff0000", "#0000ff"]
+            }
+          })()
+        }
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{
@@ -176,12 +152,16 @@ export const DeviceCard = ({
               appOperator.device({
                 cmd: "COLOR_UPDATE",
                 deviceMac: [device.Mac],
-                hsv: { v: device.hsv.v ? 0 : 80 },
+                stateObject: {
+                  state: device.channel.state == UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF
+                    ? device.channel.preState ? device.channel.preState : UNIVERSALS.GLOBALS.channelState_e.CH_STATE_1
+                    : UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF
+                },
                 gestureState: State.END,
                 log
               })
             }}>
-            <MaterialCommunityIcons name={device.hsv.v ? "lightbulb-on-outline" : "lightbulb-off"} size={24} color="black" />
+            <MaterialCommunityIcons name={device.channel.state == UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF ? "lightbulb-off" : "lightbulb-on-outline"} size={24} color="black" />
           </NewRectButtonWithChildren>
 
           <Text  /**device name */
@@ -194,11 +174,22 @@ export const DeviceCard = ({
 
         <View style={styles.brightnessSliderContainer} /* ///brightness container  */>
           <BrightnessSliderNew
-            initBrValue={device.hsv ? device.hsv.v : 50}
+            initBrValue={device.channel.outputChannnel[0].v}
             deviceMac={[device.Mac]}
             onBrightnessChange={({ value, pinState }) => {
-              getHex({ value, channel: device.channel, log })
-              // - [ ] updateColor(BR, pinState, log)
+              if (device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
+                || device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW
+                || device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB)
+                appOperator.device({
+                  cmd: "COLOR_UPDATE",
+                  deviceMac: [device.Mac],
+                  /**
+                   * - [ ] send the active channel based on deviceType with different lengthTypes
+                   */
+                  channelBrightnessObject: { value, activeChannel: [true, true, true, true, true] },
+                  gestureState: pinState,
+                  log
+                })
             }}
             /**
              * 

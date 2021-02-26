@@ -51,8 +51,9 @@ export const PairingConnectorScreen2 = ({
   const [Wifi, setWifi] = useState("");
   const [deviceName, setDeviceName] = useState("");
   const y = useValue(0);
-  const onScroll = onScrollEvent({ y });
-  const selected = round(divide(y, 60));
+  const onScroll = onScrollEvent({ y })
+  const selected = round(divide(y, 60))
+
 
 
   useCode(

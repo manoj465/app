@@ -13,6 +13,7 @@ import { getCurrentTimeStampInSeconds } from '../../../util/DateTimeUtil';
 import { logger } from '../../../@logger';
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import { navigationProp } from "./index";
+import { channel } from 'redux-saga';
 
 interface Props {
     navigation: navigationProp
@@ -27,24 +28,25 @@ export default ({ navigation, user }: Props) => {
     let isPowerSavingOn = (() => {
         let powerSavingOn = true;
         deviceList.forEach(__item => {
-            if (__item.hsv.v) {
-                isAllOff = false
-                if (__item.hsv.v > 20)
-                    powerSavingOn = false
-            }
-        });
+            __item.channel.outputChannnel.forEach(__channel => {
+                if (__channel.v) {
+                    isAllOff = false
+                    if (__channel.v > 20)
+                        powerSavingOn = false
+                }
+            })
+        })
         return powerSavingOn
     })()
 
     const updateColor = ({ v }: { v: number }) => {
-        appOperator.device({
+        /* appOperator.device({
             cmd: "COLOR_UPDATE",
             deviceMac: [...reduxStore.store.getState().deviceReducer.deviceList.map((__item) => {
                 return __item.Mac
             })],
-            hsv: { h: undefined, s: undefined, v },
             gestureState: State.END,
-        })
+        }) */
     }
 
     return (
@@ -79,7 +81,16 @@ export default ({ navigation, user }: Props) => {
                 <View style={{ borderWidth: 0.2, borderRadius: 5, marginRight: 15 }}><Text style={{ paddingHorizontal: 5, paddingVertical: 3 }}>Alexa Support</Text></View>
                 <View style={{ borderWidth: 0.2, borderRadius: 5, marginRight: 15 }}><Text style={{ paddingHorizontal: 5, paddingVertical: 3 }}>Connect with Google Assistant</Text></View>
             </Animated.ScrollView> */}
-            <Animated.ScrollView showsHorizontalScrollIndicator={false} horizontal style={{ backgroundColor: "#fff", width: "100%", display: "flex", flexDirection: "row", marginTop: 5 }}>
+            <Animated.ScrollView
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                style={{
+                    backgroundColor: "#fff",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    marginTop: 5
+                }}>
                 <QuickActionBlock /** snooze all events */
                     Heading="Snooze all events"
                     subHeading="ALL OFF"

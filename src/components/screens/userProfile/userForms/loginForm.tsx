@@ -102,7 +102,7 @@ export const LoginHeader = ({ navigation, setHeaderView, log }: LoginHeader_t) =
                                 navigation.replace("dashboard")
                             },
                             //log: log ? new logger("user login operator", log) : undefined
-                            log: new logger("server")
+                            log: new logger("login Operator")
                         })
                     }}
                     style={{

@@ -67,7 +67,10 @@ const ColorPickerPin = ({
     appOperator.device({
       cmd: "COLOR_UPDATE",
       deviceMac: [device.Mac],
-      hsv: { h: Math.min(Math.round(h * 360), 360), s: Math.min(Math.round(s * 100), 100) },
+      stateObject: {
+        state: UNIVERSALS.GLOBALS.channelState_e.CH_STATE_RGB,
+        hsv: { h: Math.min(Math.round(h * 360), 360), s: Math.min(Math.round(s * 100), 100) },
+      },
       gestureState,
       log
     })
@@ -90,7 +93,7 @@ const ColorPickerPin = ({
           } */
           if (state == State.ACTIVE) {
             if (getTimeDiffNowInMs(timeStamp) > 200) {
-              console.log("Sending hex >>>>>>>>>>>>>>>>")
+              console.log("Sending hex >>>>>>>>>>>>>>>><<")
               //console.log("can send")
               timeStamp = Date.now();
               updateColor(h, s, state, log)
@@ -98,7 +101,7 @@ const ColorPickerPin = ({
               //console.log("cannot send")
             }
           } else if (state == State.END) {
-            console.log("Sending hex >>>>>>>>>>>>>>>>")
+            console.log("Sending hex >>>>>>>>>>>>>>>><<")
             setTimeout(() => {
               timeStamp = Date.now();
               updateColor(h, s, state, log)

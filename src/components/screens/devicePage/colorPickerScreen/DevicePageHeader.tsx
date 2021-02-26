@@ -10,7 +10,7 @@ import UNIVERSALS from "../../../../@universals";
 import { appOperator } from "../../../../app.operator";
 import { appState } from "../../../../redux";
 import { MainRouterStackParamList } from "../../../../routers/MainRouter";
-import BrightnessSlider from "../../../common/BrightnessSlider";
+import BrightnessSlider from "../../../common/BrightnessSlider_deprivated";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 
@@ -54,7 +54,10 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
               appOperator.device({
                 cmd: "COLOR_UPDATE",
                 //@ts-ignore
-                deviceMac: [device.Mac], hsv: { v: device.hsv.v ? 0 : 80 },
+                deviceMac: [device.Mac],
+                stateObject: {
+                  state: device?.channel?.preState ? device.channel.preState : UNIVERSALS.GLOBALS.channelState_e.CH_STATE_1
+                },
                 gestureState: State.END,
                 log
               })
@@ -68,7 +71,7 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
               justifyContent: "center",
               alignItems: "center"
             }}>
-            <MaterialCommunityIcons name={device.hsv.v ? "lightbulb-on-outline" : "lightbulb-off"} size={24} color="black" />
+            <MaterialCommunityIcons name={device.channel.state == UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF ? "lightbulb-off" : "lightbulb-on-outline"} size={24} color="black" />
           </NewRectButtonWithChildren>
 
           <Text style={styles.deviceName}>
@@ -80,8 +83,21 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
       <View style={styles.brightnessSliderContainer}>
         <BrightnessSlider
           color={"#eee"}
-          initBrValue={device.hsv ? device.hsv.v : 65}
+          initBrValue={device.channel.outputChannnel[0].v}
           deviceMac={[device.Mac]}
+          onBrightnessChange={({ value, pinState }) => {
+            appOperator.device({
+              cmd: "COLOR_UPDATE",
+              //@ts-ignore --description as device cannot be undefined
+              deviceMac: [device.Mac],
+              /**
+               * - [ ] send the active channel based on deviceType with different lengthTypes
+               */
+              channelBrightnessObject: { value, activeChannel: [true, true, true, true, true] },
+              gestureState: pinState,
+              log
+            })
+          }}
           log={log}
         />
       </View>
