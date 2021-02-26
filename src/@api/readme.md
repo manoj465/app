@@ -43,13 +43,14 @@ provides a wrapper around axios and base error filtering machanism
   - [x] loginAPI
   - [ ] fbLoginAPI
   - [x] signupAPI
-  - BUG (login/signup brocken after DEVICE_t midification)[https://app.clickup.com/t/27drhr]
+  - #cleared (login/signup brocken after DEVICE_t midification)[https://app.clickup.com/t/27drhr]
     -- resolution
-    - [x] create a function to return default outputChannel object as per deviceType
+
+    - [x] create a function to return default `channel` href-as `outputChannel` object as per deviceType
     - [x] use that function inside converCloudDeviceToLocal to get outputchannel for device if not present in cloud or local state
-    - [ ] modify local server to consume outputChannel in db as an optional field and modify `convertLocalDeviceToCLoud` as per new DataSet
-    - [ ] add outputChannel field in device query strings and methods
-    - [ ]
+    - [x] modify local server to consume outputChannel in db as an optional field and modify `convertLocalDeviceToCLoud` as per new DataSet
+    - [x] add outputChannel field in device query strings and methods
+
   - ###### `user`
     - [x] create
     - [ ] modify
