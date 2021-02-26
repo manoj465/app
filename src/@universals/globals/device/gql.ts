@@ -8,7 +8,7 @@ deviceName
 Mac
 IP
 ssid
-hsv
+channel
 groupName
 lastState
 timers
@@ -25,7 +25,7 @@ deviceName
 Mac
 IP
 ssid
-hsv
+channel
 groupName
 lastState
 timers
@@ -61,6 +61,7 @@ export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
     devices{
       id
       Mac
+      channel
       user{
         id
       }
@@ -70,22 +71,22 @@ export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
 
 export const createNewDevice_mutation = `mutation(
     $userID:ID!
-    $Mac:String!,
-    $deviceName:String,
-    $Hostname:String,
+    $Mac:String!
+    $deviceName:String
+    $Hostname:String
+    $channel:String
     $IP:String
     $ssid:String
-    $hsv:String
     $groupName:String
     $lastState:String
   ){
     createHueDevice(data:{
-      Mac:$Mac,
-      deviceName:$deviceName,
-      Hostname:$Hostname,
+      Mac:$Mac
+      deviceName:$deviceName
+      Hostname:$Hostname
       IP:$IP
       ssid:$ssid
-      hsv:$hsv
+      channel:$channel
       groupName:$groupName
       lastState:$lastState
       user:{connect:{id:$userID}}
@@ -98,9 +99,9 @@ export const createNewDevice_mutation = `mutation(
 export const updateDevice_mutation = `mutation(
   $id:ID!,
   $deviceName:String,
-	$IP:String
-	$ssid:String
-	$hsv:String
+	$IP:String!
+  $ssid:String
+  $channel:String!
 	$groupName:String
 	$lastState:String
 	$timers:String
@@ -112,8 +113,8 @@ export const updateDevice_mutation = `mutation(
     deviceName:$deviceName,
 		IP:$IP
 		ssid:$ssid
-		hsv:$hsv
-		groupName:$groupName
+    channel:$channel
+    groupName:$groupName
 		lastState:$lastState
 		timers:$timers
     ts:$ts
