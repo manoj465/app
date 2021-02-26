@@ -48,4 +48,5 @@
 
 - [ ] check if clean localStorage is provoded on new update first start
 - [ ] check icons for android and ios
-- [ ] conform release channel
+- [ ] confirm release channel
+- [ ] check server address

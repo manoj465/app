@@ -17,7 +17,10 @@
     "publish_OTATEST": "expo publish --release-channel otatest",
     "ADD_UNIVERSALS": "git subtree add --prefix=src/@universals https://github.com/Abhimanyu6676/-types-huelite main --squash",
     "PUSH_UNIVERSALS": "git subtree push --prefix=src/@universals https://github.com/Abhimanyu6676/-types-huelite main --squash",
-    "PULL_UNIVERSALS": "git subtree pull --prefix=src/@universals https://github.com/Abhimanyu6676/-types-huelite main --squash"
+    "PULL_UNIVERSALS": "git subtree pull --prefix=src/@universals https://github.com/Abhimanyu6676/-types-huelite main --squash",
+    "ADD_LOGGER": "git subtree add --prefix=src/@logger https://github.com/Abhimanyu6676/-logger main --squash",
+    "PUSH_LOGGER": "git subtree push --prefix=src/@logger https://github.com/Abhimanyu6676/-logger main --squash",
+    "PULL_LOGGER": "git subtree push --prefix=src/@logger https://github.com/Abhimanyu6676/-logger main --squash"
   },
   "dependencies": {
     "@apollo/client": "^3.0.2",
