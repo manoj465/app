@@ -11,6 +11,7 @@ import { MainRouterStackParamList } from '../../../../routers/MainRouter'
 import { DevicePageHeader } from './DevicePageHeader'
 import NW4_DeviceScreens from './c4_DeviceScreens'
 import RGB_deviceScreens from "./rgbDeviceScreens"
+import { STYLES } from "../../../../@styles"
 
 interface Props {
     navigation: StackNavigationProp<MainRouterStackParamList, "devicePage">
@@ -58,8 +59,8 @@ export default (props: Props) => {
             </View>
             { props.device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
                 && <View style={{ flex: 1, /* backgroundColor: "red" */ }}>
-                    <Text style={[UNIVERSALS.STYLES.H2, { color: UNIVERSALS.STYLES.textColors.secondary, marginLeft: 15, marginTop: 15 }]}>Extended Controls</Text>
-                    <Text style={[UNIVERSALS.STYLES.H7, { color: UNIVERSALS.STYLES.textColors.tertiary, marginLeft: 15, marginBottom: 15 }]}>Control individual device from single page</Text>
+                    <Text style={[STYLES.H2, { color: STYLES.textColors.secondary, marginLeft: 15, marginTop: 15 }]}>Extended Controls</Text>
+                    <Text style={[STYLES.H7, { color: STYLES.textColors.tertiary, marginLeft: 15, marginBottom: 15 }]}>Control individual device from single page</Text>
                     <NW4_DeviceScreens device={props.device} />
                 </View>}
 

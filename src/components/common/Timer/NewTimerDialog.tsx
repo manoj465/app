@@ -1,7 +1,7 @@
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from "react-native";
-import STYLES from "../../../styles";
+import { STYLES } from "../../../@styles";
 import UNIVERSALS from '../../../@universals';
 import API from '../../../@api';
 import { appOperator } from '../../../app.operator';

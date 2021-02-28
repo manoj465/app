@@ -6,7 +6,7 @@ import { MainRouterStackParamList } from "../../../routers/MainRouter";
 import { getWebSocket } from "../../../services/backGroundServices/webSocket";
 import { logger } from "../../../@logger";
 import { NewRectButton } from "../../common/buttons/RectButtonCustom";
-import styles from "../../../styles";
+import { STYLES as styles } from "../../../@styles";
 
 
 const slides = [

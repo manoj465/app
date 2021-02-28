@@ -7,6 +7,7 @@ import UNIVERSALS from '../../../../../@universals'
 import { appOperator } from '../../../../../app.operator'
 import { getTimeDiffNowInMs } from '../../../../../util/DateTimeUtil'
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { STYLES } from "../../../../../@styles"
 
 interface Props {
     device: UNIVERSALS.GLOBALS.DEVICE_t
@@ -51,7 +52,8 @@ export default (props: Props) => {
                                     channelBrightnessObject: {
                                         value: brPercentage,
                                         activeChannel: (() => {
-                                            return props.device.channel.outputChannnel.map((temp__channel__, temp__index__) => {
+                                            //@ts-ignore
+                                            return props.device.channel.outputChannnel.map((temp__channel__: any, temp__index__: number) => {
                                                 if (temp__index__ == index) {
                                                     return true
                                                 }
@@ -73,7 +75,7 @@ export default (props: Props) => {
                 return (<View
                     key={"_" + index}
                     style={[
-                        UNIVERSALS.STYLES.shadow, {
+                        STYLES.shadow, {
                             width: "40%",
                             height: 200,
                             backgroundColor: "#ffffffee",
@@ -93,7 +95,7 @@ export default (props: Props) => {
                         flexDirection: "column",
                         justifyContent: "flex-end"
                     }}>
-                        <View style={[UNIVERSALS.STYLES.shadow, {
+                        <View style={[STYLES.shadow, {
                             width: 50,
                             height: 50,
                             backgroundColor: "white",
@@ -106,10 +108,10 @@ export default (props: Props) => {
                         }]}>
                             <MaterialCommunityIcons name={props.device.channel.state == UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF ? "lightbulb-off" : "lightbulb-on-outline"} size={24} color="black" />
                         </View>
-                        <Text style={[UNIVERSALS.STYLES.H6, { color: UNIVERSALS.STYLES.textColors.secondary, marginBottom: 10 }]}>{props.device.deviceName + "-" + (index + 1)}</Text>
+                        <Text style={[STYLES.H6, { color: STYLES.textColors.secondary, marginBottom: 10 }]}>{props.device.deviceName + "-" + (index + 1)}</Text>
                     </View>
                     <View
-                        style={[UNIVERSALS.STYLES.shadow, {
+                        style={[STYLES.shadow, {
                             backgroundColor: "#eee",
                             height: "90%",
                             width: "40%",

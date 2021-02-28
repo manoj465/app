@@ -4,7 +4,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Image, StyleProp, Text, TextStyle, View } from "react-native";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import styles from '../../../styles';
+import { STYLES as styles } from '../../../@styles';
 import { appOperator } from "../../../app.operator";
 import { logger } from "../../../@logger";
 import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
@@ -133,7 +133,7 @@ const AppConfigScreen = ({ navigation }: props) => {
                             color: "#555",
                             textAlign: "center"
                         }]}>Powered by <Text style={{ fontWeight: "bold" }}>STERNET INDUSTRIES</Text></Text>
-                        <Text style={[UNIVERSALS.STYLES.H7, { fontWeight: "normal", textAlign: "center" }]}>ver - 1.0.0-beta</Text>
+                        <Text style={[styles.H7, { fontWeight: "normal", textAlign: "center" }]}>ver - 1.0.0-beta</Text>
                     </View>
                 </View>
 

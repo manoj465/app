@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 //native imports
 import { _appState } from "../../../redux/rootReducer";
 import { MainRouterStackParamList } from "../../../routers/MainRouter";
-import STYLES from "../../../styles";
+import { STYLES } from "../../../@styles";
 import { appOperator } from "../../../app.operator";
 import { logger } from "../../../@logger";
 import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
