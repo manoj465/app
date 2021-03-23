@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { State } from "react-native-gesture-handler";
 import Animated from "react-native-reanimated";
@@ -23,6 +23,14 @@ interface Props {
 
 export const DevicePageHeader = ({ navigation, device: _device, headBackgroundColor, log }: Props) => {
   let device = useSelector<appState, UNIVERSALS.GLOBALS.DEVICE_t | undefined>(state => state.deviceReducer.deviceList.find(item => item.Mac == _device.Mac))
+
+
+  useEffect(() => {
+    console.log("device.channel modified " + JSON.stringify(device?.channel, null, 2))
+    return () => {
+    }
+  }, [device])
+
   if (!device)
     device = _device
 
@@ -95,13 +103,21 @@ export const DevicePageHeader = ({ navigation, device: _device, headBackgroundCo
                */
               channelBrightnessObject: { value, activeChannel: [true, true, true, true, true] },
               gestureState: pinState,
+              onActionComplete: ({ newDeviceList }) => {
+                console.log("terrrrrrrrrrrr")
+                appOperator.device({
+                  cmd: "ADD_UPDATE_DEVICES",
+                  newDevices: newDeviceList,
+                  //log: new logger("debug", undefined)
+                })
+              },
               log
             })
           }}
           log={log}
         />
       </View>
-    </Animated.View>
+    </Animated.View >
 
   );
 };

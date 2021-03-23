@@ -24,6 +24,8 @@
 
 - [ ] facebook login not working
 - [ ] `deviceListOperation` not working in deviceSettingScreen
+- [x] Dashboard Card on/off button not working
+- [x] Dashboard DeviceCard Icon not changing upon Brightness change via slider
 
 ---
 
@@ -50,3 +52,15 @@
 - [ ] check icons for android and ios
 - [ ] confirm release channel
 - [ ] check server address
+
+## Working Features
+
+- [ ] Brightness/Color Control
+- [ ] login/Signup
+- [ ] tutorials
+- [ ] timer/modes
+- [ ] cloud sync backup/restore
+- [ ] device sharing
+- [ ] custom IFTT
+- [ ] energy usage
+- [ ] user activity tracking (for device usage stats)

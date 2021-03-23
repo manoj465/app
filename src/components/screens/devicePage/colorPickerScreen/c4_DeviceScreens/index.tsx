@@ -62,6 +62,13 @@ export default (props: Props) => {
                                         })()
                                     },
                                     gestureState: 0,
+                                    onActionComplete: ({ newDeviceList }) => {
+                                        appOperator.device({
+                                            cmd: "ADD_UPDATE_DEVICES",
+                                            newDevices: newDeviceList,
+                                            //log: new logger("debug", undefined)
+                                        })
+                                    },
                                     //log
                                 })
                             } else {

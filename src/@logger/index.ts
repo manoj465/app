@@ -17,10 +17,11 @@ export class logger {
     printAll = false
     printable = [
         //"MAIN ACTIVITY", /* App.ts */
-        "LOGIN OPERATOR", /** onLoginPressed in file => `userProfile/userForms/loginForm.tsx` */
+        //"LOGIN OPERATOR", /** onLoginPressed in file => `userProfile/userForms/loginForm.tsx` */
         //"BG SERVICE",
         //"DEVICE MODES SCREEN", /* device modes screen in device page */
         //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
+        "DEVICE CARD",
         //"DASHBOARD",/* DAHSBOARD SCREEN */
         //"LOGIN/SIGNUP", /* LOGIN/SIGNUP screen */
         //"TEST FUNCTION", /* testfunction prints */
@@ -29,6 +30,7 @@ export class logger {
         //"PAIRING_SCREEN",
         //"SOCKET TEST",
         //"SERVER",
+        //"DEBUG",
     ]
     /**
      * 

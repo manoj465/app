@@ -158,7 +158,14 @@ export const DeviceCard = ({
                     : UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF
                 },
                 gestureState: State.END,
-                log
+                log,
+                onActionComplete: ({ newDeviceList }) => {
+                  appOperator.device({
+                    cmd: "ADD_UPDATE_DEVICES",
+                    newDevices: newDeviceList,
+                    log
+                  })
+                },
               })
             }}>
             <MaterialCommunityIcons name={device.channel.state == UNIVERSALS.GLOBALS.channelState_e.CH_STATE_OFF ? "lightbulb-off" : "lightbulb-on-outline"} size={24} color="black" />
@@ -188,7 +195,14 @@ export const DeviceCard = ({
                    */
                   channelBrightnessObject: { value, activeChannel: [true, true, true, true, true] },
                   gestureState: pinState,
-                  log
+                  log,
+                  onActionComplete: ({ newDeviceList }) => {
+                    appOperator.device({
+                      cmd: "ADD_UPDATE_DEVICES",
+                      newDevices: newDeviceList,
+                      log
+                    })
+                  },
                 })
             }}
             /**
