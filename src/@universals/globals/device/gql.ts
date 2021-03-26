@@ -17,8 +17,6 @@ user{
     ${HUE_User_fields_no_devices}
 }`
 
-
-
 export const Device_fields_noUser = `id
 Hostname
 deviceName
@@ -47,6 +45,12 @@ export const getDeviceWithMac_query = `query($Mac: String!) {
   }`
 
 
+/**
+ * @description connect/disconnect devices from userDB
+ * 
+ * @param connect boolean describing weather to add the given device to userDB or to remove it
+ * 
+ */
 export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
   $id:ID!
   $deviceID:ID!
@@ -122,3 +126,15 @@ export const updateDevice_mutation = `mutation(
    ${Device_fields_noUser}
   }
 }`
+
+/**
+ * @description get all devices for provided user
+ * 
+ * @queryParameters id - user UUID in DB
+ */
+export const getDeviceForUser_queryString = `query($id:ID!){
+  allHueDevices(where:{user_some:{id:$id}}){
+    ${Device_fields_noUser}
+  }
+}`
+
