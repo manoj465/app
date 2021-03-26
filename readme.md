@@ -50,8 +50,10 @@
 
 - [ ] check if clean localStorage is provoded on new update first start
 - [ ] check icons for android and ios
-- [ ] confirm release channel
+- [ ] check if app version number in appConfig screen is updated
 - [ ] check server address
+- [ ] confirm release channel
+- [ ] update working features and major bugs in below section
 
 ## Working Features
 
@@ -64,3 +66,10 @@
 - [ ] custom IFTT
 - [ ] energy usage
 - [ ] user activity tracking (for device usage stats)
+
+## Major Bugs
+
+Listed are the bugs which are worth mentioning, althought we are contineously working on fixes and improvements,
+Time before each bug is resolved could not be forsaid
+
+- [ ] Login/Signup Not Working
