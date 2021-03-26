@@ -8,7 +8,7 @@ deviceName
 Mac
 IP
 ssid
-hsv
+channel
 groupName
 lastState
 timers
@@ -17,15 +17,13 @@ user{
     ${HUE_User_fields_no_devices}
 }`
 
-
-
 export const Device_fields_noUser = `id
 Hostname
 deviceName
 Mac
 IP
 ssid
-hsv
+channel
 groupName
 lastState
 timers
@@ -47,6 +45,12 @@ export const getDeviceWithMac_query = `query($Mac: String!) {
   }`
 
 
+/**
+ * @description connect/disconnect devices from userDB
+ * 
+ * @param connect boolean describing weather to add the given device to userDB or to remove it
+ * 
+ */
 export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
   $id:ID!
   $deviceID:ID!
@@ -61,6 +65,7 @@ export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
     devices{
       id
       Mac
+      channel
       user{
         id
       }
@@ -70,26 +75,24 @@ export const userUpdateDevicesMutationString = (connect?: boolean) => `mutation(
 
 export const createNewDevice_mutation = `mutation(
     $userID:ID!
-    $Mac:String!,
-    $deviceName:String,
-    $Hostname:String,
+    $Mac:String!
+    $deviceName:String
+    $Hostname:String
+    $channel:String
     $IP:String
     $ssid:String
-    $hsv:String
     $groupName:String
     $lastState:String
-    $timers:String
   ){
     createHueDevice(data:{
-      Mac:$Mac,
-      deviceName:$deviceName,
-      Hostname:$Hostname,
+      Mac:$Mac
+      deviceName:$deviceName
+      Hostname:$Hostname
       IP:$IP
       ssid:$ssid
-      hsv:$hsv
+      channel:$channel
       groupName:$groupName
       lastState:$lastState
-      timers:$timers
       user:{connect:{id:$userID}}
     }){
     ${Device_fields_noUser}
@@ -100,9 +103,9 @@ export const createNewDevice_mutation = `mutation(
 export const updateDevice_mutation = `mutation(
   $id:ID!,
   $deviceName:String,
-	$IP:String
-	$ssid:String
-	$hsv:String
+	$IP:String!
+  $ssid:String
+  $channel:String!
 	$groupName:String
 	$lastState:String
 	$timers:String
@@ -114,8 +117,8 @@ export const updateDevice_mutation = `mutation(
     deviceName:$deviceName,
 		IP:$IP
 		ssid:$ssid
-		hsv:$hsv
-		groupName:$groupName
+    channel:$channel
+    groupName:$groupName
 		lastState:$lastState
 		timers:$timers
     ts:$ts
@@ -123,3 +126,15 @@ export const updateDevice_mutation = `mutation(
    ${Device_fields_noUser}
   }
 }`
+
+/**
+ * @description get all devices for provided user
+ * 
+ * @queryParameters id - user UUID in DB
+ */
+export const getDeviceForUser_queryString = `query($id:ID!){
+  allHueDevices(where:{user_some:{id:$id}}){
+    ${Device_fields_noUser}
+  }
+}`
+
