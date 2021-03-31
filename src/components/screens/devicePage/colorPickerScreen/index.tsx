@@ -1,17 +1,19 @@
+import { MaterialIcons } from '@expo/vector-icons'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { add } from 'react-native-reanimated'
 import { hsv2color, max, min, useValue } from 'react-native-redash'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { device } from '../../../../@api/v1/cloud'
 import { logger } from '../../../../@logger'
+import { STYLES } from "../../../../@styles"
 import UNIVERSALS from '../../../../@universals'
 import { MainRouterStackParamList } from '../../../../routers/MainRouter'
-import { DevicePageHeader } from './DevicePageHeader'
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom'
 import NW4_DeviceScreens from './c4_DeviceScreens'
+import { DevicePageHeader } from './DevicePageHeader'
 import RGB_deviceScreens from "./rgbDeviceScreens"
-import { STYLES } from "../../../../@styles"
+
 
 interface Props {
     navigation: StackNavigationProp<MainRouterStackParamList, "devicePage">
@@ -59,9 +61,35 @@ export default (props: Props) => {
             </View>
             { props.device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
                 && <View style={{ flex: 1, /* backgroundColor: "red" */ }}>
-                    <Text style={[STYLES.H2, { color: STYLES.textColors.secondary, marginLeft: 15, marginTop: 15 }]}>Extended Controls</Text>
-                    <Text style={[STYLES.H7, { color: STYLES.textColors.tertiary, marginLeft: 15, marginBottom: 15 }]}>Control individual device from single page</Text>
-                    <NW4_DeviceScreens device={props.device} />
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 15
+                    }}>
+                        <View>
+                            <Text style={[STYLES.H2, { color: STYLES.textColors.secondary, marginTop: 10 }]}>Extended Controls</Text>
+                            <Text style={[STYLES.H7, { color: STYLES.textColors.tertiary, marginBottom: 10 }]}>Control individual device from single page</Text>
+                        </View>
+                        <NewRectButtonWithChildren /* Sec3: timer button */
+                            style={{}}
+                            onPress={() => {
+                                if (props.navigateToTimer) {
+                                    console.log("go to timer")
+                                    props.navigateToTimer()
+                                }
+                                else {
+                                    console.log("cannot go to timer")
+
+                                }
+                            }}>
+                            <MaterialIcons name="access-alarm" size={35} color="#333" />
+                        </NewRectButtonWithChildren>
+                    </View>
+                    <NW4_DeviceScreens
+                        device={props.device}
+                        navigateToTimer={props.navigateToTimer} />
                 </View>}
 
             {props.device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB
@@ -72,7 +100,8 @@ export default (props: Props) => {
                         hue={hue}
                         saturation={saturation}
                         value={value}
-                        backgroundColor={backgroundColor} />
+                        backgroundColor={backgroundColor}
+                        navigateToTimer={props.navigateToTimer} />
                 </View>}
         </SafeAreaView >
     )

@@ -9,6 +9,11 @@ export function uuidv4() {
   });
 }
 
+/**
+ * 
+ * @TODO 
+ * - [ ] consume an optional array object with id param to map over and verify that new uuid is unique
+ */
 export function generate_UUID_10_withVenderPrefix() {
   return UNI.venderConf.venderPrefix + "_xxxxxxxxxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,

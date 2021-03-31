@@ -34,7 +34,8 @@ interface Props {
  * featureRequest timer delete action conformation to avoid unwanted delete operation
  */
 export const Timer = ({ device, log }: Props) => {
-  const deviceFromStore = useSelector((state: appState) => state.deviceReducer.deviceList.find(item => item.Mac == device.Mac))
+  //@ts-ignore
+  const deviceFromStore = useSelector((state: appState) => state.deviceReducer.deviceList.find<UNIVERSALS.GLOBALS.DEVICE_t>(item => item.Mac == device.Mac))
   const [timerInEditor, setTimerInEditor] = useState<Omit<UNIVERSALS.GLOBALS.TIMER_t, "id"> & { id?: string } | undefined>(undefined)
 
 
@@ -49,6 +50,7 @@ export const Timer = ({ device, log }: Props) => {
 
 
       {deviceFromStore && deviceFromStore.timers.map((timerFromProp, index) => { /* Sec2: timer block container */
+        //console.log("timer from props = = = = = " + JSON.stringify(timerFromProp))
         return (
           <View
             style={styles.timerBlockConatiner}
@@ -67,7 +69,7 @@ export const Timer = ({ device, log }: Props) => {
                 style={{
                   width: 1,
                   borderLeftColor:
-                    timerFromProp?.ET == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON
+                    timerFromProp.ET == UNIVERSALS.GLOBALS.TIMER_EVENT_TYPE_e.ON
                       ? appPositiveColor
                       : "#aaa",
                   borderLeftWidth: 2,

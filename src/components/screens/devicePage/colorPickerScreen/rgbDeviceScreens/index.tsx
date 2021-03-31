@@ -131,7 +131,14 @@ export default ({ navigation, device, ...props }: Props) => {
                             <NewRectButtonWithChildren /* Sec3: timer button */
                                 style={{}}
                                 onPress={() => {
-                                    props.navigateToTimer && props.navigateToTimer()
+                                    if (props.navigateToTimer) {
+                                        console.log("go to timer")
+                                        props.navigateToTimer()
+                                    }
+                                    else {
+                                        console.log("cannot go to timer")
+
+                                    }
                                 }}>
                                 <MaterialIcons name="access-alarm" size={35} color="#333" />
                             </NewRectButtonWithChildren>

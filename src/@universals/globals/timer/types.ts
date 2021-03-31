@@ -10,8 +10,8 @@ export enum TIMER_DAYTIME_e {
 
 export enum TIMER_STATUS_e {
     INACTIVE,
-    ONCE,
-    REPEAT
+    REPEAT,
+    ONCE
 }
 
 export type TIMER_DAYS_t = [boolean, boolean, boolean, boolean, boolean, boolean, boolean]

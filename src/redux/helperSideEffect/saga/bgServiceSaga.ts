@@ -124,19 +124,19 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
         //log?.print("fetching user")
         const userRes = await api.cloudAPI.user.userQuery.v1({
             id: user.id,
-            //log: log ? new logger("userQueryAPI", log) : undefined
+            log: log ? new logger("userQueryAPI", log) : undefined
         })
-        //log?.print("userQueryRes " + JSON.stringify(userRes, null, 2))
+        log?.print("userQueryRes " + JSON.stringify(userRes, null, 2))
         if (userRes.RES?.id) {
             appOperator.userStoreUpdateFunction({ user: UNIVERSALS.GLOBALS.convert_user_backendToLocal({ user: userRes.RES }) })
         }
         if (userRes.RES?.devices) {
-            /*  appOperator.device({
-                 cmd: "ADD_UPDATE_DEVICES",
-                 cloudState: true,
-                 newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices }) : [],
-                 //log: log ? new logger("device-operator add_update_devices", log) : undefined
-             }) */
+            appOperator.device({
+                cmd: "ADD_UPDATE_DEVICES",
+                cloudState: true,
+                newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices }) : [],
+                log: log ? new logger("device-operator add_update_devices", log) : undefined
+            })
         }
     }
     else if (iteration % 2 == 0 && user?.id) {
@@ -195,7 +195,8 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
 const handleDeviceInMapLoop = ({ device, user, iteration, log }: { device: UNIVERSALS.GLOBALS.DEVICE_t, user?: UNIVERSALS.GLOBALS.USER_t, iteration: number, log?: logger }) => {
     log?.print("device is " + device.Mac + " device ID is " + device.id)
     if (user?.id) {
-        if (!device.id) /** create device or sync ID */ {
+        /// create new device to cloud if not found on cloud
+        if (!device.id) {
             (async () => {
                 log?.print("getting device ID for device " + device.Mac + " - " + device.deviceName)
                 const res = await api.cloudAPI.device.deviceQueryWithMac.v1({ device, log: log ? new logger("device_query Api", log) : undefined })

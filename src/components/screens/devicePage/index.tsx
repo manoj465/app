@@ -16,7 +16,8 @@ interface Props {
 
 export default ({ navigation, route: { params: { device: deviceFromProp } } }: Props) => {
     const [screen, setScreen] = useState<"colorPicker" | "timer" | "deviceSetting">("colorPicker")
-    const device = useSelector<appState, UNIVERSALS.GLOBALS.DEVICE_t | undefined>(state => state.deviceReducer.deviceList.find(item => item.Mac == deviceFromProp.Mac))
+    //@ts-ignore
+    const device = useSelector<appState, UNIVERSALS.GLOBALS.DEVICE_t>(state => state.deviceReducer.deviceList.find(item => item.Mac == deviceFromProp.Mac))
 
 
     if (screen == "colorPicker" && device &&
@@ -24,7 +25,7 @@ export default ({ navigation, route: { params: { device: deviceFromProp } } }: P
             || device?.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB)
     )
         return <RGBScreens navigation={navigation} device={device} navigateToTimer={() => { setScreen("timer") }} />
-    else if (screen == "timer" && device)
+    else if (screen == "timer")
         return <TimerScreen navigation={navigation} device={device} navigateToColorPicker={() => { setScreen("colorPicker") }} />
     return ((() => {
         useEffect(() => {

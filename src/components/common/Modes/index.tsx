@@ -10,7 +10,7 @@ interface mode_i {
   img: any
   modeData: { modeSet: { time: number, color: string }[] }
 }
-const modes: mode_i[] = [
+const RGB_MODES: mode_i[] = [
   {
     name: "Romance",
     img: require("../../../../assets/images/presetImages/scenes/romance.jpg"),
@@ -61,7 +61,15 @@ const modes: mode_i[] = [
     img: require("../../../../assets/images/presetImages/scenes/fortnite.jpg"),
     modeData: { modeSet: [{ time: 5000, color: "#0000ff" }, { time: 5000, color: "#180726" }, { time: 5000, color: "#300726" }] }
   }
-];
+]
+
+const NW4_MODES: mode_i[] = [
+  {
+    name: "Demo Mode",
+    img: require("../../../../assets/images/presetImages/scenes/candle_light.jpg"),
+    modeData: { modeSet: [{ time: 5000, color: "#ffffffff00" }, { time: 5000, color: "#00ff00ff00" }, { time: 5000, color: "#ff00ff0000" }, { time: 5000, color: "#0000000000" }] }
+  }
+]
 
 interface Props {
   device: UNIVERSALS.GLOBALS.DEVICE_t;
@@ -78,7 +86,11 @@ export const Modes = ({ device }: Props) => {
       }}>
       <FlatList
         horizontal
-        data={modes}
+        data={device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_RGB
+          ? RGB_MODES
+          : device.channel.deviceType == UNIVERSALS.GLOBALS.deviceType_e.deviceType_NW4
+            ? NW4_MODES
+            : []}
         keyExtractor={(_, index) => {
           return "" + index;
         }}
