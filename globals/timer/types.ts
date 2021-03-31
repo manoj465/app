@@ -10,8 +10,8 @@ export enum TIMER_DAYTIME_e {
 
 export enum TIMER_STATUS_e {
     INACTIVE,
-    ONCE,
-    REPEAT
+    REPEAT,
+    ONCE
 }
 
 export type TIMER_DAYS_t = [boolean, boolean, boolean, boolean, boolean, boolean, boolean]
@@ -24,6 +24,7 @@ export interface TIMER_t {
     DT: TIMER_DAYTIME_e,
     ET: TIMER_EVENT_TYPE_e,
     STATUS: TIMER_STATUS_e,
+    STATE?: String,
     DAYS: TIMER_DAYS_t,
 }
 

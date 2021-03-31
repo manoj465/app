@@ -1,5 +1,5 @@
 import { logger } from "../../../@logger"
-import { TIMER_t } from "./types"
+import { TIMER_t, TIMER_EVENT_TYPE_e, TIMER_DAYTIME_e } from "./types"
 
 
 
@@ -25,7 +25,7 @@ export const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersStr
     log?.print("timersString to convert = " + timersString)
     if (timersString) {
         try {
-            let timersObject: (Omit<TIMER_t, "DAYS"> & { DAYS: number })[] = JSON.parse(timersString)
+            let timersObject: (Omit<Omit<Omit<TIMER_t, "DAYS">, "ET">, "DT"> & { DAYS: number, ET: number, DT: number })[] = JSON.parse(timersString)
             if (timersObject) {
                 log?.print("timer array size is " + timersObject.length)
                 log?.print(JSON.stringify(timersObject, null, 2))
@@ -35,7 +35,16 @@ export const convertTimersStringToObj: convertTimersStringToObj_t = ({ timersStr
                     for (let daysIndex = 0; daysIndex < 7; daysIndex++) {
                         tempDAYS[daysIndex] = getBit(daysIndex, timer.DAYS)
                     }
-                    let tempTimer: TIMER_t = { ...timer, DAYS: tempDAYS }
+                    let tempTimer: TIMER_t = {
+                        ...timer,
+                        ET: timer.ET == 1
+                            ? TIMER_EVENT_TYPE_e.ON
+                            : TIMER_EVENT_TYPE_e.OFF,
+                        DT: timer.DT == 1
+                            ? TIMER_DAYTIME_e.AM
+                            : TIMER_DAYTIME_e.PM,
+                        DAYS: tempDAYS
+                    }
                     return tempTimer
                 });
                 log?.print(JSON.stringify(newTimersObject, null, 2))
@@ -74,7 +83,18 @@ type converLocalTimerObjectToBackendString_t = (props: converLocalTimerObjectToB
 export const converLocalTimerObjectToBackendString: converLocalTimerObjectToBackendString_t = ({ timers, log }) => {
     let newTimers = timers.map((timer) => {
         return {
-            ...timer, DAYS: (() => {
+            ...timer,
+            ET: timer.ET == TIMER_EVENT_TYPE_e.ON
+                ? 1
+                : timer.ET == TIMER_EVENT_TYPE_e.OFF
+                    ? 2
+                    : 0,
+            DT: timer.DT == TIMER_DAYTIME_e.AM
+                ? 1
+                : timer.DT == TIMER_DAYTIME_e.PM
+                    ? 2
+                    : 0,
+            DAYS: (() => {
                 let daysInt = 0
                 timer.DAYS.forEach((day, index) => {
                     log?.print("before - index is " + index + " number is " + daysInt)

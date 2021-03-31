@@ -57,10 +57,12 @@ export const convert_Device_LocalToBackend_forUpdateMutation: convert_Device_Loc
     const newDevice: Omit<Device_t, "id"> = {
         IP: device.IP,
         deviceName: device.deviceName,
-        ts: device.localTimeStamp
+        ts: device.localTimeStamp,
+        channel: JSON.stringify(device.channel)
     }
     if (device.timers)
         newDevice.timers = converLocalTimerObjectToBackendString({ timers: device.timers })
+
     return newDevice
 }
 
