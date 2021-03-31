@@ -133,7 +133,7 @@ const AppConfigScreen = ({ navigation }: props) => {
                             color: "#555",
                             textAlign: "center"
                         }]}>Powered by <Text style={{ fontWeight: "bold" }}>STERNET INDUSTRIES</Text></Text>
-                        <Text style={[styles.H7, { fontWeight: "normal", textAlign: "center" }]}>ver - 1.0.1</Text>
+                        <Text style={[styles.H7, { fontWeight: "normal", textAlign: "center" }]}>ver - 1.1.0</Text>
                     </View>
                 </View>
 
