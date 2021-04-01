@@ -7,7 +7,7 @@
   "expo": {
     "name": "BDE Smart",
     "slug": "BDE",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icons/bde_appIcon.png",
     "splash": {
@@ -20,14 +20,14 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "icon": "./assets/icons/bde_appIcon.png",
+      "icon": "./assets/icons/bde/bde_appIcon_ios.png",
       "supportsTablet": true,
       "buildNumber": "1.1.0",
       "bundleIdentifier": "com.sternet.bde"
     },
     "android": {
       "icon": "./assets/icons/bde_appIcon.png",
-      "versionCode": 2,
+      "versionCode": 3,
       "package": "com.sternet.bde"
     },
     "web": {

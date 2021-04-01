@@ -72,7 +72,7 @@
 Listed are the bugs which are worth mentioning, althought we are contineously working on fixes and improvements,
 Time before each bug is resolved could not be forsaid
 
-- [ ] Login/Signup Not Working
+- [x] Login/Signup Not Working (fixed)
 
 ---
 
