@@ -21,3 +21,7 @@ dist
 # react compiler
 components/compilers/
 components/compilers
+
+
+# configurationFiles
+baseAxios.ts
