@@ -25,3 +25,5 @@ components/compilers
 
 # configurationFiles
 baseAxios.ts
+package.json
+app.json
