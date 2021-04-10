@@ -17,6 +17,7 @@ import BGService from "./src/services/backGroundServices";
 import { getData, storeData } from "./src/services/db/storage";
 import { logger } from "./src/@logger";
 import UNIVERSALS from "./src/@universals";
+import mqtt from "./src/services/backGroundServices/mqtt"
 
 //LogBox.ignoreAllLogs(true)
 
