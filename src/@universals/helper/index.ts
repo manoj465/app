@@ -1,4 +1,4 @@
-import * as helper from "./color"
+import * as color from "./color"
 import * as util from "./util"
 
-export { helper, util }
+export { color, util }
