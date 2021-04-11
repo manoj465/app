@@ -11,8 +11,11 @@ interface getHex_i {
     stateObject?: {
         state: channelState_e
         hsv?: {
+            /** @range [0-360] */
             h?: number
+            /** @range [0-100] */
             s?: number
+            /** @range [0-100] */
             v?: number
         }
     },
@@ -27,7 +30,6 @@ interface getHex_i {
  * - [x] send newState hex code upon processing and updateing channelObject
  * - [ ] make activeChannel optional in which case if activeChannel props is missing than apply the value to all channel
  * 
- * - BUG #cleared hex code not generated properly in case of channelType `UNIVERSALS.GLOBALS.outputChannelTypes_e.colorChannel_temprature`
  * - BUG for deviceType NW4 hex should be 4 pair which is currently 5 pair --resolution remove new pair addition code to newState from `line 149-150`
  */
 export const getHex: (props: getHex_i) => [string | undefined, DEVICE_t] = ({ channelBrightnessObject, stateObject, ...props }) => {
@@ -87,11 +89,11 @@ export const getHex: (props: getHex_i) => [string | undefined, DEVICE_t] = ({ ch
         }
         // Handles `CH_STATE_RGB` stateObject for RGB device channel
         else if (stateObject.state == channelState_e.CH_STATE_RGB && newDevice.channel.deviceType == deviceType_e.deviceType_RGB) {
-            if (stateObject?.hsv?.h)
+            if (stateObject?.hsv?.h != undefined)
                 newDevice.channel.outputChannnel[0].h = stateObject?.hsv?.h
-            if (stateObject?.hsv?.s)
+            if (stateObject?.hsv?.s != undefined)
                 newDevice.channel.outputChannnel[0].s = stateObject?.hsv?.s
-            if (stateObject?.hsv?.v)
+            if (stateObject?.hsv?.v != undefined)
                 newDevice.channel.outputChannnel[0].v = stateObject?.hsv?.v
             newDevice.channel.preState = stateObject.state
             newDevice.channel.state = stateObject.state
