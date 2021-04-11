@@ -1,9 +1,7 @@
-import { DEVICE_t, Device_t } from "../globalTypes"
-import { logger } from "../../../@logger"
-import { convertTimersStringToObj, converLocalTimerObjectToBackendString } from "../timer"
-import { getHsvFromString } from "../../helper/color"
-import { deviceType_e, deviceColorChannel_t, channelState_e, outputChannelTypes_e } from "./types"
-import { channel } from "redux-saga"
+import { logger } from "../../../../@logger"
+import { DEVICE_t, Device_t } from "../../globalTypes"
+import { converLocalTimerObjectToBackendString, convertTimersStringToObj } from "../../timer"
+import { channelState_e, deviceColorChannel_t, deviceType_e, outputChannelTypes_e } from "../types"
 
 type convert_Devices_backendToLocal_t = (props: { devices: Device_t[], socket?: any, log?: logger }) => DEVICE_t[]
 //@ts-ignore
@@ -163,5 +161,3 @@ export const getDefaultOutputChannel: (props: { Hostname: string }) => deviceCol
                     ]
                 }
 }
-
-

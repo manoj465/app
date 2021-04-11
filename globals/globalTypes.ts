@@ -1,6 +1,7 @@
 export * from "./user"
 export * from "./device"
 export * from "./timer"
+export * from "./device/next-index"
 
 
 
