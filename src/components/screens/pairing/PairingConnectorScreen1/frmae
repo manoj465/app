@@ -1,0 +1,113 @@
+const validateNewDeviceData = (opID: "PAIR" | "SKIP") => {
+
+    const validateDeviceName = () => {
+        if (deviceName.length < 6) {
+            Alert.alert(
+                "DEVICE NAME LENGTH !!",
+                "device length must be atleast 6 characters",
+                [
+                    {
+                        text: "Got it",
+                        //onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                    },
+                ],
+                { cancelable: false }
+            );
+            return false
+        } else if ((() => {
+            let sameDeviceNameFound = false
+            reduxStore.store.getState().deviceReducer.deviceList.forEach((__device) => {
+                if (__device.deviceName == deviceName)
+                    sameDeviceNameFound = true
+            })
+            return sameDeviceNameFound
+        })()) {
+            log.print("validating device name >>")
+            Alert.alert(
+                "DUPLICATE DEVICE NAME",
+                "device name  \"" + deviceName + "\", try another name for this device",
+                [
+                    {
+                        text: "Got it",
+                        //onPress: () => console.log("Cancel Pressed"),
+                        style: "cancel",
+                    },
+                ],
+                { cancelable: false }
+            );
+            return false
+        }
+        return true
+    }
+
+    const validateWiFi = () => {
+        if (!Wifi.length) {
+            Alert.alert(
+                "No WiFi Selected !!",
+                "Select a network to pair with, else continue without pairing at the bottom of the screen.",
+                [
+                    {
+                        text: "Got it",
+                        style: "cancel",
+                    },
+                ],
+                { cancelable: false }
+            );
+            return false
+        }
+        return true
+    }
+
+    switch (opID) {
+        case "PAIR":
+            return validateDeviceName() && validateWiFi()
+            break;
+
+        case "SKIP":
+            return validateDeviceName()
+            break;
+
+        default:
+            break;
+    }
+}
+
+
+interface onInteraction_t {
+    opID: "PAIR" | "SKIP"
+}
+const onInteraction = async ({ opID }: onInteraction_t) => {
+    switch (opID) {
+        case "PAIR":
+            log.print("now pairing")
+            if (validateNewDeviceData("PAIR")) {
+                navigation.replace("PairScreen_3", { newDevice: { ...newDevice, ssid: Wifi, deviceName } });
+            }
+            break;
+
+        case "SKIP":
+            log.print('SKIP LOGIN')
+            if (validateNewDeviceData("SKIP")) {
+                log.print("validation passed, adding new device without pairing")
+                const newContainerList = appOperator.device({ cmd: "ADD_UPDATE_DEVICES", newDevices: [{ ...newDevice, deviceName, localTimeStamp: getCurrentTimeStampInSeconds() }] })
+                console.log("updated conatiner list >> >> " + JSON.stringify(newContainerList))
+                //@ts-ignore
+                navigation.replace("dashboard");
+                navigation.reset({
+                    index: 0,
+                    //@ts-ignore
+                    routes: [{ name: "dashboard" }],
+                });
+            }
+            else {
+                log.print("validation failed")
+
+            }
+            break;
+
+        default:
+            break;
+    }
+
+};

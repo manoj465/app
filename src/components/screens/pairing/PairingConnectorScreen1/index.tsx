@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions, Image, Linking, Platform, StyleSheet, Text, View } from "react-native";
-import { PairingStackParamList } from "..";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from "@react-navigation/native";
-import { RectButton } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import LottieView from "lottie-react-native";
-//native imports
-import api from "../../../../@api";
-import { logFun, logger } from "../../../../@logger";
-import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
-import Alert from "../../../common/Alert";
+import { StackNavigationProp } from "@react-navigation/stack";
+import React, { useState } from "react";
+import { ActivityIndicator, Dimensions, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
+import Animated, { interpolate } from "react-native-reanimated";
+import { useTimingTransition } from "react-native-redash";
+import { PairingStackParamList } from "..";
+import { logger } from "../../../../@logger";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
-import STYLES from "../../../../styles"
-import UNIVERSALS from "../../../../@universals";
+import Support from "../SupportComp";
+import Frame2 from "./Frame2";
+import Frame1 from "./Frame1";
+import { STYLES } from '../../../../@styles';
 
 
 
@@ -38,210 +35,231 @@ const { width, height } = Dimensions.get("window");
  * - [ ] handle addition of RGBW product
  */
 export const PairingConnectorScreen1 = ({ navigation }: Props) => {
+  const [step, setStep] = useState<0 | 1 | 2>(0)
   const log = new logger("PAIRING_SCREEN_1")
   const [groupName, setGroupName] = useState("BedRoom");
   let _animation = null;
+  const transition = useTimingTransition(step)
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: log ? new logger("auth api", log) : undefined })
-      console.log("<><><> " + JSON.stringify(res))
-      if (res.RES?.Mac) {
-        clearInterval(interval)
-        console.log("navigating to next screen - screen-2")
-        navigation.replace("PairScreen_2", {
-          newDevice: {
-            ...res.RES,
-            localTimeStamp: getCurrentTimeInSeconds(),
-            IP: "192.168.4.1",
-            deviceName: "",
-            timers: [],
-            channel: UNIVERSALS.GLOBALS.getDefaultOutputChannel({ Hostname: res.RES.Hostname })
-          }
-        });
-      }
-
-    }, 3000)
-    return () => {
-      clearInterval(interval);
-    };
-  }, [])
 
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View
-          style={{
-            marginVertical: 20,
-            backgroundColor: "#55f",
-            height: 0.25 * height,
-            width: "95%",
-            alignSelf: "center",
-            borderRadius: 25,
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            overflow: "hidden",
-          }}
-        >
+    <View style={{
+      flex: 1,
+      backgroundColor: "#fff",
+    }}>
 
-          <Image
-            style={{
-              height: "100%",
-              width: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              opacity: 0.8,
-            }}
-            source={require("../../../../../assets/images/testIMG.jpg")}
-          />
-          <NewRectButtonWithChildren
-            style={{
-              height: 40,
-              minWidth: 160,
-              paddingHorizontal: 1,
-              borderRadius: 25,
-              overflow: "hidden",
-              justifyContent: "center",
-              position: "absolute",
-              bottom: 20,
-              right: 20,
-            }}
-            onPress={async () => {
-              const supported = await Linking.canOpenURL("App-Prefs:root=WIFI");
-              if (supported) {
-                await Linking.openURL("App-Prefs:root=WIFI");
-              } else {
-                Alert.alert(
-                  `Jump not Supported`,
-                  "You might want to try switching the HUElite app in background and then go to WiFi Settings "
-                );
-              }
-            }}
-          >
-            <View
-              style={{
-                height: 40,
-                minWidth: 160,
-                paddingHorizontal: 1,
-                position: "absolute",
-                backgroundColor: "#fff",
-                borderRadius: 25,
-                opacity: 0.7,
-                top: 0,
-                left: 0,
-              }}
-            ></View>
-            <Text
-              style={{ fontSize: 12, fontWeight: "bold", alignSelf: "center" }}
-            >
-              Go to Wi-Fi Settings
-            </Text>
-          </NewRectButtonWithChildren>
-        </View>
-        <View
+      {/* Sec: headerSection */}
+      <NewPairingBackground />
+
+
+      {/* Steps container */}
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: height - 50, // subctracted header height from total height
+          width,
+          //backgroundColor: "red"
+        }}>
+        <View // top section
           style={{
-            flex: 1,
-            backgroundColor: "#fff",
-            alignItems: "center",
+            //backgroundColor: "green",
+            flex: 0.3,
+            flexDirection: "row",
             justifyContent: "center",
-          }}
-        >
-          {Platform.OS != "web" && <LottieView
-            ref={(animation) => {
-              _animation = animation;
-            }}/* 
+            alignItems: "flex-end"
+          }}>
+
+          <View
             style={{
-              width: width * 0.8,
-              height: width * 0.8,
-              backgroundColor: "#fff",
-            }} */
-            source={require("../../../../../assets/lottie/scanning.json")}
-            autoPlay
-            loop={true}
-          //progress={progress}
-          />}
-        </View>
-        {/*/// Text Section */}
-        <View
-          style={{ backgroundColor: "#fff", justifyContent: "center", marginTop: 20, marginBottom: 10 }}
-        >
-          <Text
-            style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#555",
-              paddingHorizontal: 30,
-            }}
-          >
-            Conect to your Device to proceed
-          </Text>
-          <Text
-            style={{
-              color: "#333",
-              paddingHorizontal: 30,
-              marginTop: 10,
-              textAlign: "center",
-              fontSize: 12,
-            }}
-          >
-            To proceed with pairing go-to your
-            phone Wi-Fi Settings and connect to Wi-Fi naming{" "}
-            <Text style={{ fontWeight: "bold" }}>BDE_XXXX_XX:XX</Text>
-            {" "}with password{" "}
-            <Text style={{ fontWeight: "bold" }}>12345678</Text>
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 12 }}><Text style={{ color: STYLES.textColors.warning, fontWeight: "bold" }}>TIP:</Text>{" "}turn off your mobile data</Text>
-        </View>
-        {/* ///goBACK button */}
-        <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          {navigation.canGoBack() && <NewRectButtonWithChildren
-            style={{
+              backgroundColor: "#2ecc71",
+              height: 8,
+              width: 24,
+              borderRadius: 20,
               overflow: "hidden",
-              alignSelf: "flex-start",
-              marginBottom: 10,
-            }}
-            onPress={() => {
-              /* TODO_CUR dispatch(
-                newDeviceSagaAction(
-                  Object.assign({}, dummyDevice, {
-                    SSID: "Homelink1",
-                    wifiPass: "Ioplmkjnb@1",
-                    Mac: "ED:98:FF:46:FF",
-                    groupName: groupName.length > 3 ? groupName : null,
-                  })
-                )
-              ); */
-              navigation.pop();
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: "bold",
-                alignSelf: "flex-start",
-                marginLeft: 20,
-                color: "#66F",
-              }}
-            >
-              Go Back
-            </Text>
-          </NewRectButtonWithChildren>}
+              marginHorizontal: 5,
+              marginVertical: 10
+            }}></View>
+          <View
+            style={{
+              backgroundColor: "#777",
+              height: 8,
+              width: 8,
+              borderRadius: 20,
+              overflow: "hidden",
+              marginHorizontal: 5,
+              marginVertical: 10
+            }}></View>
+          <View
+            style={{
+              backgroundColor: "#777",
+              height: 8,
+              width: 8,
+              borderRadius: 20,
+              overflow: "hidden",
+              marginHorizontal: 5,
+              marginVertical: 10
+            }}></View>
         </View>
       </View>
-    </SafeAreaView>
-  );
-};
 
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-});
+
+      <Frame1
+        //@ts-ignore
+        setStep={setStep} />
+
+
+
+      {
+        false && <View style={{ flex: 1, backgroundColor: "#fff" }}>
+
+          <PairingCard
+            title="Let's connect to your device"
+            style={{
+              marginTop: 20
+            }}
+            height={interpolate(transition, {
+              inputRange: [0, 1, 2],
+              outputRange: [height * 0.6, 60, 60],
+            })}
+            showContent={step == 0}
+            shadow={step != 0}
+            cardIcon={() => {
+              if (step == 0)
+                return (
+                  <ActivityIndicator size="small" color="#55f" style={{ marginHorizontal: 6 }} />
+                )
+              else return (
+                <View style={{
+                  backgroundColor: "#00FF50",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: 50,
+                  overflow: "hidden",
+                  padding: 2,
+                  marginHorizontal: 5
+                }}>
+                  <MaterialIcons name="done" size={16} color="white" />
+                </View>
+              )
+            }}>
+            <Frame1 setStep={setStep} />
+          </PairingCard>
+
+          <PairingCard
+            title="Select your Home network"
+            style={{
+              marginTop: 10
+            }}
+            height={interpolate(transition, {
+              inputRange: [0, 1, 2],
+              outputRange: [60, height * 0.6, 60],
+            })}
+            shadow={step != 1}
+            showContent={step == 1}>
+            <Frame2
+              navigation={navigation}
+              newDevice={""}
+            />
+
+          </PairingCard>
+
+          <PairingCard
+            title="Setup your device"
+            style={{
+              marginTop: 10
+            }}
+            height={interpolate(transition, {
+              inputRange: [0, 1, 2],
+              outputRange: [60, 60, height * 0.6],
+            })}
+            showContent={step == 2}
+            shadow={step != 2}>
+            <NewRectButtonWithChildren
+              onPress={() => {
+                setStep(1)
+              }}><Text>Pre</Text></NewRectButtonWithChildren>
+          </PairingCard>
+
+          <Support />
+        </View>
+      }
+    </View >
+  )
+}
+
+
+
+const BulletPoint = ({ children, ...props }: { children: any, hintTxt?: String, mainTxtStyle?: StyleProp<TextStyle>, hintTxtStyle?: StyleProp<TextStyle> }) => {
+  return (
+    <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+      <Text style={[{ color: "#333", fontSize: 18, fontWeight: "bold" }, props.mainTxtStyle]}>{'\u2022  '}</Text>
+      <View>
+        <Text style={[{ color: "#333", fontSize: 18, fontWeight: "bold" }, props.mainTxtStyle]}>{children}</Text>
+        {props.hintTxt && <Text style={[{ marginTop: 5, color: "#555", fontSize: 16, }, props.hintTxtStyle]}>{props.hintTxt}</Text>}
+      </View>
+    </View>
+  )
+}
+
+
+const NewPairingBackground = (props: {}) => {
+  return (
+    <View style={{
+      height: height - 50,
+      width,
+      position: "absolute",
+      top: 0,
+      left: 0,
+      zIndex: 1
+    }}>
+      <View
+        style={{
+          flex: 0.3
+        }}>
+      </View>
+
+      <View
+        style={{
+          flex: 0.7,
+          marginHorizontal: 15,
+          borderTopRightRadius: 50,
+          borderTopLeftRadius: 50,
+          shadowOffset: {
+            width: 0,
+            height: -1,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 2.22,
+          shadowColor: '#000000',
+          elevation: 5,
+          backgroundColor: "#fff",
+        }}>
+      </View>
+    </View>
+  )
+}
+
+const PairingCard = (props: {
+  cardIcon?: any,
+  title?: String,
+  children?: any,
+  shadow?: boolean,
+  height?: Animated.Node<any>,
+  style?: StyleProp<Animated.AnimateStyle<ViewStyle>>,
+  showContent?: boolean
+}) => {
+
+  return (
+    <Animated.View
+      style={{}}>
+      {/* Main Container */}
+      <View style={{ flex: 1 }}></View>
+
+    </Animated.View>
+  )
+}
+

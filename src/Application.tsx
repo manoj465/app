@@ -18,7 +18,10 @@ const Application = ({ }: App_i) => {
       : "pairing"
     : "login_signup"
 
-  return <MainRouter initialScreen={initialScreen} />;
+  return <MainRouter
+    initialScreen={"pairing"}
+  //initialScreen={initialScreen} 
+  />;
 };
 
 
