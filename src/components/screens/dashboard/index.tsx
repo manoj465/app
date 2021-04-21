@@ -15,7 +15,7 @@ import { logger } from "../../../@logger";
 import { NewRectButton, NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
 import useDeleteDeviceModal from "../../common/useDeleteDeviceModal";
 import { DeviceCard } from "./deviceCard";
-import Header from './Header';
+import Header from './header';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 
 const navigationIconSize = 25;

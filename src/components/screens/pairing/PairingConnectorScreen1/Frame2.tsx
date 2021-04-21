@@ -1,19 +1,10 @@
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { Dimensions, FlatList, StyleSheet, Text, Vibration, View } from "react-native";
+import { Dimensions, FlatList, Text, Vibration, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Animated, { add, call, divide, interpolate, round, useCode } from "react-native-reanimated";
 import { onScrollEvent, useValue } from "react-native-redash";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { PairingStackParamList } from "..";
 import { logger } from "../../../../@logger";
-import UNIVERSALS from "../../../../@universals";
-import { appOperator } from "../../../../app.operator";
-import reduxStore from "../../../../redux";
 import useScanApiHook from "../../../../services/webApi/webHooks";
-import { getCurrentTimeStampInSeconds } from "../../../../util/DateTimeUtil";
-import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 
 const deviceNames = [
@@ -25,8 +16,9 @@ const deviceNames = [
 ]
 
 interface Props {
-    navigation: any;
-    newDevice: any //UNIVERSALS.GLOBALS.DEVICE_t
+    navigation?: any;
+    newDevice?: any //UNIVERSALS.GLOBALS.DEVICE_t
+    setStep: React.Dispatch<React.SetStateAction<0 | 1 | 2>>
 }
 
 const { width, height } = Dimensions.get("window")
@@ -36,6 +28,7 @@ const { width, height } = Dimensions.get("window")
 export default ({
     navigation,
     newDevice,
+    setStep
 }: Props) => {
     const log = new logger("PAIRING_SCREEN_2");
     const [data, status, loading, error, load] = useScanApiHook({
@@ -72,7 +65,7 @@ export default ({
             style={{
                 alignItems: "center",
                 justifyContent: "space-between",
-                backgroundColor: "#fff",
+                backgroundColor: "#ffffff00",
                 flex: 1
             }}>
 

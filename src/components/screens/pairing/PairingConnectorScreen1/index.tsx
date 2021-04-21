@@ -75,8 +75,8 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
           <View
             style={{
               backgroundColor: "#2ecc71",
-              height: 8,
-              width: 24,
+              height: 6,
+              width: 18,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -85,8 +85,8 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
           <View
             style={{
               backgroundColor: "#777",
-              height: 8,
-              width: 8,
+              height: 6,
+              width: 6,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -95,8 +95,8 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
           <View
             style={{
               backgroundColor: "#777",
-              height: 8,
-              width: 8,
+              height: 6,
+              width: 6,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -105,88 +105,32 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
         </View>
       </View>
 
+      <Animated.View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: interpolate(transition, {
+            inputRange: [0, 1, 2],
+            outputRange: [0, -width, -width * 2],
+          }),
+          height: height - 50, //substracted header height
+          width: width * 2,
+          //backgroundColor: "red",
+          display: "flex",
+          flexDirection: "row",
+          zIndex: 2
+        }}>
 
-      <Frame1
-        //@ts-ignore
-        setStep={setStep} />
+        <Frame1
+          show={step == 0}
+          setStep={setStep}
+        />
+
+        <Frame2 setStep={setStep} />
+
+      </Animated.View>
 
 
-
-      {
-        false && <View style={{ flex: 1, backgroundColor: "#fff" }}>
-
-          <PairingCard
-            title="Let's connect to your device"
-            style={{
-              marginTop: 20
-            }}
-            height={interpolate(transition, {
-              inputRange: [0, 1, 2],
-              outputRange: [height * 0.6, 60, 60],
-            })}
-            showContent={step == 0}
-            shadow={step != 0}
-            cardIcon={() => {
-              if (step == 0)
-                return (
-                  <ActivityIndicator size="small" color="#55f" style={{ marginHorizontal: 6 }} />
-                )
-              else return (
-                <View style={{
-                  backgroundColor: "#00FF50",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: 50,
-                  overflow: "hidden",
-                  padding: 2,
-                  marginHorizontal: 5
-                }}>
-                  <MaterialIcons name="done" size={16} color="white" />
-                </View>
-              )
-            }}>
-            <Frame1 setStep={setStep} />
-          </PairingCard>
-
-          <PairingCard
-            title="Select your Home network"
-            style={{
-              marginTop: 10
-            }}
-            height={interpolate(transition, {
-              inputRange: [0, 1, 2],
-              outputRange: [60, height * 0.6, 60],
-            })}
-            shadow={step != 1}
-            showContent={step == 1}>
-            <Frame2
-              navigation={navigation}
-              newDevice={""}
-            />
-
-          </PairingCard>
-
-          <PairingCard
-            title="Setup your device"
-            style={{
-              marginTop: 10
-            }}
-            height={interpolate(transition, {
-              inputRange: [0, 1, 2],
-              outputRange: [60, 60, height * 0.6],
-            })}
-            showContent={step == 2}
-            shadow={step != 2}>
-            <NewRectButtonWithChildren
-              onPress={() => {
-                setStep(1)
-              }}><Text>Pre</Text></NewRectButtonWithChildren>
-          </PairingCard>
-
-          <Support />
-        </View>
-      }
     </View >
   )
 }
@@ -243,23 +187,59 @@ const NewPairingBackground = (props: {}) => {
   )
 }
 
-const PairingCard = (props: {
-  cardIcon?: any,
-  title?: String,
-  children?: any,
-  shadow?: boolean,
-  height?: Animated.Node<any>,
-  style?: StyleProp<Animated.AnimateStyle<ViewStyle>>,
-  showContent?: boolean
+export const PairingFrame = (props: {
+  cardSectionStyle?: StyleProp<ViewStyle>
+  headerSectionStyle?: StyleProp<ViewStyle>
+  header?: any
+  children?: any
+  functionComponent?: any
+  showFunctionComponent?: boolean
 }) => {
 
   return (
-    <Animated.View
-      style={{}}>
-      {/* Main Container */}
-      <View style={{ flex: 1 }}></View>
+    <View
+      style={{
+        flex: 1,
+        width,
+        backgroundColor: "#ffffff00",
+      }}>
 
-    </Animated.View>
+      {/* functional component */}
+      <View
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          height: 1,
+          width: 10,
+          backgroundColor: "#000",
+          opacity: props.showFunctionComponent ? 1 : 0,
+          zIndex: 5
+        }}>
+        {(props.functionComponent && (props.showFunctionComponent == true || props.showFunctionComponent == undefined)) && <props.functionComponent />}
+      </View>
+
+      {/* header section */}
+      <View
+        style={[{
+          flex: 0.3,
+          overflow: "hidden",
+          backgroundColor: "#ffffff00",
+        }, props.headerSectionStyle]}>
+        {props.header && <props.header />}
+      </View>
+
+      {/* card section */}
+      <View
+        style={[{
+          backgroundColor: "#ffffff00",
+          flex: 0.7,
+          overflow: "hidden"
+        }, props.cardSectionStyle]}>
+        {props.children}
+      </View>
+
+    </View>
   )
 }
 
