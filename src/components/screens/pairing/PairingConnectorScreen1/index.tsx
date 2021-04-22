@@ -11,6 +11,7 @@ import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCus
 import Support from "../SupportComp";
 import Frame2 from "./Frame2";
 import Frame1 from "./Frame1";
+import Notify from "./Notify";
 import { STYLES } from '../../../../@styles';
 
 
@@ -48,6 +49,8 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
       flex: 1,
       backgroundColor: "#fff",
     }}>
+
+      <Notify />
 
       {/* Sec: headerSection */}
       <NewPairingBackground />
@@ -126,7 +129,10 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
           setStep={setStep}
         />
 
-        <Frame2 setStep={setStep} />
+        <Frame2
+          show={step == 1}
+          setStep={setStep}
+        />
 
       </Animated.View>
 

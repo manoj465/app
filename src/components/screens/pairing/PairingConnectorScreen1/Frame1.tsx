@@ -10,6 +10,7 @@ import { STYLES } from '../../../../@styles';
 import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 import { PairingFrame } from "."
+import reduxStore from '../../../../redux';
 
 
 const { width, height } = Dimensions.get("window");
@@ -75,7 +76,7 @@ export default (props: {
                         justifyContent: "center",
                     }}
                 >
-                    {Platform.OS != "web" && <LottieView
+                    {props.show && <LottieView
                         ref={(animation) => {
                             //_animation = animation;
                         }}
@@ -132,6 +133,11 @@ export default (props: {
                     <NewRectButtonWithChildren
                         onPress={() => {
                             Linking.openURL("https://www.huelite.in/support/how_to_pair/")
+                            /* reduxStore.store.dispatch(reduxStore.actions.appCTX.notificationsRedux({
+                                newNotification: {
+                                    title: "this is test notification"
+                                }
+                            })) */
                         }}
                         style={{ marginTop: 0 }}>
                         <Text>Need help? we have got you</Text>
