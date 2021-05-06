@@ -4,22 +4,39 @@ import { _reduxConstant } from "../../ReduxConstant";
 import { appCtxDBAction } from "../saga/appCTXSagas"
 import { _getBaseAction, __baseAction_Props } from "../../sagas/sagaBaseWorkers";
 import UNIVERSALS from "../../../@universals";
+import { uuidv4_8 } from "../../../util/UUID_utils";
 
 
 
 interface quickIcons_i {
   stayAwake?: boolean
 }
+export enum notificationType_e {
+  NORMAL,
+  ALERT,
+  ERROR,
+  SUCCESS
+}
+export interface notification_props {
+  id: String
+  topic: String
+  title: String
+  subTitle?: String
+  color?: String
+  type?: notificationType_e
+}
 export interface appCTXReducerState_Prop {
   welcomeScreenStatus: boolean
   user?: UNIVERSALS.GLOBALS.USER_t
   quickActions: quickIcons_i
+  notifications: notification_props[]
 }
 
 export const initialState: appCTXReducerState_Prop = {
   welcomeScreenStatus: false,
   user: undefined,
-  quickActions: {}
+  quickActions: {},
+  notifications: []
 };
 
 export const appCTXReducer = (
@@ -47,6 +64,41 @@ export const appCTXReducer = (
       return Object.assign({}, state, { quickActions: { ...state.quickActions, ...action.props.data } })
       break;
 
+    case _reduxConstant.APPCTX_NOTIFICATIONS:
+      let newState = state
+      if (action.props.notifications)
+        newState = Object.assign({}, state, { notifications: action.props.notifications })
+      else if (action.props.removeNotificationWithId) {
+        newState = Object.assign({}, state, {
+          notifications: state.notifications.filter(item => item.id != action.props.removeNotificationWithId)
+        })
+      }
+      else if (action.props.newNotification) {
+        let newArray: any[] | undefined = undefined
+        if (state.notifications.length >= 2) {
+          newArray = []
+          state.notifications.forEach((item, index) => {
+            if (index > 0 && newArray)
+              newArray.push(item)
+          })
+        }
+        newState = Object.assign({}, state, {
+          notifications: newArray ? newArray : [
+            ...state.notifications,
+            {
+              id: uuidv4_8(),
+              title: action.props.newNotification.title,
+              subTitle: action.props.newNotification.subTitle,
+              topic: action.props.newNotification.topic,
+              color: action.props.newNotification.color,
+              type: action.props.newNotification.type
+            }]
+        })
+      }
+      return newState
+
+      break;
+
     default:
       return state;
   }
@@ -64,6 +116,7 @@ export const _actions = {
   userRedux: _getBaseAction<userReduxAction_Props>(_reduxConstant.USER_REDUX),
   appCTXRedux: _getBaseAction<appCtxReduxAction_Props>(_reduxConstant.APPCTX_REDUX),
   quickActionsRedux: _getBaseAction<{ data: quickIcons_i } & { log?: logger }>(_reduxConstant.APPCTX_QUICK_ACTIONS_REDUX),
+  notificationsRedux: _getBaseAction<{ notifications?: notification_props[], removeNotificationWithId?: String, newNotification?: Omit<notification_props, "id"> }>(_reduxConstant.APPCTX_NOTIFICATIONS),
 }
 
 export type _actionReturnTypes =
@@ -73,4 +126,6 @@ export type _actionReturnTypes =
     type: _reduxConstant.APPCTX_REDUX
   } | __baseAction_Props<{ data: quickIcons_i } & { log?: logger }> & {
     type: _reduxConstant.APPCTX_QUICK_ACTIONS_REDUX
+  } | __baseAction_Props<{ notifications?: notification_props[], removeNotificationWithId?: String, newNotification?: Omit<notification_props, "id"> }> & {
+    type: _reduxConstant.APPCTX_NOTIFICATIONS
   }

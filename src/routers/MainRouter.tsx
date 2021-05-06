@@ -1,16 +1,19 @@
-import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
+import { createStackNavigator, StackNavigationProp, CardStyleInterpolators } from "@react-navigation/stack";
 import React from "react";
 import UNIVERSALS from "../@universals";
 import AppConfigScreen from "../components/screens/appConfig";
 import { Dashboard } from "../components/screens/dashboard";
 import DevicePage from "../components/screens/devicePage";
 import { WelcomeScreen } from "../components/screens/onboarding/WelcomeScreen";
-import { pairingRouter } from "../components/screens/pairing";
+import PairingScreen from "../components/screens/pairing/PairingConnectorScreen1";
 import UserProfileScreen from "../components/screens/userProfile";
 import { deviceContainerType } from "../util/dummyData/DummyData";
+import SetupDeviceScreen from "../components/screens/devicePage/SetupScreen";
+
 
 export type MainRouterStackParamList = {
   //login_signup: undefined;
+  setupDevice: { device: UNIVERSALS.GLOBALS.DEVICE_t }
   onboarding: undefined;
   pairing: undefined;
   //DashboardRouter: undefined;
@@ -29,7 +32,7 @@ const MainRouter = (props: any) => {
       initialRouteName={props.initialScreen ? props.initialScreen : "DashboardRouter"}
       //initialRouteName="user"
       screenOptions={{
-        headerShown: false,
+        //headerShown: false,
         cardStyle: {
           opacity: 1,
           backgroundColor: "#fff",
@@ -38,14 +41,36 @@ const MainRouter = (props: any) => {
     >
       {/* <Stack.Screen name="login_signup" component={GetStarted} /> */}
       <Stack.Screen name="onboarding" component={WelcomeScreen} />
-      <Stack.Screen name="pairing" component={pairingRouter} />
-      <Stack.Screen name="dashboard" component={Dashboard} />
+      <Stack.Screen
+        name="pairing"
+        component={PairingScreen}
+        options={{ title: 'Add new device' }} />
+      <Stack.Screen
+        name="dashboard"
+        component={Dashboard}
+        options={{ headerShown: false }} />
       <Stack.Screen name="config" component={AppConfigScreen} />
       <Stack.Screen name="user" component={UserProfileScreen} />
       <Stack.Screen
         name="devicePage"
         component={DevicePage}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="setupDevice"
+        component={SetupDeviceScreen}
+        options={{
+          title: 'Setup new device',
+          headerShown: false,
+          gestureEnabled: true,
+          gestureDirection: "vertical",
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+          cardStyle: {
+            backgroundColor: "#ffffffdd"
+          }
+        }}
       />
     </Stack.Navigator>
   );

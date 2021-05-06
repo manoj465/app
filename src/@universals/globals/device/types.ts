@@ -11,7 +11,11 @@ export interface DEVICE_t extends Omit<Omit<Omit<Omit<Omit<Omit<Device_t, "id">,
     IP: string,
     channel: deviceColorChannel_t & { state: channelState_e, preState?: channelState_e }
     timers: TIMER_t[]
-    localTimeStamp: number
+    localTimeStamp: number,
+    icon?: number
+    config?: {
+        saveLastState: boolean
+    }
 }
 /** @description >- backend representation of device Object */
 export interface Device_t extends timestamp_i {

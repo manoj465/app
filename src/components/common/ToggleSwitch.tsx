@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { StyleProp, View, ViewStyle } from "react-native";
 import { NewRectButtonWithChildren } from "./buttons/RectButtonCustom";
 
 interface Props {
-  _height?: number;
-  _width?: number;
-  initialState?: boolean;
-  onPress?: (state: boolean) => void;
+  state: boolean;
+  onPress?: () => void;
+  style?: StyleProp<ViewStyle>
 }
 
 /**
@@ -15,53 +14,34 @@ interface Props {
  * @param _height<optional>
  * @param initialState<optional> @default -false
  */
-export const ToggleSwitch = ({
-  _height = 40,
-  _width = 80,
-  initialState = false,
-  onPress,
-}: Props) => {
-  const [state, setState] = useState<boolean>(initialState);
+export const ToggleSwitch = ({ state, onPress, }: Props) => {
+
   return (
     <NewRectButtonWithChildren
       onPress={() => {
-        setState(!state);
-        if (onPress) onPress(state);
+        if (onPress)
+          onPress()
       }}
       style={{
         backgroundColor: "#eee",
-        height: _height,
-        width: _width,
+        height: 30,
+        width: 60,
         borderRadius: 50,
-        justifyContent: "center",
-        shadowColor: "#000",
-        borderWidth: 2,
-        borderColor: "#eee",
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 2.41,
-        elevation: 3,
+        display: "flex",
+        alignItems: "center",
+        borderColor: "#999",
+        borderWidth: 0.5,
+
       }}
     >
       {/* ///Indicator */}
       <View
         style={{
-          backgroundColor: state ? "#5f5" : "#f55",
+          backgroundColor: state ? "#58d68d" : "#777",
           alignSelf: state ? "flex-end" : "flex-start",
-          height: _height,
-          width: _height,
+          height: 28,
+          width: 28,
           borderRadius: 50,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 1,
-          },
-          shadowOpacity: 0.2,
-          shadowRadius: 2.41,
-          elevation: 2,
         }}
       />
     </NewRectButtonWithChildren>

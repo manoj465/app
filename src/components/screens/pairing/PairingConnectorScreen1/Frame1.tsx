@@ -11,15 +11,22 @@ import Alert from "../../../common/Alert";
 import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
 import { PairingFrame } from "."
 import reduxStore from '../../../../redux';
+import { NOTIFY } from '../../../common/notificationComp';
+import UNIVERSALS from '../../../../@universals';
+import { getCurrentTimeStampInSeconds } from '../../../../util/DateTimeUtil';
 
 
 const { width, height } = Dimensions.get("window");
 
 export default (props: {
     show?: boolean
-    setStep: React.Dispatch<React.SetStateAction<0 | 1 | 2>>,
+    setStep: React.Dispatch<React.SetStateAction<0 | 1 | 2>>
+    newDevice: UNIVERSALS.GLOBALS.DEVICE_t | undefined
+    setNewDevice: React.Dispatch<React.SetStateAction<UNIVERSALS.GLOBALS.DEVICE_t | undefined>>
     log?: logger
 }) => {
+
+    let time = 0;
 
     return (
 
@@ -28,12 +35,39 @@ export default (props: {
             functionComponent={() => {
                 useEffect(() => {
                     const interval = setInterval(async () => {
-                        const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: props.log ? new logger("auth api", props.log) : undefined })
+                        const res = await api.deviceAPI.authAPI.v1({
+                            IP: "192.168.4.1",
+                            log: props.log ? new logger("auth api") : undefined
+                        })
                         console.log("-- response from authAPI " + JSON.stringify(res))
-                        if (res.RES?.Mac) {
+                        if (res.RES?.Mac && res.RES.Hostname) {
                             clearInterval(interval)
                             console.log("step 1 done")
+                            // - [ ] get the initial defaults based on hostName as like default channel
+                            props.setNewDevice({
+                                Hostname: res.RES.Hostname,
+                                Mac: res.RES.Mac,
+                                IP: "192.168.4.1",
+                                deviceName: res.RES.Hostname,
+                                timers: [],
+                                channel: UNIVERSALS.GLOBALS.getDefaultOutputChannel({ Hostname: res.RES.Hostname }),
+                                localTimeStamp: getCurrentTimeStampInSeconds(),
+                                icon: 0,
+                                config: {
+                                    saveLastState: true
+                                }
+                            })
                             props.setStep(1)
+                        }
+                        time = time + 3
+                        console.log("time passes = " + time)
+                        if (time % 15 == 0) {
+                            NOTIFY({
+                                topic: "PAIRING",
+                                title: "Turn off mobile data",
+                                subTitle: "Make sure your mobile data is turned off and you are connected to the smartlight device Wifi",
+                                type: "ALERT"
+                            })
                         }
                     }, 3000)
                     return () => {
@@ -133,11 +167,6 @@ export default (props: {
                     <NewRectButtonWithChildren
                         onPress={() => {
                             Linking.openURL("https://www.huelite.in/support/how_to_pair/")
-                            /* reduxStore.store.dispatch(reduxStore.actions.appCTX.notificationsRedux({
-                                newNotification: {
-                                    title: "this is test notification"
-                                }
-                            })) */
                         }}
                         style={{ marginTop: 0 }}>
                         <Text>Need help? we have got you</Text>

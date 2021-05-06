@@ -117,6 +117,56 @@ const add_updateDevices: add_updateDevices_t = ({ newDevices, cloudState, ...pro
 }
 
 
+/*
+'########::'########:'##::::'##:'####::'######::'########::::'##::::'##:'########::'########:::::'###::::'########:'########:
+ ##.... ##: ##.....:: ##:::: ##:. ##::'##... ##: ##.....::::: ##:::: ##: ##.... ##: ##.... ##:::'## ##:::... ##..:: ##.....::
+ ##:::: ##: ##::::::: ##:::: ##:: ##:: ##:::..:: ##:::::::::: ##:::: ##: ##:::: ##: ##:::: ##::'##:. ##::::: ##:::: ##:::::::
+ ##:::: ##: ######::: ##:::: ##:: ##:: ##::::::: ######:::::: ##:::: ##: ########:: ##:::: ##:'##:::. ##:::: ##:::: ######:::
+ ##:::: ##: ##...::::. ##:: ##::: ##:: ##::::::: ##...::::::: ##:::: ##: ##.....::: ##:::: ##: #########:::: ##:::: ##...::::
+ ##:::: ##: ##::::::::. ## ##:::: ##:: ##::: ##: ##:::::::::: ##:::: ##: ##:::::::: ##:::: ##: ##.... ##:::: ##:::: ##:::::::
+ ########:: ########:::. ###::::'####:. ######:: ########::::. #######:: ##:::::::: ########:: ##:::: ##:::: ##:::: ########:
+........:::........:::::...:::::....:::......:::........::::::.......:::..:::::::::........:::..:::::..:::::..:::::........::
+*/
+
+interface updateDevices_props {
+    cmd: "UPDATE_DEVICE"
+    newDevice: UNIVERSALS.GLOBALS.DEVICE_t
+    postUpdate?: (props: { newDeviceList: UNIVERSALS.GLOBALS.DEVICE_t[], updatedDevice: UNIVERSALS.GLOBALS.DEVICE_t, preDeviceState: UNIVERSALS.GLOBALS.DEVICE_t }) => void
+    log?: logger
+}
+interface updateDevices_t { (props: updateDevices_props): UNIVERSALS.GLOBALS.DEVICE_t[] }
+const updateDevices: updateDevices_t = ({ newDevice, ...props }) => {
+    let requireReduxUpdate = false
+    let localDeviceList = reduxStore.store.getState().deviceReducer.deviceList
+    let newDeviceList = localDeviceList
+    newDeviceList.forEach((item, index) => {
+        let localStateDevice = newDeviceList.find(item => item.Mac == newDevice.Mac)
+        if (localStateDevice) {
+            let localStateDeviceIndex = newDeviceList.findIndex(item => item.Mac == newDevice.Mac)
+            props.log?.print("device found in local state")
+            requireReduxUpdate = true
+            newDeviceList = newDeviceList.filter(item => item.Mac != newDevice.Mac)
+            newDeviceList.splice(localStateDeviceIndex, 0, { ...newDevice, localTimeStamp: getCurrentTimeStampInSeconds() })
+        } else {
+            props.log?.print("device not found in local state")
+            // - [ ] add device as newDevice
+        }
+    })
+
+    if (requireReduxUpdate) {
+        props.log?.print("Sending Saga Action with new list is " + JSON.stringify(newDeviceList, null, 2))
+        reduxStore.store.dispatch(reduxStore.actions.deviceList.deviceListSaga({
+            deviceList: newDeviceList,
+            log: props.log ? new logger("devicelist saga", props.log) : undefined
+        }))
+    } else {
+        props.log?.print("update not required ")
+    }
+    return newDeviceList
+}
+
+
+
 
 
 /*
@@ -197,13 +247,16 @@ const colorUpdate = (props: colorUpdate_props) => {
 
 
 
-type containerListOperation_t = (props: add_updateDevices_props | removeDeviceProps | colorUpdate_props) => void
+type containerListOperation_t = (props: add_updateDevices_props | removeDeviceProps | colorUpdate_props | updateDevices_props) => void
 const deviceOperation: containerListOperation_t = async (props) => {
     switch (props.cmd) {
         case "ADD_UPDATE_DEVICES":
             add_updateDevices(props)
             break;
 
+        case "UPDATE_DEVICE":
+            updateDevices(props)
+            break;
 
         case "REMOVE_DEVICE":
             removeDevice(props)

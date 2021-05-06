@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Dimensions, StyleProp, Text, TextStyle, View, ViewStyle, KeyboardAvoidingView, Platform } from "react-native";
 import Animated, { interpolate } from "react-native-reanimated";
 import { useTimingTransition } from "react-native-redash";
 import { PairingStackParamList } from "..";
@@ -11,8 +11,9 @@ import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCus
 import Support from "../SupportComp";
 import Frame2 from "./Frame2";
 import Frame1 from "./Frame1";
-import Notify from "./Notify";
+import Notify from "../../../common/notificationComp";
 import { STYLES } from '../../../../@styles';
+import UNIVERSALS from '../../../../@universals';
 
 
 
@@ -35,8 +36,9 @@ const { width, height } = Dimensions.get("window");
  * - [x] handle addition of rgb product
  * - [ ] handle addition of RGBW product
  */
-export const PairingConnectorScreen1 = ({ navigation }: Props) => {
+export default ({ navigation }: Props) => {
   const [step, setStep] = useState<0 | 1 | 2>(0)
+  const [newDevice, setNewDevice] = useState<undefined | UNIVERSALS.GLOBALS.DEVICE_t>(undefined)
   const log = new logger("PAIRING_SCREEN_1")
   const [groupName, setGroupName] = useState("BedRoom");
   let _animation = null;
@@ -45,18 +47,21 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
 
 
   return (
-    <View style={{
-      flex: 1,
-      backgroundColor: "#fff",
-    }}>
+    <View
+      //behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      //keyboardVerticalOffset={80}
+      style={{
+        flex: 1,
+        backgroundColor: "#fff",
+      }}>
 
-      <Notify />
+      <Notify topic={"PAIRING"} />
 
       {/* Sec: headerSection */}
       <NewPairingBackground />
 
 
-      {/* Steps container */}
+      {/* StepsIndicator container */}
       <View
         style={{
           position: "absolute",
@@ -77,9 +82,9 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
 
           <View
             style={{
-              backgroundColor: "#2ecc71",
+              backgroundColor: step == 0 ? "#2ecc71" : "#777",
               height: 6,
-              width: 18,
+              width: step == 0 ? 18 : 6,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -87,9 +92,9 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             }}></View>
           <View
             style={{
-              backgroundColor: "#777",
+              backgroundColor: step == 1 ? "#2ecc71" : "#777",
               height: 6,
-              width: 6,
+              width: step == 1 ? 18 : 6,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -97,9 +102,9 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             }}></View>
           <View
             style={{
-              backgroundColor: "#777",
+              backgroundColor: step == 2 ? "#2ecc71" : "#777",
               height: 6,
-              width: 6,
+              width: step == 2 ? 18 : 6,
               borderRadius: 20,
               overflow: "hidden",
               marginHorizontal: 5,
@@ -116,6 +121,7 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
             inputRange: [0, 1, 2],
             outputRange: [0, -width, -width * 2],
           }),
+          //flex: 1,
           height: height - 50, //substracted header height
           width: width * 2,
           //backgroundColor: "red",
@@ -127,11 +133,16 @@ export const PairingConnectorScreen1 = ({ navigation }: Props) => {
         <Frame1
           show={step == 0}
           setStep={setStep}
+          newDevice={newDevice}
+          setNewDevice={setNewDevice}
         />
 
         <Frame2
           show={step == 1}
           setStep={setStep}
+          newDevice={newDevice}
+          setNewDevice={setNewDevice}
+          navigation={navigation}
         />
 
       </Animated.View>

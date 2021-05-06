@@ -3,26 +3,55 @@ import { DEVICE_t, Device_t } from "../../globalTypes"
 import { converLocalTimerObjectToBackendString, convertTimersStringToObj } from "../../timer"
 import { channelState_e, deviceColorChannel_t, deviceType_e, outputChannelTypes_e } from "../types"
 
-type convert_Devices_backendToLocal_t = (props: { devices: Device_t[], socket?: any, log?: logger }) => DEVICE_t[]
+type convert_Devices_backendToLocal_t = (props: {
+    devices: Device_t[]
+    localDeviceList?: DEVICE_t[]
+    socket?: any
+    log?: logger
+}) => DEVICE_t[]
 //@ts-ignore
-export const convert_Devices_backendToLocal: convert_Devices_backendToLocal_t = ({ devices, socket = undefined, log }) => {
+export const convert_Devices_backendToLocal: convert_Devices_backendToLocal_t = ({ devices, localDeviceState, localDeviceList, socket = undefined, log }) => {
     return devices.map((device, d_index) => {
-        return convert_Device_backendToLocal({ device })
+        return convert_Device_backendToLocal({
+            device,
+            localDeviceState: localDeviceList ? localDeviceList.find(item => item.Mac == device.Mac) : undefined
+        })
     })
 }
 
-type convert_Device_backendToLocal_t = (props: { device: Device_t, log?: logger }) => DEVICE_t
-export const convert_Device_backendToLocal: convert_Device_backendToLocal_t = ({ device, log }) => {
-    //let temp_hsv = getHsvFromString({ hsvString: device.hsv })
+type convert_Device_backendToLocal_t = (props: {
+    device: Device_t
+    localDeviceState?: DEVICE_t
+    log?: logger
+}) => DEVICE_t
+export const convert_Device_backendToLocal: convert_Device_backendToLocal_t = ({ device, localDeviceState, log }) => {
+    //@ts-ignore - supress string-String warning
     let tempChannelObject = getDefaultOutputChannel({ Hostname: device.Hostname })
-    if (device.channel)
+    if (device.channel) {
+        //@ts-ignore - supress string-String warning
         tempChannelObject = JSON.parse(device.channel)
+    }
+    //@ts-ignore - supress string-String warning
     let temp_timers = convertTimersStringToObj({ timersString: device.timers })
     return {
         ...device,
         channel: tempChannelObject,
         timers: temp_timers ? temp_timers : [],
-        localTimeStamp: device.ts
+        localTimeStamp: device.ts,
+        //@ts-ignore - as backend device type don't have icon config yet. ignoreComment #toBeRemoved in future
+        icon: device?.icon
+            //@ts-ignore
+            ? device.icon
+            : localDeviceState?.icon
+                ? localDeviceState.icon
+                : 0,
+        //@ts-ignore
+        config: device?.config
+            //@ts-ignore    
+            ? device.config
+            : localDeviceState?.config
+                ? localDeviceState.config
+                : undefined
     }
 }
 
@@ -74,8 +103,6 @@ export const convert_Device_LocalToBackend_forUpdateMutation: convert_Device_Loc
  * | defaults: | deviceType | ------- | **c1** - if none persent than its 1 channel * all colorChannel |
  * | ex: |  | **rgbwStrip** | **c1**, **c4** |
  */
-
-
 interface getDeviceType_t { (props: { Hostname: string }): deviceType_e | undefined }
 export const getDeviceType: getDeviceType_t = ({ Hostname }) => {
     let deviceHostnameSplitArray = Hostname.split('_')

@@ -110,9 +110,9 @@ export const DeviceCard = ({
             }}
             onPress={() => {
               console.log("show action sheet")
-              const options = ["Delete device", "Share device", "cancel"]
-              const destructiveButtonIndex = 2
-              const cancelButtonIndex = 2
+              const options = ["Device Settings", "Share device", "Delete device", "cancel"]
+              const destructiveButtonIndex = 3
+              const cancelButtonIndex = 3
               showActionSheetWithOptions(
                 {
                   options,
@@ -122,7 +122,14 @@ export const DeviceCard = ({
                 },
                 async (index) => {
                   switch (index) {
+
                     case 0:
+                      navigation.navigate("setupDevice", {
+                        device
+                      })
+                      break;
+
+                    case 2:
                       if (setToBeDeletedDevice) {
                         setToBeDeletedDevice(device.Mac)
                       }

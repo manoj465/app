@@ -134,7 +134,7 @@ const performSideEffects = async ({ user, iteration, log = new logger("test func
             appOperator.device({
                 cmd: "ADD_UPDATE_DEVICES",
                 cloudState: true,
-                newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices }) : [],
+                newDevices: userRes.RES.devices ? UNIVERSALS.GLOBALS.convert_Devices_backendToLocal({ devices: userRes.RES.devices, localDeviceList: reduxStore.store.getState().deviceReducer.deviceList }) : [],
                 log: log ? new logger("device-operator add_update_devices", log) : undefined
             })
         }

@@ -18,7 +18,6 @@ const useScanApiHook: userScanApiHelper_t = ({ timeout = 0, autoStart, log }) =>
   const [status, setStatus] = useState(-4);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  log?.print("---------------")
 
   useEffect(() => {
     if (data) {
@@ -35,6 +34,11 @@ const useScanApiHook: userScanApiHelper_t = ({ timeout = 0, autoStart, log }) =>
           load()
         }, 3000);
       }
+      else {
+        log?.print("wifi scann complete")
+        if (loading)
+          setLoading(false)
+      }
     }
     if (autoStart && !data) {
       load()
@@ -43,8 +47,13 @@ const useScanApiHook: userScanApiHelper_t = ({ timeout = 0, autoStart, log }) =>
   }, [data])
 
   async function load() {
+    setLoading(true)
+    setData(undefined)
     log?.print("hitting scan api request")
-    const res = await api.deviceAPI.scanAPI.v1({ IP: "192.168.4.1", log: log ? new logger("pair-API", log) : undefined })
+    const res = await api.deviceAPI.scanAPI.v1({
+      IP: "192.168.4.1",
+      //log: log ? new logger("pair-API", log) : undefined
+    })
     log?.print("RES - scanAPI " + JSON.stringify(res, null, 2))
     setData(res)
   }

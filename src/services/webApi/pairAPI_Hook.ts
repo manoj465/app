@@ -15,10 +15,15 @@ export enum pairing_state_e {
   SAVE_CONFIG_SUCCESS,
   SAVE_CONFIG_ERROR
 }
-type connectProps = (ssid: string, pass: string) => Promise<void>;
+
+/**
+ * @param pair function props
+ */
+type connectProps = (ssid: String, pass: String) => Promise<void>;
 
 interface Props {
   (_props: {
+    /** Device IP address */
     IP: string,
     _onMsg: (msg: string) => void,
     log?: logger
@@ -26,7 +31,9 @@ interface Props {
     : [
       api.deviceAPI.pairAPI.pairApiReturnType | undefined,
       WebSocket | undefined,
+      /** pair function props */
       connectProps,
+      // PAIRING STATUS enum
       pairing_state_e,
       () => Promise<void>
     ];
@@ -35,7 +42,7 @@ const usePairApiHook: Props = ({ IP: IP_ADD, _onMsg, log }) => {
   const [data, setData] = useState<api.deviceAPI.pairAPI.pairApiReturnType | undefined>(undefined);
   const [pairStatus, setPairStatus] = useState<pairing_state_e>(pairing_state_e.IDLE);
   const [socket, setSocket] = useState<WebSocket | undefined>(undefined);
-
+  const [busy, setBusy] = useState(false)
 
   useEffect(() => {
     log?.print("--------*")
@@ -54,15 +61,15 @@ const usePairApiHook: Props = ({ IP: IP_ADD, _onMsg, log }) => {
     }
     return () => {
       clearInterval(interval)
+      if (socket) {
+        socket.close()
+      }
     }
   }, [socket])
 
   const pair: connectProps = async (ssid, pass) => {
     log?.print("Pair Credentials are " + ssid + " -- " + pass);
-    if (pairStatus == pairing_state_e.PAIR_READY
-      || pairStatus == pairing_state_e.PAIR_WRONG_PASSWORD
-      || pairStatus == pairing_state_e.PAIR_UNKNOWN_ERROR
-      || pairStatus == pairing_state_e.PAIR_NO_SSID) {
+    if (socket) {
       const result = await api.deviceAPI.pairAPI.v1({ IP: "192.168.4.1", ssid, pass, log: log ? new logger("pair api", log) : undefined })
       log?.print("-result- RES - " + JSON.stringify(result))
       if (result.RES?.Mac)
@@ -85,12 +92,12 @@ const usePairApiHook: Props = ({ IP: IP_ADD, _onMsg, log }) => {
   const getSocket = async () => {
     if (!socket) {
       log?.print("getting socket");
-      let result = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1" })
-      if (result?.RES?.Mac) {
-        log?.print("Auth success :: " + result.RES.Mac);
-      } else {
-        setSocket(undefined)
-      }
+      /*  let result = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1" })
+       if (result?.RES?.Mac) {
+         log?.print("Auth success :: " + result.RES.Mac);
+       } else {
+         setSocket(undefined)
+       } */
       try {
         const _socket = await getWebSocket({
           ipAddr: IP_ADD,
