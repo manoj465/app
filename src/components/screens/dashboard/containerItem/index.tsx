@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import Animated, { interpolate } from "react-native-reanimated";
 import { mix, useValue } from "react-native-redash";
 import { useSpringTransition } from "../../../common/transitions/Transition";
-import { DeviceCard, deviceCardHeight } from "../deviceCard";
+import { DeviceCard, deviceCardHeight } from "../../../../../sternet/ui/device-card";
 import { GroupHeader } from "./GroupHeader";
 
 interface Props {

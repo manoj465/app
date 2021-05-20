@@ -68,10 +68,8 @@ export const NewRectButtonWithChildren = ({ style, innerCompStyle, onPress = () 
 
 const _styles = StyleSheet.create({
     buttonContainer: {
-        backgroundColor: "#fff",
-        overflow: "hidden",
+        //backgroundColor: "#fff",
         borderRadius: 10,
-        marginVertical: 5,
         height: 50,
     },
     innerbutton: {

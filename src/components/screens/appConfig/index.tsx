@@ -1,18 +1,18 @@
-import { FontAwesome, Ionicons, Feather, AntDesign, } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { LinearGradient } from 'expo-linear-gradient';
 import React from "react";
-import { Image, StyleProp, Text, TextStyle, View } from "react-native";
-import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { Linking, StyleProp, Text, TextStyle, View } from "react-native";
+import { ScrollView } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { logger } from "../../../@logger";
 import { STYLES as styles } from '../../../@styles';
 import { appOperator } from "../../../app.operator";
-import { logger } from "../../../@logger";
-import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom";
-import Container from "../../common/containers/SafeAreaWithAnimatedVerticalScrollView";
-import { useSelector } from 'react-redux';
-import { appState } from '../../../redux';
-import { LinearGradient } from 'expo-linear-gradient';
-import UNIVERSALS from '../../../@universals';
+import reduxStore, { appState } from '../../../redux';
+import { MainRouterStackParamList } from "../../../routers/MainRouter";
+import { NewRectButtonWithChildren } from "../../common/buttons/RectButtonCustom"
+import * as WebBrowser from 'expo-web-browser'
 
 type navigationProp = StackNavigationProp<
     MainRouterStackParamList,
@@ -31,53 +31,63 @@ const AppConfigScreen = ({ navigation }: props) => {
 
 
     return (
-        <Container style={{ backgroundColor: "#fff", flex: 1, paddingHorizontal: 10 }}>
+        <View
+            style={{
+                backgroundColor: "#fff",
+                flex: 1,
+            }}>
 
-            <View /** header container */ >
-                <NewRectButtonWithChildren onPress={() => {
-                    if (navigation.canGoBack())
-                        navigation.pop()
-                }}
-                    innerCompStyle={{
-                        display: "flex",
+
+
+
+            <LinearGradient /** user headerCardContainer */
+                colors={["#79b6f7", "#a872fe"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                    overflow: "visible",
+                    backgroundColor: "#eee",
+                    borderRadius: 0,
+                    flex: 0.4,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    zIndex: 2
+                }}>
+
+                <View //navigattion button container
+                    style={{
+                        //backgroundColor: "red",
                         flexDirection: "row",
+                        display: "flex",
+                        justifyContent: "space-between",
                         alignItems: "center",
-                        justifyContent: "flex-start",
-                        //backgroundColor: "blue"
+                        position: "absolute",
+                        top: 30,
+                        width: "100%"
                     }}>
-                    <Ionicons style={{}} name="ios-arrow-back" size={30} color="#555" />
-                    <Text style={{ color: "#555", fontSize: 22, fontWeight: "bold", marginLeft: 10 }}>Settings</Text>
-                </NewRectButtonWithChildren>
-            </View>
-
-            <View /** content container */ style={{}}>
 
 
-                <LinearGradient /** user headerCard container */
-                    colors={["#79b6f7", "#a872fe"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={[styles.shadow, {
-                        overflow: "visible",
-                        backgroundColor: "#eee",
-                        width: "100%",
-                        height: 200,
-                        borderRadius: 10,
-                    }]}>
-                    <FontAwesome name="user" size={200} color="white" style={{ position: "absolute", right: "10%", top: 10, opacity: 0.3 }} />
+                    <NewRectButtonWithChildren onPress={() => {
+                        if (navigation.canGoBack())
+                            navigation.pop()
+                    }}
+                        style={{
+                            backgroundColor: "#ffffff00",
+                            marginHorizontal: 10
+                        }}
+                        innerCompStyle={{}}>
+                        <Ionicons style={{}} name="close" size={30} color="#fff" />
+                    </NewRectButtonWithChildren>
+
+
 
                     <NewRectButtonWithChildren /** logout button */
                         style={
                             {
-                                width: 40,
-                                height: 40,
-                                margin: 15,
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                                backgroundColor: "transparent"
+                                backgroundColor: "transparent",
+                                marginHorizontal: 10
                             }}
-                        innerCompStyle={[styles.center, {}]}
+                        innerCompStyle={{}}
                         onPress={() => {
                             appOperator.user({
                                 cmd: "LOGOUT", onLogout: () => {
@@ -86,44 +96,179 @@ const AppConfigScreen = ({ navigation }: props) => {
                                 }
                             })
                         }}>
-                        <AntDesign name="logout" size={24} color="#eee" />
+                        <MaterialIcons name="logout" size={24} color="#fff" />
                     </NewRectButtonWithChildren>
 
 
+                </View>
+
+                <View //userInfo container
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
                     <View /** header user icon */
                         style={[styles.shadow, {
-                            height: 100,
-                            width: 100,
                             borderRadius: 50,
                             backgroundColor: "#fff",
-                            position: "absolute",
-                            bottom: -30,
-                            left: 20,
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center"
                         }]}>
-                        <Feather name="user" size={45} color="#555" />
+                        <Feather name="user" size={45} color="#555" style={{ margin: 10 }} />
                     </View>
+                    <Text style={[styles.H3, { color: "white", marginTop: 10 }]}>{User?.userName ? "Hi, " + User?.userName : "Hi, user"}</Text>
+                    <Text style={{ color: "white" }}>{User?.email}</Text>
+                </View>
 
-                    <Text style={[styles.H3, { position: "absolute", bottom: 10, left: 130, color: "white" }]}>{"Hi, " + User?.userName}</Text>
+                <View // headerDevicesCount 
+                    style={[styles.shadow, {
+                        height: 30,
+                        width: "70%",
+                        bottom: -15,
+                        borderRadius: 50,
+                        backgroundColor: "#fff",
+                        position: "absolute",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        maxWidth: 180
+                    }]}>
+                    <Text style={[styles.H6, { color: "#777" }]}>{reduxStore.store.getState().deviceReducer.deviceList.length + " device connected"}</Text>
+                </View>
 
-                </LinearGradient>
+            </LinearGradient>
 
-                <View /** settings and other support */ style={{ width: "100%", marginTop: 50, padding: 5 }}>
-                    <Text style={[styles.H7, { color: "#555", opacity: 0.6 }]}>GENERAL</Text>
+            <ScrollView // bottomContentContainer
+                showsVerticalScrollIndicator={false}
+                style={{
+                    flex: 0.7,
+                    flexGrow: 1,
+                    width: "100%"
+                }}>
+
+                <View /** settings and other support */
+                    style={{
+                        marginTop: 50,
+                        marginHorizontal: 10
+                    }}>
+                    <Text style={[styles.H7, { color: "#55f", opacity: 0.6 }]}>Manual & Guides</Text>
                     <View style={[styles.shadow, { backgroundColor: "#fff", borderRadius: 10, marginTop: 10, paddingVertical: 10 }]}>
-                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Change Password" Icon={() => <></>} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="How to install"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support/how_to_install')
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#999",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="How to pair"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support/how_to_pair')
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#999",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="Link with Alexa"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support/linkAlexa')
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#999",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="More..."
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support/getstarted')
+                            }} />
                     </View>
                 </View>
 
-                <View style={{ width: "100%", marginTop: 50, padding: 5 }}>
-                    <Text style={[styles.H7, { color: "#555", opacity: 0.6 }]}>HELP</Text>
+                <View // guides & manual
+                    style={{
+                        marginHorizontal: 10,
+                        marginTop: 50,
+                    }}>
+                    <Text style={[styles.H7, { color: "#55f", opacity: 0.6 }]}>HELP</Text>
                     <View style={[styles.shadow, { backgroundColor: "#fff", borderRadius: 10, marginTop: 10, paddingVertical: 10 }]}>
-                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Terms & Conditions" Icon={() => <></>} />
-                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Privacy Policy" Icon={() => <></>} />
-                        <MenuHeading textStyles={{ fontSize: 16 }} heading="Support" Icon={() => <></>} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="Terms & Conditions"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync("https://www.huelite.in/support/termsNconditions")
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#999",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="Privacy Policy"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support/privacy_policy')
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#999",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="Support"
+                            Icon={() => <></>}
+                            onPress={() => {
+                                WebBrowser.openBrowserAsync('https://www.huelite.in/support')
+                            }} />
+                        <View style={{
+                            height: 1,
+                            width: "95%",
+                            marginHorizontal: "2.5%",
+                            borderBottomColor: "#bbb",
+                            borderBottomWidth: 1
+                        }} />
+                        <MenuHeading
+                            textStyles={{ fontSize: 16 }}
+                            heading="Chat with us"
+                            Icon={() => <Ionicons name="logo-whatsapp" size={24} color="#25d366" />}
+                            onPress={() => {
+                                let link = 'https://wa.me/+919839531395?text=Hi,%20I%20need%20assistance'
+                                if (Linking.canOpenURL(link))
+                                    Linking.openURL(link)
+                                else
+                                    console.log("cannot open url")
+                            }} />
                     </View>
+
                     <View style={{
                         width: "100%",
                         marginVertical: 25
@@ -137,10 +282,10 @@ const AppConfigScreen = ({ navigation }: props) => {
                     </View>
                 </View>
 
-            </View>
+            </ScrollView>
 
 
-        </Container>
+        </View>
     );
 };
 
@@ -156,12 +301,10 @@ const MenuHeading = ({ Icon, heading, textStyles, onPress = () => { } }: MenuHea
     return (
         <NewRectButtonWithChildren
             style={{
-                borderBottomColor: "#555",
-                borderBottomWidth: 0,
                 width: "100%",
                 paddingHorizontal: 10,
-                marginVertical: 10,
-                backgroundColor: "transparent"
+                marginVertical: 5,
+                backgroundColor: "transparent",
             }}
             innerCompStyle={{
                 display: "flex",
@@ -169,10 +312,11 @@ const MenuHeading = ({ Icon, heading, textStyles, onPress = () => { } }: MenuHea
                 justifyContent: "space-between",
                 alignItems: "center",
                 //backgroundColor: "red",
-                width: "100%"
+                width: "100%",
+                paddingRight: 10
             }}
             onPress={onPress}>
-            <Text style={[{ fontSize: 25, fontWeight: "bold", color: "#555" }, textStyles]}>{heading}</Text>
+            <Text style={[{ fontSize: 25, fontWeight: "bold", color: "#777" }, textStyles]}>{heading}</Text>
             <Icon />
         </NewRectButtonWithChildren>
     )

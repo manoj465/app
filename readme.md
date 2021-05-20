@@ -1,3 +1,7 @@
+## env
+
+- peacock color #ff6347
+
 ## feature-request
 
 - [x] convert color hex range from 1-255 to 1-100

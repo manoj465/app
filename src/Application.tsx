@@ -16,11 +16,13 @@ const Application = ({ }: App_i) => {
     ? reduxStore.store.getState().deviceReducer.deviceList.length
       ? "dashboard"
       : "pairing"
-    : "login_signup"
+    : reduxStore.store.getState().deviceReducer.deviceList.length
+      ? "dashboard"
+      : "login_signup"
 
   return <MainRouter
-    initialScreen={"pairing"}
-  //initialScreen={initialScreen} 
+    //initialScreen={"pairing"}
+    initialScreen={initialScreen}
   />;
 };
 

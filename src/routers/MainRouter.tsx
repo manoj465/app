@@ -9,6 +9,7 @@ import PairingScreen from "../components/screens/pairing/PairingConnectorScreen1
 import UserProfileScreen from "../components/screens/userProfile";
 import { deviceContainerType } from "../util/dummyData/DummyData";
 import SetupDeviceScreen from "../components/screens/devicePage/SetupScreen";
+import { Dimensions } from "react-native";
 
 
 export type MainRouterStackParamList = {
@@ -23,6 +24,8 @@ export type MainRouterStackParamList = {
   devicePage: { device: UNIVERSALS.GLOBALS.DEVICE_t };
   deviceObjectPage: { group: deviceContainerType };
 };
+
+
 
 export type MainRouterNavigationProp = StackNavigationProp<MainRouterStackParamList>;
 const Stack = createStackNavigator<MainRouterStackParamList>();
@@ -40,24 +43,69 @@ const MainRouter = (props: any) => {
       }}
     >
       {/* <Stack.Screen name="login_signup" component={GetStarted} /> */}
-      <Stack.Screen name="onboarding" component={WelcomeScreen} />
+      <Stack.Screen
+        name="onboarding"
+        component={WelcomeScreen}
+        options={{
+          gestureEnabled: false
+        }} />
+
       <Stack.Screen
         name="pairing"
         component={PairingScreen}
-        options={{ title: 'Add new device' }} />
+        options={{
+          title: 'Add new device',
+          gestureEnabled: false
+        }} />
+
       <Stack.Screen
         name="dashboard"
         component={Dashboard}
-        options={{ headerShown: false }} />
-      <Stack.Screen name="config" component={AppConfigScreen} />
-      <Stack.Screen name="user" component={UserProfileScreen} />
+        options={{
+          headerShown: false,
+          gestureEnabled: false
+        }} />
+
+      <Stack.Screen
+        name="config"
+        component={AppConfigScreen}
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+          cardStyleInterpolator: ({ current, layouts }) => {
+
+            return {
+              cardStyle: {
+                transform: [
+                  {
+                    translateX: current.progress.interpolate(
+                      {
+                        inputRange: [0, 1],
+                        outputRange: [-layouts.screen.width, 0,],
+                      }),
+                  }
+                ],
+              },
+            }
+          }
+        }} />
+
+      <Stack.Screen
+        name="user"
+        component={UserProfileScreen}
+        options={{
+          gestureEnabled: false
+        }} />
+
       <Stack.Screen
         name="devicePage"
         component={DevicePage}
         options={{
-          headerShown: false
+          headerShown: false,
+          gestureEnabled: false
         }}
       />
+
       <Stack.Screen
         name="setupDevice"
         component={SetupDeviceScreen}
