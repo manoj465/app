@@ -22,23 +22,37 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
     try {
       let _deviceList: UNIVERSALS.GLOBALS.DEVICE_t[] = yield select((state: _appState) => state.deviceReducer.deviceList);
       log?.print(iteration + ' - bgService : : >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : devicelist length - ' + _deviceList.length);
-      performSideEffects({
+      /* @-#todo_active - move to different function 
+        performSideEffects({
         user: reduxStore.store.getState().appCTXReducer.user,
         iteration,
         log: log ? new logger('performSideEffect', log) : undefined,
-      });
+      }); */
       let socketContainer: HBSocketList_t[] = yield select((state: _appState) => state.HBReducer.HBSocketList);
       if (_deviceList.length) {
         _deviceList.forEach(async (device) => {
-          syncDeviceWithBackend({
+          /*  @-#todo_active - move to different function 
+            syncDeviceWithBackend({
             device,
             iteration,
             user: reduxStore.store.getState().appCTXReducer.user,
             log: log ? new logger('handle_device_in_loop', log) : undefined,
-          });
+          }); */
           const localSocketContainer = socketContainer.find((item) => item.Mac == device.Mac);
           if (localSocketContainer?.socket) {
             log?.print('device : ' + device.Mac + ' has socket');
+            // @-#todo check socket ping interval
+            if (localSocketContainer.lastMsgRecTs) {
+              let timeDiff = getCurrentTimeStampInSeconds() - localSocketContainer.lastMsgRecTs;
+              console.log('socket time diff : ' + timeDiff);
+              if (timeDiff >= 3 && timeDiff < 15) {
+                console.log('sending ping to device');
+                localSocketContainer.socket.send('Heartbeat');
+              } else {
+                console.log('time to undef the socket for device----, ' + device.Mac);
+                reduxStore.store.dispatch(_actions.HBSocket({ item: { Mac: device.Mac, socket: undefined } }));
+              }
+            }
           } else {
             let socket = null;
             let res = await api.deviceAPI.authAPI.v1({
@@ -56,18 +70,19 @@ export const [bgServiceWatcher, bgServiceSagaAction] = _getWorker<bgServiceSagaA
                   },
                   onMsg: (msg) => {
                     try {
-                      const data: deviceSocketHBResponse | null = msg ? JSON.parse(msg) : null;
                       reduxStore.store.dispatch(_actions.HBSocket({ item: { Mac: device.Mac, lastMsgRecTs: getCurrentTimeStampInSeconds() } }));
-                      //log("SOCKET MSG >> " + JSON.stringify(data))
+                      console.log('SOCKET MSG >> ' + msg);
                     } catch (error) {
-                      log?.print(error);
+                      console.log('socket error');
+                      console.log(error);
                     }
                   },
                   onErr: (e) => {
-                    log?.print('Ws Error - ' + JSON.stringify(e));
+                    console.log('Ws Error - ' + JSON.stringify(e));
                     reduxStore.store.dispatch(_actions.HBSocket({ item: { Mac: device.Mac, socket: undefined } }));
                   },
                   onClose: () => {
+                    console.log('socket closed');
                     reduxStore.store.dispatch(_actions.HBSocket({ item: { Mac: device.Mac, socket: undefined } }));
                   },
                 });
