@@ -7,7 +7,7 @@
   "expo": {
     "name": "BDE Smart",
     "slug": "BDE",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "orientation": "portrait",
     "icon": "./assets/icons/bde_appIcon.png",
     "splash": {
