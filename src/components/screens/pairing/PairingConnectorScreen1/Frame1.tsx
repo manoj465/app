@@ -32,11 +32,12 @@ export default (props: {
       functionComponent={() => {
         useEffect(() => {
           const interval = setInterval(async () => {
-            const res = await api.deviceAPI.authAPI.v1({
+            const res = await api.deviceAPI.statusAPI.v1({
               IP: '192.168.4.1',
-              log: props.log ? new logger('auth api') : undefined,
+              //log: props.log ? new logger('status api') : undefined,
+              //log: new logger('status api'),
             });
-            console.log('-- response from authAPI ' + JSON.stringify(res));
+            console.log('[pairing frame 1] statusAPI response -- ' + JSON.stringify(res));
             if (res.RES?.Mac && res.RES.Hostname) {
               clearInterval(interval);
               console.log('step 1 done');

@@ -194,7 +194,7 @@ export default ({ navigation, setStep, show, ...props }: Props) => {
   );
 };
 
-const PairingContainer = (props: {
+interface PairingContainerProps {
   children?: any;
   style?: StyleProp<ViewStyle>;
   frame2steps: 0 | 1 | 2;
@@ -211,14 +211,15 @@ const PairingContainer = (props: {
   navigation: any;
   newDevice: UNIVERSALS.GLOBALS.DEVICE_t | undefined;
   setNewDevice: React.Dispatch<React.SetStateAction<UNIVERSALS.GLOBALS.DEVICE_t | undefined>>;
-}) => {
+}
+const PairingContainer = (props: PairingContainerProps) => {
   const transition = useTimingTransition(props.frame2steps);
   const [data, socket, pair, pairStatus, hitSaveAPI] = usePairApiHook({
     IP: '192.168.4.1',
     _onMsg: (msg) => {
       //console.log("socket msg on Pairing Screen---- " + JSON.stringify(msg));
     },
-    log: new logger('pairing hook'),
+    //log: new logger('pairing hook'),
   });
 
   useEffect(() => {
@@ -301,7 +302,7 @@ const PairingContainer = (props: {
         <NewRectButtonWithChildren
           onPress={() => {
             if (props.frame2steps == 0) {
-              if (props.Wifi) props.setFrame2steps(1);
+              if (props.Wifi && props.Wifi != '--HUE--') props.setFrame2steps(1);
               else {
                 console.log('no wifi selected');
                 if (props.loading) {
@@ -690,10 +691,10 @@ const WiFiPasswordView = (props: { pass: string; setPass: React.Dispatch<React.S
 };
 
 interface PairingView_props {
-  ssid?: String;
-  pass: String;
+  ssid?: string;
+  pass: string;
   pairStatus: pairing_state_e;
-  pair: (ssid: String, pass: String) => Promise<void>;
+  pair: (ssid: string, pass: string) => Promise<void>;
 }
 const PairingView = ({ ssid, pass, pair, pairStatus }: PairingView_props) => {
   useEffect(() => {
@@ -711,18 +712,21 @@ const PairingView = ({ ssid, pass, pair, pairStatus }: PairingView_props) => {
       }}
     >
       {pairStatus == pairing_state_e.PAIR_REQUEST_SUCCESS_N_CONNECTING || pairStatus == pairing_state_e.PAIR_READY ? (
-        <LottieView
-          ref={(animation) => {
-            //_animation = animation;
-          }}
-          style={{
-            width: width - 30, //removed horizontal margin of the container
-          }}
-          source={require('../../../../../assets/lottie/connecting-2.json')}
-          autoPlay
-          loop={true}
-          //progress={progress}
-        />
+        <View>
+          <Text style={{ fontSize: 20, color: '#777', fontWeight: 'bold', textAlign: 'center' }}>Connecting...</Text>
+          <LottieView
+            ref={(animation) => {
+              //_animation = animation;
+            }}
+            style={{
+              width: width - 30, //removed horizontal margin of the container
+            }}
+            source={require('../../../../../assets/lottie/progress-3.json')}
+            autoPlay
+            loop={true}
+            //progress={progress}
+          />
+        </View>
       ) : pairStatus == pairing_state_e.PAIR_SUCCESS ? (
         <LottieView
           ref={(animation) => {
