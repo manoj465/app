@@ -1,17 +1,17 @@
 {
   "facebookScheme": "fb366634227889659",
   "facebookAppId": "366634227889659",
-  "facebookDisplayName": "BDELogin",
+  "facebookDisplayName": "HUEliteLogin",
   "android.config.googleSignIn.apiKey": "AIzaSyAiPbw4QD29XDg8anpovpVzfdakdrmQ5gw",
   "android.config.googleSignIn.certificateHash": "3A:2F:2C:0E:7F:6D:F7:F1:FA:31:5E:88:D3:3E:0B:AD:3B:AC:D4:28",
   "expo": {
-    "name": "BDE Smart",
-    "slug": "BDE",
-    "version": "1.0.1",
+    "name": "HUElite",
+    "slug": "HUElite",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icons/bde_appIcon.png",
+    "icon": "./assets/icons/icon-no-bg.png",
     "splash": {
-      "image": "./assets/icons/bde_appIcon.png",
+      "image": "./assets/icons/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -20,21 +20,25 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "icon": "./assets/icons/bde/bde_appIcon_ios.png",
+      "icon": "./assets/icons/icon-with-bg.png",
       "supportsTablet": true,
-      "buildNumber": "1.1.0",
-      "bundleIdentifier": "com.sternet.bde"
+      "buildNumber": "2.0.0",
+      "bundleIdentifier": "com.sternet.huelite"
     },
     "android": {
-      "icon": "./assets/icons/bde_appIcon.png",
-      "versionCode": 3,
-      "package": "com.sternet.bde"
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icons/icon-no-bg.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "icon": "./assets/icons/icon-no-bg.png",
+      "versionCode": 2,
+      "package": "com.sternet.huelite"
     },
     "web": {
-      "name": "BDE",
-      "shortName": "BDE",
+      "name": "HUElite",
+      "shortName": "HUElite",
       "orientation": "portrait",
-      "description": "BDE Smart",
+      "description": "lightup with HUElite",
       "favicon": "./assets/icons/icon-no-bg.png",
       "backgroundColor": "#ffffff",
       "startUrl": "https://app.huelite.in/?utm_source=homescreen",
@@ -48,7 +52,6 @@
         }
       ],
       "display": "fullscreen"
-    },
-    "sdkVersion": "40.0.0"
+    }
   }
 }

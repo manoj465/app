@@ -17,6 +17,7 @@ import useDeleteDeviceModal from '../../common/useDeleteDeviceModal';
 import Header from './header';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import DeviceCard from '../../../../sternet/ui/device-card';
+import mqtt from '../../../services/backGroundServices/mqtt';
 
 const navigationIconSize = 25;
 
