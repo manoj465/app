@@ -68,7 +68,7 @@ const [_colorSaga_watcher, _colorSaga_action] = _getWorker<_colorAction_Props & 
   type: _reduxConstant.COLOR_UPDATE_SAGA,
   shouldTakeLatest: true,
   callable: function* containersWorker({ deviceMac, state, channelBrightnessObject, stateObject, gestureState, onActionComplete, log }) {
-    //let log = new logger("debug")
+    //log = new logger('debug');
     let deviceSocketList: HBSocketList_t[] = yield select((state: _appState) => state.HBReducer.HBSocketList);
     let devicelist: UNIVERSALS.GLOBALS.DEVICE_t[] = yield select((state: _appState) => state.deviceReducer.deviceList);
     //@ts-ignore
@@ -79,29 +79,37 @@ const [_colorSaga_watcher, _colorSaga_action] = _getWorker<_colorAction_Props & 
           let [newHex, newDevice] = getHex({ device, channelBrightnessObject, stateObject });
           let deviceSocketObject = deviceSocketList.find((item) => item.Mac == newDevice.Mac);
           if (deviceSocketObject?.socket) {
-            console.log('sending color to device. state: ' + newHex + ', IP: ' + device.IP);
+            log?.print('sending color to device. state: ' + newHex + ', IP: ' + device.IP);
             if (state) {
               deviceSocketObject.socket.send(state);
             } else if (newHex) deviceSocketObject.socket.send(newHex);
-          } else if (gestureState == State.END && !deviceSocketObject?.socket) {
-            console.log('sending color to device. state: ' + newHex + ', over mqtt ');
-            /* if device has no socket than send the color over mqtt only upon gestureState end */
-            if (newHex) {
-              console.log('newHex: ' + newHex);
-              mqtt.sendToDevice({ Mac: device.Mac, Hostname: device.Hostname, payload: newHex });
-            } else if (state) {
-              console.log('state: ' + state);
-              mqtt.sendToDevice({ Mac: device.Mac, Hostname: device.Hostname, payload: state });
-            }
           }
-          log?.print('new Device from HexConverter ' + JSON.stringify(newDevice, null, 2));
+          log?.print('new Device from HexConverter ' + JSON.stringify(newDevice));
           return newDevice;
         }
         return device;
       })
     );
-    yield _delay(300); /* wait until gesture interval 200ms exceeds to ensure this next line of code only executes upon gesture end */
+    yield _delay(300); /* note : wait until gesture interval 200ms exceeds to ensure this next line of code only executes upon gesture end */
     log?.print('[COLOR SAGA] Gesture has ended >> sending Redux Data Update' + JSON.stringify(newDeviceList /* , null, 2 */));
+    //NOTE : deviceList has already been set to be updated, no need here
+    devicelist.forEach(async (_device) => {
+      if (deviceMac.includes(_device.Mac)) {
+        let [newHex, newDevice] = getHex({ device: _device, channelBrightnessObject, stateObject });
+        let deviceSocketObject = deviceSocketList.find((item) => item.Mac == newDevice.Mac);
+        if (!deviceSocketObject?.socket) {
+          log?.print('sending color to device. state: ' + newHex + ', over mqtt ');
+          /* if device has no socket than send the color over mqtt only upon gestureState end */
+          if (newHex) {
+            log?.print('newHex: ' + newHex);
+            mqtt.sendToDevice({ Mac: _device.Mac, Hostname: _device.Hostname, payload: newHex });
+          } else if (state) {
+            log?.print('state: ' + state);
+            mqtt.sendToDevice({ Mac: _device.Mac, Hostname: _device.Hostname, payload: state });
+          }
+        }
+      }
+    });
     if (onActionComplete) onActionComplete({ newDeviceList });
   },
 });

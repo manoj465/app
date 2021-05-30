@@ -16,10 +16,10 @@ export class logger {
   printAll = false;
   printable = [
     //'STATUS API',
-    'AUTHAPI',
+    //'AUTHAPI',
     //"MAIN ACTIVITY", /* App.ts */
     //"LOGIN OPERATOR", /** onLoginPressed in file => `userProfile/userForms/loginForm.tsx` */
-    'BG SERVICE',
+    //'BG SERVICE',
     //"DEVICE MODES SCREEN", /* device modes screen in device page */
     //"DEVICE COLOR PICKER",/* DEVICE COLOR PICKER PAGE */
     //'DEVICE CARD',
@@ -32,7 +32,7 @@ export class logger {
     //'PAIRING HOOK',
     //"SOCKET TEST",
     //"SERVER",
-    //"DEBUG",
+    'DEBUG',
   ];
   /**
    *

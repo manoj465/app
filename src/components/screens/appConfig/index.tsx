@@ -304,7 +304,7 @@ const AppConfigScreen = ({ navigation }: props) => {
             >
               Powered by <Text style={{ fontWeight: 'bold' }}>STERNET INDUSTRIES</Text>
             </Text>
-            <Text style={[styles.H7, { fontWeight: 'normal', textAlign: 'center' }]}>ver - 2.0.4-beta</Text>
+            <Text style={[styles.H7, { fontWeight: 'normal', textAlign: 'center' }]}>ver - 2.1.1-beta</Text>
           </View>
         </View>
       </ScrollView>
