@@ -1,3 +1,5 @@
+# HUElite App 3.0
+
 ## feature-request
 
 - [x] convert color hex range from 1-255 to 1-100
