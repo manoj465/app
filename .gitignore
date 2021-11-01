@@ -1,6 +1,7 @@
 node_modules/**/*
 node_modules/
 node_modules
+public
 .expo/*
 npm-debug.*
 *.jks
@@ -11,6 +12,7 @@ npm-debug.*
 *.orig.*
 web-build/
 dist
+.env
 
 # macOS
 .DS_Store
@@ -21,3 +23,6 @@ dist
 # react compiler
 components/compilers/
 components/compilers
+
+
+# configurationFiles

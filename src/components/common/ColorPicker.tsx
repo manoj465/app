@@ -1,33 +1,20 @@
-import React, { useState, memo, useEffect, useRef } from "react";
-import {
-  Dimensions,
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  Platform,
-} from "react-native";
-
-//import { Surface } from "gl-react-expo";
-//import { GLSL, Node, Shaders } from "gl-react";
-import Animated from "react-native-reanimated";
-import ColorPickerPin from "./ColorPickerPin_optimizedForWeb";
-//import Svg, { Circle } from "react-native-svg";
-import { deviceType } from "../../util/dummyData/DummyData.jsx";
-import { logger } from "../../@logger";
-import UNIVERSALS from "../../@universals";
+import React, { useState } from 'react';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { logger } from '../../@logger';
+import ColorPickerPin from './ColorPickerPin_optimizedForWeb';
 
 const styles = StyleSheet.create({
   container: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     //backgroundColor: "red",
   },
   surface: {},
   hue: {
     //flex: 1,
-    alignSelf: "center",
+    alignSelf: 'center',
     //maxWidth: 300,
     //maxHeight: 300
     //backgroundColor: "red",
@@ -38,54 +25,45 @@ interface Props {
   hue: Animated.Value<number>;
   saturation: Animated.Value<number>;
   backgroundColor: Animated.Node<number>;
-  device: UNIVERSALS.GLOBALS.DEVICE_t
-  log?: logger
+  device: DEVICE_t;
+  log?: logger;
 }
-const { width } = Dimensions.get("window");
-const ColorPicker = ({
-  hue,
-  saturation,
-  backgroundColor,
-  device,
-  log
-}: Props) => {
+const { width } = Dimensions.get('window');
+const ColorPicker = ({ hue, saturation, backgroundColor, device, log }: Props) => {
   //const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-  const [canvasWidth, setCanvasWidth] = useState(0)
-  console.log("--width of color picker width is :: " + canvasWidth)
-  //const ref = useRef<any>(null);
-
-
-  /* useEffect(() => {
-    if (ref.current) {
-      console.log('width', ref?.current ? ref.current?.offsetWidth : 0);
-      setCanvasWidth(ref.current.offsetWidth)
-    }
-  }, [ref.current]) */
+  const [canvasWidth, setCanvasWidth] = useState(0);
+  //console.log('--width of color picker width is :: ' + canvasWidth);
 
   return (
     <View style={styles.container}>
-      <View style={{ alignSelf: "center" }}
+      <View
+        style={{ alignSelf: 'center' }}
         //ref={ref}
         onLayout={(event) => {
           var { width } = event.nativeEvent.layout;
-          console.log("**width :: " + width)
           setCanvasWidth(width);
-        }} >
-        <Image source={require("../../../assets/images/colorPicker.png")} style={[
-          styles.surface,
-          {
-            width: width * 0.85,
-            height: width * 0.85,
-          },
-        ]} />
-        {canvasWidth > 0 && <ColorPickerPin
-          canvasWidth={canvasWidth}
-          h={hue}
-          s={saturation}
-          backgroundColor={backgroundColor}
-          device={device}
-          log={log}
-        />}
+        }}
+      >
+        <Image
+          source={require('../../../assets/images/colorPicker.png')}
+          style={[
+            styles.surface,
+            {
+              width: width * 0.85,
+              height: width * 0.85,
+            },
+          ]}
+        />
+        {canvasWidth > 0 && (
+          <ColorPickerPin
+            canvasWidth={canvasWidth}
+            h={hue}
+            s={saturation}
+            backgroundColor={backgroundColor}
+            device={device}
+            log={log}
+          />
+        )}
       </View>
     </View>
   );
@@ -93,15 +71,14 @@ const ColorPicker = ({
 
 export default ColorPicker;
 
-
 /**
- * 
+ *
  * ## changelog
  * - colorpicker pin is now rendered only after the canvasWidth is updated with image component width
  */
 
-
-{/*   <Surface
+{
+  /*   <Surface
           style={[
             styles.surface,
             {
@@ -111,8 +88,8 @@ export default ColorPicker;
           ]}
         >
         <Node shader={shaders.hue} /> 
-        </Surface> */}
-
+        </Surface> */
+}
 
 /* const shaders = Shaders.create({
 hue: {

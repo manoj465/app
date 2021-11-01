@@ -1,13 +1,25 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { PanGestureHandler, State } from "react-native-gesture-handler";
-import Animated, { add, block, call, cond, divide, eq, event, modulo, pow, set, useCode } from "react-native-reanimated";
-import { canvas2Polar, clamp, polar2Canvas, translate, useValue, vec } from "react-native-redash";
-import UNIVERSALS from "../../@universals";
-import { appOperator } from "../../app.operator";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import Animated, {
+  add,
+  block,
+  call,
+  cond,
+  divide,
+  eq,
+  event,
+  modulo,
+  pow,
+  set,
+  useCode,
+} from 'react-native-reanimated';
+import { canvas2Polar, clamp, polar2Canvas, translate, useValue, vec } from 'react-native-redash';
+import UNIVERSALS from '../../@universals';
+import { appOperator } from '../../app.operator';
 //import { Path } from "react-native-svg";
-import { getTimeDiffNowInMs } from "../../util/DateTimeUtil";
-import { logger } from "../../@logger";
+import { getTimeDiffNowInMs } from '../../util/DateTimeUtil';
+import { logger } from '../../@logger';
 
 //const AnimatedPath = Animated.createAnimatedComponent(Path);
 const quadraticIn = (t: any) => pow(t, 2);
@@ -16,26 +28,25 @@ const PICKER_HEIGHT = 60;
 const STROKE_WIDTH = 4;
 
 interface Props {
-  canvasWidth: number
-  h: Animated.Value<number>
-  s: Animated.Value<number>
-  backgroundColor: Animated.Node<number>
-  device: UNIVERSALS.GLOBALS.DEVICE_t
-  log?: logger
+  canvasWidth: number;
+  h: Animated.Value<number>;
+  s: Animated.Value<number>;
+  backgroundColor: Animated.Node<number>;
+  device: DEVICE_t;
+  log?: logger;
 }
 
-const ColorPickerPin = ({
-  canvasWidth,
-  h,
-  s,
-  backgroundColor,
-  device,
-  log
-}: Props) => {
+const ColorPickerPin = ({ canvasWidth, h, s, backgroundColor, device, log }: Props) => {
   const state = useValue(State.UNDETERMINED);
   let timeStamp = Date.now();
-  const CENTER = { x: canvasWidth / 2, y: canvasWidth / 2, };
-  const v = polar2Canvas({ theta: (device.hsv?.h ? device.hsv?.h : 0) * (Math.PI / 180), radius: (canvasWidth / 2) * Math.sqrt((device.hsv?.s ? device.hsv?.s : 100) / 100), }, CENTER);
+  const CENTER = { x: canvasWidth / 2, y: canvasWidth / 2 };
+  const v = polar2Canvas(
+    {
+      theta: (device.hsv?.h ? device.hsv?.h : 0) * (Math.PI / 180),
+      radius: (canvasWidth / 2) * Math.sqrt((device.hsv?.s ? device.hsv?.s : 100) / 100),
+    },
+    CENTER
+  );
   const offset = { x: useValue(0), y: useValue(0) };
   const v2 = vec.add(offset, v);
   const { theta, radius } = canvas2Polar(v2, CENTER);
@@ -52,10 +63,7 @@ const ColorPickerPin = ({
             set(state, _state),
             cond(
               eq(state, State.ACTIVE),
-              block([
-                set(offset.x, add(offset.x, transX)),
-                set(offset.y, add(offset.y, transY)),
-              ])
+              block([set(offset.x, add(offset.x, transX)), set(offset.y, add(offset.y, transY))])
             ),
           ]),
       },
@@ -64,25 +72,21 @@ const ColorPickerPin = ({
   );
 
   const updateColor = (h: number, s: number, gestureState: State, log?: logger) => {
-
-
     appOperator.device({
-      cmd: "COLOR_UPDATE",
+      cmd: 'COLOR_UPDATE',
       deviceMac: [device.Mac],
       hsv: { h: Math.min(Math.round(h * 360), 360), s: Math.min(Math.round(s * 100), 100) },
       gestureState,
-      log
-    })
-  }
+      log,
+    });
+  };
 
   useCode(
     () => [
       set(h, hue),
       set(s, quadraticIn(saturation)),
-      call(
-        [h, s, state],
-        ([h, s, state]) => {
-          /* if (getTimeDiffNowInMs(timeStamp) > 200) {
+      call([h, s, state], ([h, s, state]) => {
+        /* if (getTimeDiffNowInMs(timeStamp) > 200) {
             console.log("<<<< Sending Color- >>>>")
             timeStamp = getCurrentTimeStamp();
             updateColor(h, s, State.ACTIVE, log)
@@ -90,39 +94,36 @@ const ColorPickerPin = ({
           else {
             //console.log("<<<< cannot send Bightness- >>>>")
           } */
-          if (state == State.ACTIVE) {
-            if (getTimeDiffNowInMs(timeStamp) > 200) {
-              console.log("Sending hex >>>>>>>>>>>>>>>>")
-              //console.log("can send")
-              timeStamp = Date.now();
-              updateColor(h, s, state, log)
-            } else {
-              //console.log("cannot send")
-            }
-          } else if (state == State.END) {
-            console.log("Sending hex >>>>>>>>>>>>>>>>")
-            setTimeout(() => {
-              timeStamp = Date.now();
-              updateColor(h, s, state, log)
-            }, 200);
+        if (state == State.ACTIVE) {
+          if (getTimeDiffNowInMs(timeStamp) > 200) {
+            console.log('Sending hex >>>>>>>>>>>>>>>>');
+            //console.log("can send")
+            timeStamp = Date.now();
+            updateColor(h, s, state, log);
+          } else {
+            //console.log("cannot send")
           }
+        } else if (state == State.END) {
+          console.log('Sending hex >>>>>>>>>>>>>>>>');
+          setTimeout(() => {
+            timeStamp = Date.now();
+            updateColor(h, s, state, log);
+          }, 200);
         }
-      ),
+      }),
     ],
     [h, hue, s, state, saturation, timeStamp]
   );
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <PanGestureHandler
-        onGestureEvent={gestureHandler}
-        onHandlerStateChange={gestureHandler}>
+      <PanGestureHandler onGestureEvent={gestureHandler} onHandlerStateChange={gestureHandler}>
         <Animated.View
           style={{
             width: 50,
             height: 50,
-            backgroundColor: "#00000000" /* backgroundColor */,
-            shadowColor: "#000",
+            backgroundColor: '#00000000' /* backgroundColor */,
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
               height: 12,
@@ -130,13 +131,11 @@ const ColorPickerPin = ({
             shadowOpacity: 0.58,
             shadowRadius: 25.0,
             elevation: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             transform: [
-              ...translate(
-                polar2Canvas(l, CENTER)
-              ) /* ...translate(
+              ...translate(polar2Canvas(l, CENTER)) /* ...translate(
                 polar2Canvas(
                   {
                     theta: 240 * (Math.PI / 180),
@@ -154,9 +153,9 @@ const ColorPickerPin = ({
         >
           <View
             style={{
-              backgroundColor: "#fff",
+              backgroundColor: '#fff',
               borderWidth: 2,
-              borderColor: "#aaa",
+              borderColor: '#aaa',
               height: 30,
               width: 30,
               borderRadius: 15,

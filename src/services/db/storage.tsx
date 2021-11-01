@@ -1,11 +1,11 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /**
  *
  * @param {* key_<String> >> dataKey} key
  * @param {* value_<Object> >> dataSet} value
  */
-export const storeData = async (key: "appCTX" | "deviceList" | "deletedDeviceList", value: Object) => {
+export const storeData = async (key: 'deviceList_v2' | 'appCTX' | 'deletedDeviceList', value: Object) => {
   //console.log("SAVING DATA >> " + JSON.stringify(value))
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -21,7 +21,7 @@ export const storeData = async (key: "appCTX" | "deviceList" | "deletedDeviceLis
  * @returns {* null:: in case dataSet doesn't exists}
  * @returns {* Object: if data exists}
  */
-export const getData = async (key: "appCTX" | "deviceList" | "deletedDeviceList") => {
+export const getData = async (key: string) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
@@ -32,8 +32,8 @@ export const getData = async (key: "appCTX" | "deviceList" | "deletedDeviceList"
 };
 
 export const saveAppCTX = (props: any) => {
-  console.log("appCTX data to save => " + JSON.stringify(props));
+  console.log('appCTX data to save => ' + JSON.stringify(props));
   new Promise(() => {
-    storeData("appCTX", props);
+    storeData('appCTX', props);
   });
 };

@@ -1,4 +1,6 @@
-# HUElite App 3.0.0
+## env
+
+- peacock color #ff6347
 
 ## feature-request
 
@@ -59,19 +61,35 @@
 
 ## Working Features
 
-- [ ] Brightness/Color Control
-- [ ] login/Signup
+- [x] Brightness/Color Control
+- [x] login/Signup
 - [ ] tutorials
-- [ ] timer/modes
-- [ ] cloud sync backup/restore
+- [x] timer
+- [x] cloud sync backup/restore
 - [ ] device sharing
 - [ ] custom IFTT
 - [ ] energy usage
-- [ ] user activity tracking (for device usage stats)
+- [ ] MQTT(controll from anywhere)
 
 ## Major Bugs
 
 Listed are the bugs which are worth mentioning, althought we are contineously working on fixes and improvements,
 Time before each bug is resolved could not be forsaid
 
-- [ ] Login/Signup Not Working
+- [x] Login/Signup Not Working (fixed)
+
+---
+
+# commit message
+
+---
+
+# minor update ver1.1.0
+
+- timer working
+- login/signup feature back online
+
+## changelog
+
+- modified the conversion methods for timer
+- UI fixes and improvements in timer screens

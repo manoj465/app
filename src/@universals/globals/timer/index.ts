@@ -1,4 +1,3 @@
-export * from "./types"
-export * from "./helper"
+export * from './helper';
 
 /** test-002 */

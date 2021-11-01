@@ -1,3 +1,2 @@
-export * from "./types"
-export * from "./helper"
-export * from "./gql"
+export * from './helper';
+export * from './gql';

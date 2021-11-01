@@ -9,14 +9,14 @@ export default StyleSheet.create({
     shadow: {
         backgroundColor: "#fff",
         alignItems: 'center',
-        shadowColor: '#777',
+        shadowColor: '#000',
         shadowOffset: {
             width: 0,
             height: 0,
         },
         shadowOpacity: 0.25,
         shadowRadius: 2,
-        elevation: 2,
+        elevation: 15
     },
     absoluteFill: {
         width: "100%",

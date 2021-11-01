@@ -1,247 +1,294 @@
-import React, { useEffect, useState } from "react";
-import { Dimensions, Image, Linking, Platform, StyleSheet, Text, View } from "react-native";
-import { PairingStackParamList } from "..";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from "@react-navigation/native";
-import { RectButton } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch } from "react-redux";
-import LottieView from "lottie-react-native";
-//native imports
-import api from "../../../../@api";
-import { logFun, logger } from "../../../../@logger";
-import { getCurrentTimeInSeconds } from "expo-auth-session/build/TokenRequest";
-import Alert from "../../../common/Alert";
-import { NewRectButtonWithChildren } from "../../../common/buttons/RectButtonCustom";
-import STYLES from "../../../../styles"
-import UNIVERSALS from "../../../../@universals";
+import { MaterialIcons } from '@expo/vector-icons';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  Dimensions,
+  StyleProp,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import Animated, { interpolate } from 'react-native-reanimated';
+import { useTimingTransition } from 'react-native-redash';
+import { PairingStackParamList } from '../index';
+import { logger } from '../../../../@logger';
+import { NewRectButtonWithChildren } from '../../../common/buttons/RectButtonCustom';
+import Support from '../SupportComp';
+import Frame2 from './Frame2';
+import Frame1 from './Frame1';
+import Notify from '../../../common/notificationComp';
+import { STYLES } from '../../../../@styles';
+import UNIVERSALS from '../../../../@universals';
+import reduxStore from '../../../../redux';
 
-
-
-type pairingScreen1NavigationProp = StackNavigationProp<PairingStackParamList, "PairScreen_1">;
-type pairingScreen1RouteProp = RouteProp<PairingStackParamList, "PairScreen_1">;
+type pairingScreen1NavigationProp = StackNavigationProp<PairingStackParamList, 'PairScreen_1'>;
+type pairingScreen1RouteProp = RouteProp<PairingStackParamList, 'PairScreen_1'>;
 
 interface Props {
   navigation: pairingScreen1NavigationProp;
   route: pairingScreen1RouteProp;
 }
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 /**
- * 
- * @param param0 
- * 
- * 
+ *
+ * @param param0
+ *
+ *
  * @todo
  * - [ ] add groupName addition feature
  * - [x] handle addition of rgb product
  * - [ ] handle addition of RGBW product
  */
-export const PairingConnectorScreen1 = ({ navigation }: Props) => {
-  const log = new logger("PAIRING_SCREEN_1")
-  const [groupName, setGroupName] = useState("BedRoom");
+export default ({ navigation }: Props) => {
+  const [step, setStep] = useState<0 | 1 | 2>(0);
+  const [newDevice, setNewDevice] = useState<undefined | DEVICE_t>(undefined);
+  const log = new logger('PAIRING_SCREEN_1');
+  const [groupName, setGroupName] = useState('BedRoom');
   let _animation = null;
+  const transition = useTimingTransition(step);
 
   useEffect(() => {
-    const interval = setInterval(async () => {
-      const res = await api.deviceAPI.authAPI.v1({ IP: "192.168.4.1", log: log ? new logger("auth api", log) : undefined })
-      console.log("<><><> " + JSON.stringify(res))
-      if (res.RES?.Mac) {
-        clearInterval(interval)
-        console.log("navigating to next screen - screen-2")
-        navigation.replace("PairScreen_2", {
-          newDevice: {
-            ...res.RES,
-            localTimeStamp: getCurrentTimeInSeconds(),
-            IP: "192.168.4.1",
-            deviceName: "",
-            timers: [],
-            channel: UNIVERSALS.GLOBALS.getDefaultOutputChannel({ Hostname: res.RES.Hostname })
-          }
-        });
-      }
-
-    }, 3000)
     return () => {
-      clearInterval(interval);
+      reduxStore.store.dispatch(
+        reduxStore.actions.appCTX.notificationsRedux({
+          notifications: reduxStore.store
+            .getState()
+            .appCTXReducer.notifications.filter((item) => item.topic != 'PAIRING'),
+        })
+      );
     };
-  }, [])
-
+  }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <View
-          style={{
-            marginVertical: 20,
-            backgroundColor: "#55f",
-            height: 0.25 * height,
-            width: "95%",
-            alignSelf: "center",
-            borderRadius: 25,
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            overflow: "hidden",
-          }}
-        >
+    <View
+      //behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+      //keyboardVerticalOffset={80}
+      style={{
+        flex: 1,
+        backgroundColor: '#fff',
+      }}
+    >
+      <Notify topic={'PAIRING'} />
 
-          <Image
-            style={{
-              height: "100%",
-              width: "100%",
-              position: "absolute",
-              top: 0,
-              left: 0,
-              opacity: 0.8,
-            }}
-            source={require("../../../../../assets/images/testIMG.jpg")}
-          />
-          <NewRectButtonWithChildren
-            style={{
-              height: 40,
-              minWidth: 160,
-              paddingHorizontal: 1,
-              borderRadius: 25,
-              overflow: "hidden",
-              justifyContent: "center",
-              position: "absolute",
-              bottom: 20,
-              right: 20,
-            }}
-            onPress={async () => {
-              const supported = await Linking.canOpenURL("App-Prefs:root=WIFI");
-              if (supported) {
-                await Linking.openURL("App-Prefs:root=WIFI");
-              } else {
-                Alert.alert(
-                  `Jump not Supported`,
-                  "You might want to try switching the HUElite app in background and then go to WiFi Settings "
-                );
-              }
-            }}
-          >
-            <View
-              style={{
-                height: 40,
-                minWidth: 160,
-                paddingHorizontal: 1,
-                position: "absolute",
-                backgroundColor: "#fff",
-                borderRadius: 25,
-                opacity: 0.7,
-                top: 0,
-                left: 0,
-              }}
-            ></View>
-            <Text
-              style={{ fontSize: 12, fontWeight: "bold", alignSelf: "center" }}
-            >
-              Go to Wi-Fi Settings
-            </Text>
-          </NewRectButtonWithChildren>
-        </View>
-        <View
+      {/* Sec: headerSection */}
+      <NewPairingBackground />
+
+      {/* StepsIndicator container */}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: height - 50, // subctracted header height from total height
+          width,
+          //backgroundColor: "red"
+        }}
+      >
+        <View // top section
           style={{
-            flex: 1,
-            backgroundColor: "#fff",
-            alignItems: "center",
-            justifyContent: "center",
+            //backgroundColor: "green",
+            flex: 0.3,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'flex-end',
           }}
         >
-          {Platform.OS != "web" && <LottieView
-            ref={(animation) => {
-              _animation = animation;
-            }}/* 
+          <View
             style={{
-              width: width * 0.8,
-              height: width * 0.8,
-              backgroundColor: "#fff",
-            }} */
-            source={require("../../../../../assets/lottie/scanning.json")}
-            autoPlay
-            loop={true}
-          //progress={progress}
-          />}
-        </View>
-        {/*/// Text Section */}
-        <View
-          style={{ backgroundColor: "#fff", justifyContent: "center", marginTop: 20, marginBottom: 10 }}
-        >
-          <Text
+              backgroundColor: step == 0 ? '#2ecc71' : '#777',
+              height: 6,
+              width: step == 0 ? 18 : 6,
+              borderRadius: 20,
+              overflow: 'hidden',
+              marginHorizontal: 5,
+              marginVertical: 10,
+            }}
+          ></View>
+          <View
             style={{
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#555",
-              paddingHorizontal: 30,
+              backgroundColor: step == 1 ? '#2ecc71' : '#777',
+              height: 6,
+              width: step == 1 ? 18 : 6,
+              borderRadius: 20,
+              overflow: 'hidden',
+              marginHorizontal: 5,
+              marginVertical: 10,
             }}
-          >
-            Conect to your Device to proceed
-          </Text>
-          <Text
+          ></View>
+          <View
             style={{
-              color: "#333",
-              paddingHorizontal: 30,
-              marginTop: 10,
-              textAlign: "center",
-              fontSize: 12,
+              backgroundColor: step == 2 ? '#2ecc71' : '#777',
+              height: 6,
+              width: step == 2 ? 18 : 6,
+              borderRadius: 20,
+              overflow: 'hidden',
+              marginHorizontal: 5,
+              marginVertical: 10,
             }}
-          >
-            To proceed with pairing go-to your
-            phone Wi-Fi Settings and connect to Wi-Fi naming{" "}
-            <Text style={{ fontWeight: "bold" }}>BDE_XXXX_XX:XX</Text>
-            {" "}with password{" "}
-            <Text style={{ fontWeight: "bold" }}>12345678</Text>
-          </Text>
-          <Text style={{ textAlign: "center", fontSize: 12 }}><Text style={{ color: STYLES.textColors.warning, fontWeight: "bold" }}>TIP:</Text>{" "}turn off your mobile data</Text>
-        </View>
-        {/* ///goBACK button */}
-        <View
-          style={{
-            alignItems: "center",
-          }}
-        >
-          {navigation.canGoBack() && <NewRectButtonWithChildren
-            style={{
-              overflow: "hidden",
-              alignSelf: "flex-start",
-              marginBottom: 10,
-            }}
-            onPress={() => {
-              /* TODO_CUR dispatch(
-                newDeviceSagaAction(
-                  Object.assign({}, dummyDevice, {
-                    SSID: "Homelink1",
-                    wifiPass: "Ioplmkjnb@1",
-                    Mac: "ED:98:FF:46:FF",
-                    groupName: groupName.length > 3 ? groupName : null,
-                  })
-                )
-              ); */
-              navigation.pop();
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 17,
-                fontWeight: "bold",
-                alignSelf: "flex-start",
-                marginLeft: 20,
-                color: "#66F",
-              }}
-            >
-              Go Back
-            </Text>
-          </NewRectButtonWithChildren>}
+          ></View>
         </View>
       </View>
-    </SafeAreaView>
+
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: interpolate(transition, {
+            inputRange: [0, 1, 2],
+            outputRange: [0, -width, -width * 2],
+          }),
+          //flex: 1,
+          height: height - 50, //substracted header height
+          width: width * 2,
+          //backgroundColor: "red",
+          display: 'flex',
+          flexDirection: 'row',
+          zIndex: 2,
+        }}
+      >
+        <Frame1 show={step == 0} setStep={setStep} newDevice={newDevice} setNewDevice={setNewDevice} />
+
+        <Frame2
+          show={step == 1}
+          setStep={setStep}
+          newDevice={newDevice}
+          setNewDevice={setNewDevice}
+          navigation={navigation}
+        />
+      </Animated.View>
+    </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-});
+const BulletPoint = ({
+  children,
+  ...props
+}: {
+  children: any;
+  hintTxt?: String;
+  mainTxtStyle?: StyleProp<TextStyle>;
+  hintTxtStyle?: StyleProp<TextStyle>;
+}) => {
+  return (
+    <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
+      <Text style={[{ color: '#333', fontSize: 18, fontWeight: 'bold' }, props.mainTxtStyle]}>{'\u2022  '}</Text>
+      <View>
+        <Text style={[{ color: '#333', fontSize: 18, fontWeight: 'bold' }, props.mainTxtStyle]}>{children}</Text>
+        {props.hintTxt && (
+          <Text style={[{ marginTop: 5, color: '#555', fontSize: 16 }, props.hintTxtStyle]}>{props.hintTxt}</Text>
+        )}
+      </View>
+    </View>
+  );
+};
+
+const NewPairingBackground = (props: {}) => {
+  return (
+    <View
+      style={{
+        height: height - 50,
+        width,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 1,
+      }}
+    >
+      <View
+        style={{
+          flex: 0.3,
+        }}
+      ></View>
+
+      <View
+        style={{
+          flex: 0.7,
+          marginHorizontal: 15,
+          borderTopRightRadius: 50,
+          borderTopLeftRadius: 50,
+          shadowOffset: {
+            width: 0,
+            height: -1,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 2.22,
+          shadowColor: '#000000',
+          elevation: 5,
+          backgroundColor: '#fff',
+        }}
+      ></View>
+    </View>
+  );
+};
+
+export const PairingFrame = (props: {
+  cardSectionStyle?: StyleProp<ViewStyle>;
+  headerSectionStyle?: StyleProp<ViewStyle>;
+  header?: any;
+  children?: any;
+  functionComponent?: any;
+  showFunctionComponent?: boolean;
+}) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        width,
+        backgroundColor: '#ffffff00',
+      }}
+    >
+      {/* functional component */}
+      <View
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          height: 1,
+          width: 10,
+          backgroundColor: '#000',
+          opacity: props.showFunctionComponent ? 1 : 0,
+          zIndex: 5,
+        }}
+      >
+        {props.functionComponent &&
+          (props.showFunctionComponent == true || props.showFunctionComponent == undefined) && (
+            <props.functionComponent />
+          )}
+      </View>
+
+      {/* header section */}
+      <View
+        style={[
+          {
+            flex: 0.3,
+            overflow: 'hidden',
+            backgroundColor: '#ffffff00',
+          },
+          props.headerSectionStyle,
+        ]}
+      >
+        {props.header && <props.header />}
+      </View>
+
+      {/* card section */}
+      <View
+        style={[
+          {
+            backgroundColor: '#ffffff00',
+            flex: 0.7,
+            overflow: 'hidden',
+          },
+          props.cardSectionStyle,
+        ]}
+      >
+        {props.children}
+      </View>
+    </View>
+  );
+};
