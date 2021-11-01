@@ -1,4 +1,4 @@
-# HUElite App 3.0
+# HUElite App 3.0.0
 
 ## feature-request
 
